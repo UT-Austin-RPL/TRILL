@@ -6,7 +6,7 @@ categories: projects
 
 <link href='https://fonts.googleapis.com/css?family=Titillium+Web:400,600,400italic,600italic,300,300italic' rel='stylesheet' type='text/css'>
 <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <title>Learning from Human Teleoperation: Skill-acquisition Framework for Humanoid Loco-manipulation</title>
+  <title>Deep Imitation Learning for Humanoid Loco-manipulation through Human Teleoperation</title>
 
 
 <!-- <meta property="og:image" content="images/teaser_fb.jpg"> -->
@@ -125,7 +125,7 @@ highlight {
 </style>
 
 <div id="primarycontent">
-<center><h1><strong>Learning from Human Teleoperation: Skill-acquisition Framework for Humanoid Loco-manipulation</strong></h1></center>
+<center><h1><strong>Deep Imitation Learning for Humanoid Loco-manipulation through Human Teleoperation</strong></h1></center>
 <center><h2>
     <a href="https://mingyoseo.com/">Mingyo Seo</a>&nbsp;&nbsp;&nbsp;
     <a href="https://www.linkedin.com/in/stevehan2001/">Steve Han</a>&nbsp;&nbsp;&nbsp;
@@ -138,49 +138,12 @@ highlight {
   <h2>
     <a href="https://www.utexas.edu/">The University of Texas at Austin</a>&nbsp;&nbsp;&nbsp;
   </h2>
-  <h2><a href="http://arxiv.org/abs/2209.09233">Paper</a> | Code (coming soon)</h2>
+  <!--
+  <h2><a href="">Paper</a> | Code (coming soon)</h2>
+  -->
   </center>
 
  <center><p><span style="font-size:20px;"></span></p></center>
-<!-- <p> -->
-<!--   </p><table border="0" cellspacing="10" cellpadding="0" align="center">  -->
-<!--   <tbody> -->
-<!--   <tr> -->
-<!--   <\!-- For autoplay -\-> -->
-<!-- <iframe width="560" height="315" -->
-<!--   src="https://www.youtube.com/embed/GCfs3DJ4aO4?autoplay=1&mute=1&loop=1" -->
-<!--   autoplay="true" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>   -->
-<!--   <\!-- No autoplay -\-> -->
-<!-- <\!-- <iframe width="560" height="315" -\-> -->
-<!-- <\!--   src="https://www.youtube.com/embed/GCfs3DJ4aO4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>   -\-> -->
-
-<!-- </tr> -->
-<!-- </tbody> -->
-<!-- </table> -->
-
-<!--
-<table border="0" cellspacing="10" cellpadding="0" align="center"> 
-  <tbody>
-    <tr> 
-      <td align="center" valign="middle">
-        <iframe width="800" height="450" src="https://www.youtube.com/embed/PdT8vBv9Asg?showinfo=0&playlist=PdT8vBv9Asg&autoplay=1&loop=1" autoplay="true" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        </td>
-    </tr>
-  </tbody>
-</table>
--->
-
-<table border="0" cellspacing="10" cellpadding="0" align="center">
-  <tbody>
-    <tr>
-      <td align="center" valign="middle">
-        <video muted autoplay loop width="800">
-          <source src="./src/video/header.mp4"  type="video/mp4">
-        </video>
-      </td>
-    </tr>
-  </tbody>
-</table>
 
 <p>
 <div width="500"><p>
@@ -188,7 +151,12 @@ highlight {
                 <tr>
                     <td>
 <p align="justify" width="20%">
-Will be added later
+We tackle the problem of developing humanoid loco-manipulation skills with deep imitation learning. The challenge of collecting human demonstrations for humanoids, in conjunction with the difficulty of  policy training under a high degree of freedom, presents substantial challenges.
+We introduce <b>TRILL</b>, a data-efficient framework for learning humanoid loco-manipulation policies from human demonstrations. 
+In this framework, we collect human demonstration data through an intuitive Virtual Reality (VR) interface.
+We employ the whole-body control formulation to transform task-space commands from human operators into the robot's joint-torque actuation while stabilizing its dynamics.
+By employing high-level action abstractions tailored for humanoid robots, our method can efficiently learn complex loco-manipulation skills.
+We demonstrate the effectiveness of TRILL in simulation and on a real-world robot for performing various types of tasks. 
 </p></td></tr></table>
 </p>
   </div>
@@ -200,90 +168,76 @@ Will be added later
 
   <table border="0" cellspacing="10" cellpadding="0" align="center"> 
     <tbody>
-      <tr> 
+      <tr>
         <td align="center" valign="middle">
-          <a href="./src/figure/approach.png"><img src="./src/figure/approach.png" style="width:100%;"> </a>
-        </td>
+          <video muted autoplay loop width="798">
+            <source src="./src/video/approach.mp4"  type="video/mp4">
+          </video>
+        </td>    
       </tr>
     </tbody>
   </table>
 
-  <table align=center width=800px>
-                <tr>
-                    <td>
-  <p align="justify" width="20%">
-  Overview of TRILL. We present a learning framework that allows a human demonstrator to easily provide supervision via teleoperation of task-space commands.
-  The robot control interface then executes these target commands through joint-torque actuation. Policies trained on demonstration data, utilizing the underlying controller, can be directly deployed through this interface. This hierarchy enables the learned policies to perform effectively on floating-base robot systems, in both simulated and real-world environments.
-</p></td></tr></table>
+  <table align=center width=800px><tr><td><p align="justify" width="20%">
+    TRILL addresses the challenge of learning humanoid loco-manipulation. 
+    We introduce a learning framework that facilitates teleoperated demonstrations with task-space commands provided by a human demonstrator. 
+    The trained policies leverage human complexity and adaptability in decision-making to generate these commands.
+    The robot control interface then executes these target commands through joint-torque actuation, complying with robot dynamics.
+    This synergistic combination of imitation learning and whole-body control enables successful method implementation in both simulated and real-world environments.
+  </p></td></tr></table>
 
   
-<br><br><hr> <h1 align="center">Hierarchical Perceptive Locomotion Model</h1> <!-- <h2
+<br><br><hr> <h1 align="center">Hierarchical Loco-manipulation Pipeline</h1> <!-- <h2
 align="center"></h2> --> <table border="0" cellspacing="10"
 cellpadding="0" align="center"><tbody><tr><td align="center"
 valign="middle"><a href="./src/figure/pipeline.png"> <img
 src="./src/figure/pipeline.png" style="width:100%;"> </a></td>
 </tr> </tbody> </table>
 
-<table align=center width=800px><tr><td> <p align="justify" width="20%">The high-level navigation policy generates the target velocity command at 10Hz from the onboard RGB-D camera observation and robot heading. The target velocity command, including linear and angular velocities, is used as input to the low-level gait controller along with the buffer of recent robot states. The low-level gait policy predicts the joint-space actions as the desired joint positions at 38Hz and sends them to the quadruped robot for actuation. More implementation details can be found in <a href="https://github.com/UT-Austin-RPL/PRELUDE/blob/main/implementation.md">this page</a>.
+<table align=center width=800px><tr><td> <p align="justify" width="20%">
+  The trained policies generate the target task-space command at 20Hz from the onboard stereo camera observation and the robot's proprioceptive feedback. The robot control interface realizes the task-space commands and computes the desired joint torques at 100Hz and sends them to the humanoid robot for actuation.
 </p></td></tr></table>
 <br>
 
 <hr>
 
-<h1 align="center">Teleopreation of the humanoid robot</h1>
+<h1 align="center">Real-robot Teleoperation</h1>
 
-  <table align=center width=800px><tr><td> <p align="justify" width="20%">Will be added later
+  <table align=center width=800px><tr><td> <p align="justify" width="20%">
+    We design an intuitive VR teleoperation system, which reduces the cognitive and physical burdens for human operators to provide task demonstration.
   </p></td></tr></table>
-
-  <!--
+  
   <table border="0" cellspacing="10" cellpadding="0" align="center"> 
     <tbody>
       <tr> 
         <td align="center" valign="middle">
-          <iframe width="798" height="300" src="https://www.youtube.com/embed/csr5hi5v_Bs?autoplay=1&mute=1&playlist=csr5hi5v_Bs&loop=1" autoplay="true" frameborder="5" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  -->
-  
-  <table border="0" cellspacing="10" cellpadding="0" align="center">
-    <tbody>
-      <tr>
-        <td align="center" valign="middle">
-          <video muted controls width="798">
-            <source src="./src/video/evaluation.mp4"  type="video/mp4">
+          <video controls width="798">
+            <source src="./src/video/demo_ramen.mp4"  type="video/mp4">
           </video>
         </td>
       </tr>
     </tbody>
   </table>
-
+ 
 <hr>
 
-<h1 align="center">Real Robot Evaluation</h1>
+<h1 align="center">Real-robot Deployment</h1>
 
-  <table align=center width=800px><tr><td> <p align="justify" width="20%">Will be added later
+  <table align=center width=800px><tr><td> <p align="justify" width="20%">
+    We demonstrate the application of TRILL on the real robot, deploying visuomotor policies trained for dexterous manipulation tasks.
   </p></td></tr></table>
 
-  <!--
   <table border="0" cellspacing="10" cellpadding="0" align="center"> 
     <tbody>
       <tr> 
         <td align="center" valign="middle">
-          <iframe width="798" height="300" src="https://www.youtube.com/embed/csr5hi5v_Bs?autoplay=1&mute=1&playlist=csr5hi5v_Bs&loop=1" autoplay="true" frameborder="5" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          <video muted controls width="394">
+            <source src="./src/video/deploy_box.mp4"  type="video/mp4">
+          </video>
         </td>
-      </tr>
-    </tbody>
-  </table>
-  -->
-  
-  <table border="0" cellspacing="10" cellpadding="0" align="center">
-    <tbody>
-      <tr>
         <td align="center" valign="middle">
-          <video muted controls width="798">
-            <source src="./src/video/evaluation.mp4"  type="video/mp4">
+          <video muted controls width="394">
+            <source src="./src/video/deploy_cap.mp4"  type="video/mp4">
           </video>
         </td>
       </tr>
@@ -296,75 +250,37 @@ src="./src/figure/pipeline.png" style="width:100%;"> </a></td>
 <h1 align="center">Simulation Evaluation</h1>
 
   <table align=center width=800px><tr><td> <p align="justify" width="20%">
-  Will be added later
+    We design two realistic simulation environments and evaluate the robot’s ability to successfully perform subtasks involving free-space locomotion, manipulation, and loco-manipulation.
   </p></td></tr></table>
 
-
-  <!--
-  <table border="0" cellspacing="10" cellpadding="0" align="center"> 
-    <tr>
-        <td align="center" valign="middle">
-          <iframe width="600" height="337" src="https://www.youtube.com/embed/K3pYobHhzDs?autoplay=1&mute=1&playlist=K3pYobHhzDs&loop=1" autoplay="true" frameborder="5" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        </td>
-      </tr>
-      <tr>
-        <td align="center" valign="middle">
-          <iframe width="600" height="337" src="https://www.youtube.com/embed/cc3b8VM7Jb0?autoplay=1&mute=1&playlist=cc3b8VM7Jb0&loop=1" autoplay="true" frameborder="5" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        </td>
-      </tr>
-      <tr>
-        <td align="center" valign="middle">
-          <iframe width="600" height="337" src="https://www.youtube.com/embed/9yEtgGHy9Aw?autoplay=1&mute=1&playlist=9yEtgGHy9Aw&loop=1" autoplay="true" frameborder="5" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        </td>
-      </tr>
-  </table>
-  -->
   <table border="0" cellspacing="10" cellpadding="0" align="center">
     <tbody>
       <tr>
         <td align="center" valign="middle">
           <video muted controls width="394">
-            <source src="./src/video/deploy1.mp4"  type="video/mp4">
+            <source src="./src/video/deploy_door.mp4"  type="video/mp4">
           </video>
         </td>
-
         <td align="center" valign="middle">
           <video muted controls width="394">
-            <source src="./src/video/deploy2.mp4"  type="video/mp4">
+            <source src="./src/video/deploy_workbench.mp4"  type="video/mp4">
           </video>
         </td>
       </tr>
-
-      <tr>
-        <td align="center" valign="middle">
-          <video muted controls width="394">
-            <source src="./src/video/deploy3.mp4"  type="video/mp4">
-          </video>
-        </td>
-
-        <td align="center" valign="middle">
-          <video muted controls width="394">
-            <source src="./src/video/deploy4.mp4"  type="video/mp4">
-          </video>
-        </td>
-      </tr>
-
     </tbody>
   </table>
 
-
 <hr>
-<center><h1>Citation</h1></center>
 
+<!--
+<center><h1>Citation</h1></center>
 <table align=center width=800px>
   <tr>
     <td>
-    <!-- <left> -->
     <pre><code style="display:block; overflow-x: auto">
       WILL BE ADDED LATER!!
     </code></pre>
-    <!-- </left> -->
     </td>
   </tr>
 </table>
-
+-->
