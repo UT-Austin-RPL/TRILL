@@ -169,11 +169,9 @@ We demonstrate the effectiveness of TRILL in simulation and on a real-world robo
   <table border="0" cellspacing="10" cellpadding="0" align="center"> 
     <tbody>
       <tr>
-        <td align="center" valign="middle">
-          <video muted autoplay loop width="798">
-            <source src="./src/video/approach.mp4"  type="video/mp4">
-          </video>
-        </td>    
+	<td align="center" valign="middle">
+	  <a href="./src/figure/approach.png"><img src="./src/figure/approach.png" style="width:100%;"> </a>
+        </td>
       </tr>
     </tbody>
   </table>
