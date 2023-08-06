@@ -248,7 +248,7 @@ src="./src/figure/pipeline.png" style="width:100%;"> </a></td>
 <h1 align="center">Simulation Evaluation</h1>
 
   <table align=center width=800px><tr><td> <p align="justify" width="20%">
-    We design two realistic simulation environments and evaluate the robot’s ability to successfully perform subtasks involving free-space locomotion, manipulation, and loco-manipulation. Our architecture, which is specifically tailored for humanoid robots, can train visuomotor policies efficiently.
+    We design two realistic simulation environments and evaluate the robot’s ability to successfully perform subtasks involving free-space locomotion, manipulation, and loco-manipulation. TRILL, a framework tailored to train humanoid robots, achieves success rates of 96% for free-space locomotion tasks, 80% for manipulation tasks, and 92% for loco-manipulation tasks.
   </p></td></tr></table>
 
   <table border="0" cellspacing="10" cellpadding="0" align="center">
