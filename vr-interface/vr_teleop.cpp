@@ -31,8 +31,8 @@ using namespace std;
 using Eigen::Matrix3f;
 using Eigen::Vector3f;
 
-const string STREAMING_SOCKET_ENDPOINT = "tcp://192.168.50.100:5556";
-const string CONTROL_SOCKET_ENDPOINT = "tcp://*:5555";
+string STREAMING_SOCKET_ENDPOINT;
+string CONTROL_SOCKET_ENDPOINT;
 
 enum {
     vBUTTON_TRIGGER = 0, 
@@ -413,6 +413,16 @@ void transformVRPose(){
 }
 
 int main(int argc, const char** argv) {
+    if(argc<3){
+        printf("The command is missing some arguments.\n");
+    }
+    else if (argc>3){
+        printf("The command has too many arguments.\n");
+    }
+    else {
+        STREAMING_SOCKET_ENDPOINT = argv[1];
+        CONTROL_SOCKET_ENDPOINT = argv[2];
+    }
     signal (SIGINT, quit_handler);
     v_initPre();
 
