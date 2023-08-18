@@ -1,3 +1,12 @@
+/* 
+ * Program to connect to a VR headset, stream the VR controller inputs via an exposed ZMQ pub socket, and potentially
+ * receive images to display in the headset via an exposed ZMQ sub socket.
+ *
+ * The VR controller inputs are streamed as a protobuf message of type draco::vr_teleop_msg.
+ *
+ * OpenVR code based on https://gist.github.com/machinaut/5bebd312d21a66419b1b329e369b6625
+ */
+
 #include <chrono>
 #include <google/protobuf/stubs/common.h>
 #include <signal.h>
