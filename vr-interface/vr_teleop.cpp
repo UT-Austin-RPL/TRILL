@@ -4,7 +4,7 @@
  *
  * The VR controller inputs are streamed as a protobuf message of type draco::vr_teleop_msg.
  *
- * OpenVR code based on https://gist.github.com/machinaut/5bebd312d21a66419b1b329e369b6625
+ * OpenVR code copied from https://gist.github.com/machinaut/5bebd312d21a66419b1b329e369b6625
  */
 
 #include <chrono>
@@ -74,12 +74,14 @@ HMD_t hmd;
 controller_t ctl[2];
 
 // the transformed position and orientation of the controllers
+// by default, no transformation is applied
 Vector3f transformed_left_pos;
 Vector3f transformed_right_pos;
 Matrix3f transformed_left_ori;
 Matrix3f transformed_right_ori;
 
-// create an invisible glfw window as context, initialize openvr compositor, and create VR data structures
+// create an invisible glfw window as context (if streaming), 
+// initialize openvr compositor, and create VR data structures
 void v_initPre(void) {
 #if STREAMING
     if (!glfwInit()) {
@@ -146,7 +148,6 @@ void v_initPre(void) {
                     ctl[n].idtrigger = i;
                 else if( prop==k_eControllerAxis_TrackPad )
                     ctl[n].idpad = i;
-
             }
 
             if (ctl[n].idtrigger < 0)
@@ -158,7 +159,8 @@ void v_initPre(void) {
     cout << hmd.width << ", " << hmd.height << endl;
 
 #if STREAMING
-    // Create white texture to stream a white image to the headset
+    // Set up white texture for initialization
+    // This texture will be replaced by the actual images to stream to the headset
     glActiveTexture(GL_TEXTURE2);
     glGenTextures(1, &hmd.idtex);
     glBindTexture(GL_TEXTURE_2D, hmd.idtex);
@@ -168,7 +170,7 @@ void v_initPre(void) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-    int size = 2*hmd.width*hmd.height * 3;
+    int size = 2 * hmd.width*hmd.height * 3; // RGB is 3 values. VR has twice the width.
     unsigned char * white = new unsigned char[size];
     for (int i = 0; i < size; ++i) {
         white[i] = 255;
@@ -185,7 +187,6 @@ void v_copyPose(const TrackedDevicePose_t* pose, float* roompos, float* roommat)
 
     const HmdMatrix34_t* p = &pose->mDeviceToAbsoluteTracking;
 
-    // raw data: room
     roompos[0] = p->m[0][3];
     roompos[1] = p->m[1][3];
     roompos[2] = p->m[2][3];
@@ -254,7 +255,7 @@ void v_update(void) {
                 break;
             }
 
-            // process event. The printouts are for debugging
+            // process event.
             switch( evt.eventType )
             {
             case VREvent_ButtonPress:
