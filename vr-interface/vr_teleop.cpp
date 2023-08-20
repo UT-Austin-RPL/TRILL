@@ -324,6 +324,22 @@ void quit_handler(int s){
     }
 }
 
+// If your robot environment has the same coordinate system as the VR controllers, 
+// then no transformation is needed.
+
+void transformVRPose() {
+
+}
+
+// This is our code for transforming the VR coordinate system to the 
+// coordinate system used for the robot.
+// It essentially implements the following equation: 
+// Let R_vr be the rotation of the controller from its natural orientation,
+// R_t be the transformation between the VR axes and the simulation axes,
+// and R_sim be the desired rotation to be applied to the robot hands.
+// Then, R_sim = R_t^-1  R_vr  R_t
+
+/*
 Matrix3f convert_orientation(Matrix3f VR_orientation){
   Matrix3f T;
   T << 0, -1, 0,
@@ -359,35 +375,13 @@ void transformVRPose(){
         }
     }
     
-    /*
-    cout<< "hmd_pos:\n"<< hmd_pos<<endl;
-    cout<< "hmd_mat:\n"<< hmd_mat<<endl;
-    cout<< "left_pos:\n"<< left_pos<<endl;
-    cout<< "left_mat:\n"<< left_mat<<endl;
-    cout<< "right_pos:\n"<< right_pos<<endl;
-    cout<< "right_mat:\n"<< right_mat<<endl;
-    */
-
     Vector3f local_left_pos = left_pos - hmd_pos;
     Vector3f local_right_pos = right_pos - hmd_pos;
     Matrix3f mat_room2hmd = hmd_mat.inverse();
-    
-    // cout<< "local_left_pos:\n" << local_left_pos<<endl;
-    // cout<< "local_right_pos:\n" << local_right_pos<<endl;
-
-    //cout<< "hmt_mat:\n" << hmd_mat <<endl;
-    //cout<< "mat_room2hmd:\n" << mat_room2hmd <<endl;
-
 
     local_left_pos = mat_room2hmd * local_left_pos; 
     local_right_pos = mat_room2hmd * local_right_pos;
     
-    /*
-    cout<< "mat_room2hmd:\n" << mat_room2hmd<<endl;
-    cout<< "local_left_pos:\n" << local_left_pos<<endl;
-    cout<< "local_right_pos:\n" << local_right_pos<<endl;
-    */
-
     transformed_left_pos = -1 * local_left_pos;
     float tempValue = transformed_left_pos(2);
     transformed_left_pos(2) = transformed_left_pos(1);
@@ -408,17 +402,15 @@ void transformVRPose(){
 
     transformed_left_ori = convert_orientation(mat_room2hmd * left_mat);
     transformed_right_ori = convert_orientation(mat_room2hmd * right_mat);
-
-    //cout<< "transformed_left:\n" << transformed_left <<endl;
-    //cout<< "transformed_right:\n" << transformed_right<<endl;
 }
+*/
 
 int main(int argc, const char** argv) {
     if(argc<3){
-        printf("The command is missing some arguments.\n");
+        printf("Please run the command with ./vr <streaming_socket_endpoint> <control_socket_endpoint>\n");
     }
     else if (argc>3){
-        printf("The command has too many arguments.\n");
+        printf("Please run the command with ./vr <streaming_socket_endpoint> <control_socket_endpoint>\n");
     }
     else {
         STREAMING_SOCKET_ENDPOINT = argv[1];
