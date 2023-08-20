@@ -34,6 +34,8 @@ using Eigen::Vector3f;
 string STREAMING_SOCKET_ENDPOINT;
 string CONTROL_SOCKET_ENDPOINT;
 
+bool DEBUG = false;
+
 enum {
     vBUTTON_TRIGGER = 0, 
     vBUTTON_SIDE,
@@ -260,24 +262,26 @@ void v_update(void) {
             case VREvent_ButtonPress:
                 ctl[n].hold[button] = true;
 
-                if( button==vBUTTON_TRIGGER )
-                {
-                    cout << "trigger" << n << endl;
-                }
+                if (DEBUG){
+                    if( button==vBUTTON_TRIGGER )
+                    {
+                        cout << "trigger" << n << endl;
+                    }
 
-                else if( button==vBUTTON_MENU )
-                {
-                    cout << "menu" << n << endl;
-                }
+                    else if( button==vBUTTON_MENU )
+                    {
+                        cout << "menu" << n << endl;
+                    }
 
-                else if( button==vBUTTON_PAD)
-                {
-                    cout << "PAD" << n << " " << ctl[n].padpos[0] << " " << ctl[n].padpos[1] << endl;
-                }
+                    else if( button==vBUTTON_PAD)
+                    {
+                        cout << "PAD" << n << " " << ctl[n].padpos[0] << " " << ctl[n].padpos[1] << endl;
+                    }
 
-                else if( button==vBUTTON_SIDE )
-                {
-                    cout << "SIDE" << n << endl;
+                    else if( button==vBUTTON_SIDE )
+                    {
+                        cout << "SIDE" << n << endl;
+                    }
                 }
 
                 break;
@@ -358,35 +362,13 @@ void transformVRPose(){
         }
     }
     
-    /*
-    cout<< "hmd_pos:\n"<< hmd_pos<<endl;
-    cout<< "hmd_mat:\n"<< hmd_mat<<endl;
-    cout<< "left_pos:\n"<< left_pos<<endl;
-    cout<< "left_mat:\n"<< left_mat<<endl;
-    cout<< "right_pos:\n"<< right_pos<<endl;
-    cout<< "right_mat:\n"<< right_mat<<endl;
-    */
-
     Vector3f local_left_pos = left_pos - hmd_pos;
     Vector3f local_right_pos = right_pos - hmd_pos;
     Matrix3f mat_room2hmd = hmd_mat.inverse();
-    
-    // cout<< "local_left_pos:\n" << local_left_pos<<endl;
-    // cout<< "local_right_pos:\n" << local_right_pos<<endl;
-
-    //cout<< "hmt_mat:\n" << hmd_mat <<endl;
-    //cout<< "mat_room2hmd:\n" << mat_room2hmd <<endl;
-
 
     local_left_pos = mat_room2hmd * local_left_pos; 
     local_right_pos = mat_room2hmd * local_right_pos;
     
-    /*
-    cout<< "mat_room2hmd:\n" << mat_room2hmd<<endl;
-    cout<< "local_left_pos:\n" << local_left_pos<<endl;
-    cout<< "local_right_pos:\n" << local_right_pos<<endl;
-    */
-
     transformed_left_pos = -1 * local_left_pos;
     float tempValue = transformed_left_pos(2);
     transformed_left_pos(2) = transformed_left_pos(1);
@@ -407,9 +389,6 @@ void transformVRPose(){
 
     transformed_left_ori = convert_orientation(mat_room2hmd * left_mat);
     transformed_right_ori = convert_orientation(mat_room2hmd * right_mat);
-
-    //cout<< "transformed_left:\n" << transformed_left <<endl;
-    //cout<< "transformed_right:\n" << transformed_right<<endl;
 }
 
 int main(int argc, const char** argv) {
@@ -487,37 +466,15 @@ int main(int argc, const char** argv) {
                 commands_str.size());
         control_socket.send(zmq_msg, zmq::send_flags::dontwait);
 
-        /*
-        float combined_buffer[9 * 3 + 3 * 3 + 8];
-        memcpy(combined_buffer, hmd.roompos, 3 * sizeof(float));
-        memcpy(combined_buffer + 3, hmd.roommat, 9 * sizeof(float));
-        memcpy(combined_buffer + 12, ctl[0].roompos, 3 * sizeof(float));
-        memcpy(combined_buffer + 15, ctl[0].roommat, 9 * sizeof(float));
-        memcpy(combined_buffer + 24, ctl[1].roompos, 3 * sizeof(float));
-        memcpy(combined_buffer + 27, ctl[1].roommat, 9 * sizeof(float));
-        memcpy(combined_buffer + 36, &ctl[0].hold[0], 4 * sizeof(float));
-        memcpy(combined_buffer + 40, &ctl[1].hold[0], 4 * sizeof(float));
-
-        control_socket.send_raw((const char *) combined_buffer, 44 * sizeof(float));
-        */
-
 #if STREAMING
         streaming_socket.receive_raw(image, image_size);
-        //cv::Mat img = cv::Mat(1176, 1096 * 2, CV_8UC3, image);
-        //cv::imshow("test", img);
-        //cv::waitKey(1);
         glActiveTexture(GL_TEXTURE2);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 
         v_render();
         v_update();
 #endif
-        //auto start = chrono::high_resolution_clock::now();
-        //this_thread::sleep_for(chrono::milliseconds(10));
         v_update();
-        //auto end = chrono::high_resolution_clock::now();
-        //auto duration = chrono::duration_cast<chrono::milliseconds>(end - start);
-        //cout << "v update duration: " << duration.count() << endl;
     }
 }
 
