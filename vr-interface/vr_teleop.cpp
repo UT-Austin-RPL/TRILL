@@ -34,6 +34,8 @@ using Eigen::Vector3f;
 string STREAMING_SOCKET_ENDPOINT;
 string CONTROL_SOCKET_ENDPOINT;
 
+bool DEBUG = false;
+
 enum {
     vBUTTON_TRIGGER = 0, 
     vBUTTON_SIDE,
@@ -261,24 +263,26 @@ void v_update(void) {
             case VREvent_ButtonPress:
                 ctl[n].hold[button] = true;
 
-                if( button==vBUTTON_TRIGGER )
-                {
-                    cout << "trigger" << n << endl;
-                }
+                if (DEBUG){
+                    if( button==vBUTTON_TRIGGER )
+                    {
+                        cout << "trigger" << n << endl;
+                    }
 
-                else if( button==vBUTTON_MENU )
-                {
-                    cout << "menu" << n << endl;
-                }
+                    else if( button==vBUTTON_MENU )
+                    {
+                        cout << "menu" << n << endl;
+                    }
 
-                else if( button==vBUTTON_PAD)
-                {
-                    cout << "PAD" << n << " " << ctl[n].padpos[0] << " " << ctl[n].padpos[1] << endl;
-                }
+                    else if( button==vBUTTON_PAD)
+                    {
+                        cout << "PAD" << n << " " << ctl[n].padpos[0] << " " << ctl[n].padpos[1] << endl;
+                    }
 
-                else if( button==vBUTTON_SIDE )
-                {
-                    cout << "SIDE" << n << endl;
+                    else if( button==vBUTTON_SIDE )
+                    {
+                        cout << "SIDE" << n << endl;
+                    }
                 }
 
                 break;
@@ -480,37 +484,15 @@ int main(int argc, const char** argv) {
                 commands_str.size());
         control_socket.send(zmq_msg, zmq::send_flags::dontwait);
 
-        /*
-        float combined_buffer[9 * 3 + 3 * 3 + 8];
-        memcpy(combined_buffer, hmd.roompos, 3 * sizeof(float));
-        memcpy(combined_buffer + 3, hmd.roommat, 9 * sizeof(float));
-        memcpy(combined_buffer + 12, ctl[0].roompos, 3 * sizeof(float));
-        memcpy(combined_buffer + 15, ctl[0].roommat, 9 * sizeof(float));
-        memcpy(combined_buffer + 24, ctl[1].roompos, 3 * sizeof(float));
-        memcpy(combined_buffer + 27, ctl[1].roommat, 9 * sizeof(float));
-        memcpy(combined_buffer + 36, &ctl[0].hold[0], 4 * sizeof(float));
-        memcpy(combined_buffer + 40, &ctl[1].hold[0], 4 * sizeof(float));
-
-        control_socket.send_raw((const char *) combined_buffer, 44 * sizeof(float));
-        */
-
 #if STREAMING
         streaming_socket.receive_raw(image, image_size);
-        //cv::Mat img = cv::Mat(1176, 1096 * 2, CV_8UC3, image);
-        //cv::imshow("test", img);
-        //cv::waitKey(1);
         glActiveTexture(GL_TEXTURE2);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 
         v_render();
         v_update();
 #endif
-        //auto start = chrono::high_resolution_clock::now();
-        //this_thread::sleep_for(chrono::milliseconds(10));
         v_update();
-        //auto end = chrono::high_resolution_clock::now();
-        //auto duration = chrono::duration_cast<chrono::milliseconds>(end - start);
-        //cout << "v update duration: " << duration.count() << endl;
     }
 }
 
