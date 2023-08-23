@@ -7,6 +7,8 @@
  * OpenVR code copied from https://gist.github.com/machinaut/5bebd312d21a66419b1b329e369b6625
  */
 
+// Warning: spaghetti code ahead
+
 #include <chrono>
 #include <google/protobuf/stubs/common.h>
 #include <signal.h>
@@ -329,10 +331,42 @@ void quit_handler(int s){
 }
 
 // If your robot environment has the same coordinate system as the VR controllers, 
-// then no transformation is needed.
+// then no transformation is needed. 
+// We simply get the world (room) poses of the controllers and transform them to the
+// local frame of the hmd (since we care about the poses of controllers in 
+// relation to the headset).
 
 void transformVRPose() {
+    Vector3f hmd_pos;
+    Matrix3f hmd_mat;
+    Vector3f left_pos;
+    Matrix3f left_mat;
+    Vector3f right_pos;
+    Matrix3f right_mat;
 
+    for(int i=0; i<3; i++){
+    	hmd_pos(i) = hmd.roompos[i];
+        left_pos(i) = ctl[0].roompos[i];
+        right_pos(i) = ctl[1].roompos[i];
+    }
+
+    for(int i=0; i<3; i++){
+        for(int j=0; j<3; j++){
+            hmd_mat(i,j) = hmd.roommat[i*3 + j];
+            left_mat(i,j) = ctl[0].roommat[i*3 + j];
+            right_mat(i,j) = ctl[1].roommat[i*3 + j];
+        }
+    }
+    
+    Vector3f local_left_pos = left_pos - hmd_pos;
+    Vector3f local_right_pos = right_pos - hmd_pos;
+    Matrix3f mat_room2hmd = hmd_mat.inverse();
+
+    transformed_left_pos = mat_room2hmd * local_left_pos; 
+    transformed_right_pos = mat_room2hmd * local_right_pos;
+
+    transformed_left_ori = mat_room2hmd * left_mat;
+    transformed_right_ori = mat_room2hmd * right_mat;
 }
 
 // This is our code for transforming the VR coordinate system to the 
@@ -441,12 +475,15 @@ int main(int argc, const char** argv) {
     cout << "streaming socket connected" << endl;
 #endif
 
+    // the 50% resolution in ALVR
     int width = 1096 * 2;
     int height = 1176;
     size_t image_size = width * height * 3;
     char image[image_size];
 
     while (1) {
+
+        // send out the VR controller information
 
         draco::vr_teleop_msg m;
         transformVRPose();
@@ -485,12 +522,12 @@ int main(int argc, const char** argv) {
         control_socket.send(zmq_msg, zmq::send_flags::dontwait);
 
 #if STREAMING
+        // render streamed image on headset
         streaming_socket.receive_raw(image, image_size);
         glActiveTexture(GL_TEXTURE2);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 
         v_render();
-        v_update();
 #endif
         v_update();
     }
