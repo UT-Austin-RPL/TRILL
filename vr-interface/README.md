@@ -1,5 +1,22 @@
 ![architecture diagram](architecture_diagram.jpeg)
 
+A script for getting controller input from and streaming stereoscopic video to a VR headset, built with OpenVR.
+
+## Introduction
+
+Developed for teleoperation of robots, the script reports the 6-DOF poses of left and right controllers as well as additional buttons for locomotion and gripper control.
+In addition, stereoscopic images are streamed and displayed on the VR headset to create depth perception for the wearer.
+Using ZMQ, the script can connect to both our simulation written in python and our real-robot controller written in C++.
+
+The protobuf file is contained in the messages folder. Examples on how to interact with the script is contained in the examples folder.
+
+### Architecture
+
+We use OpenVR (implemented in SteamVR) and ALVR (Air Light VR) for the communication between the laptop and the headset. OpenVR is a low-level API designed to support a wide range of VR devices. ALVR is an open-source project that allows streaming Steam VR games from the laptop to the headset via Wi-Fi. It implements technologies such as Asynchronous Timewarp and Fixed Foveated Rendering for a smoother experience. ZMQ is an asynchronous messaging library that simplies message-passing between different programs or devices.
+
+For the simulation, we use Mujoco with Python binding for the physical simulation and Robosuite for the objects in the scene. We first render the scene using a virtual stereoscopic camera that is adjusted to match the interpupillary distance of the VR headset. Then, the rendered pixels are copied from the GPU to CPU and sent to the VR interface using ZMQ and ethernet. The interface code listens to the images and writes them into a GPU texture used by OpenVR. Finally, SteamVR and ALVR transmit the images through a router and displays them in the VR headset. At the same time, the interface polls the VR headset for the poses of the headset and controllers through OpenVR. It transforms the controller poses to the local frame of the headset, and they are then mapped to the poses of the robot hands in the robot’s local frame.
+The transformed hand poses are then published continuously using a ZMQ pub socket. When the simulation needs a VR command, it pulls the most recent command from the queue and sends it to the whole-body controller.
+
 ## Ubuntu Installation Instructions (with GPU)
 
 ### Installing ALVR on Ubuntu
@@ -33,7 +50,7 @@ Essentially you have to install side quest to side load the app to the oculus qu
 
 2. Install conan. If you want Conan to be able to automatically apt install missing packages, make sure to install Conan globally. Otherwise, install it locally.
    Make sure to install the 1.x version of conan as the current build file isn't compatible with 2.x.
-   1. `pip install conan`
+   1. `pip install conan==1.60.2`
 3. In the GitHub repo, install dependencies with Conan
    1. `cd vr_interface`
    2. `mkdir build`
@@ -95,3 +112,27 @@ Make sure that the headset and laptop are connected to the same wifi. You should
 ## Troubleshooting
 
 1. Don't run 2 versions of the vr script (for example, if you modify the script, put it in a separate repo, and run the modified script before running the original script). When this happens, SteamVR tends to work for a few seconds before crashing. The solution is to restart the laptop and make sure to only run one version of the script.
+
+## Design Choices
+
+Some design decisions were made to satisfy the requirements defined above. They are explained in this section in hopes of providing documentation and guidance for others working on similar systems.
+
+### OpenVR
+
+Initially, a website was created based on WebXR and JavaScript to stream controller poses over the internet. I wanted to improve the latency by keeping the connection within a local network, but I encountered difficulty in setting up HTTPS certificates in the campus lab. After getting tired of tunneling the connection over the internet, I decided to pursue a more low-level approach.
+The native Oculus SDK could work, but it would limit the option to change VR systems in the future. Unity is a good option for cross-platform compatibility, but since there's only a need to stream images and controller poses, a game engine is an overkill. I also don't believe that Unity exposes the low-level functionality to directly show the stereoscopic images in the headset. Since Unity uses the low-level OpenVR API, I decided to use it directly. Although a newer API called OpenXR is gaining steam, I feel that the performance benefits of OpenXR doesn't justify its complexity compared to OpenVR.
+
+Using OpenVR has several advantages. First, it has great performance since it is used by VR games and has direct support from VR headset manufacturers. Second, it delegates the work of video streaming to existing technologies. Many VR headsets support direct HDMI connection from the computer's graphics card, which OpenVR can take full advantage of since it takes input images from OpenGL. Even though the Quest doesn't have an HDMI cable, it is still possible to use the Oculus Link (over an USB cable) or Oculus Air Link (over a local network) with OpenVR. These are sophisticated streaming technologies that predict the user's movements and streaming latency to render ahead of time, and they encode the frames as slices in H.264. ALVR is an open-source alternative that implements similar technologies with the added benefit of having experimental support for Linux. Using these technologies is much more performant and scalable than hand-coding an image streaming pipeline. Finally, OpenVR works on a variety of Operating Systems and targets many VR headsets.
+
+### Image Transfer from GPU to CPU
+
+Since our interface script is written in C++ (since the Python OpenVR binding doesn't work well) and the simulation is in Python, we need a way to transfer the rendered images between processes.
+First, we can use memory sharing or pybind to transfer the Mujoco simulation state. Using the simulation states, the C++ code can directly render the scene using Mujoco and pass the result directly to OpenVR within the GPU. However, since Mujoco allocates simulation data structure dynamically, it's difficult to do inter-process memory sharing. Second, we could hypothetically share the GPU buffer rendered by the python script with the C++ script, but OpenGL contexts don't seem to allow inter-process sharing. Third, we can lose some performance and transfer the images from GPU to CPU. Once the images are in memory, we can send them over using ZMQ.
+
+The last approach was chosen to make the design more adaptable to the real robot, where the images are always coming from memory. The rendered images have a resolution of $1096 \times 2$ by $1176$, where the width is multiplied by 2 to account for both eyes. The rendering of an image takes .3 milliseconds on the RTX3090 GPU, copying it to the CPU consumes 3 milliseconds, and sending it through ZMQ asynchronously uses .6 milliseconds. Overall, this number is negligible compared to the simulation and whole-body control times, so this performance is acceptable.
+
+### Asynchronous Message Passing
+
+The simulation uses a ZMQ sub socket to get actions from the pub socket in the interface script. Usually this is done synchronously, meaning that the simulation waits for the interface to provide a response after requesting. However, this approach usually takes 70 milliseconds for the message round-trip. This delay can be reduced to .1 milliseconds by using an asynchronous approach. In this case, the sender and receiver simply run at their own pace, and the ZMQ threads in the background takes care of getting the messages ready. When the simulation requests an action, the ZMQ simply gets the most recently received message in its queue and returns it. Since the interface runs at a higher frequency than the simulation, there will never be a case where no action is available. Also, by setting the "conflate" option in ZMQ, we can reduce the need of a queue by only keeping the most recent message.
+
+The performance of the VR Interface is acceptable. Using asynchronous message passing and a separate laptop for VR interface, receiving images and sending commands are both sub-millisecond operations. The biggest contributor to latency is ALVR, which adds about 70 milliseconds of latency.
