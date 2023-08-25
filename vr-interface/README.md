@@ -1,4 +1,5 @@
 ![architecture diagram](architecture_diagram.jpeg)
+
 ## Ubuntu Installation Instructions (with GPU)
 
 ### Installing ALVR on Ubuntu
@@ -31,6 +32,7 @@ Essentially you have to install side quest to side load the app to the oculus qu
 1. Clone this GitHub repo
 
 2. Install conan. If you want Conan to be able to automatically apt install missing packages, make sure to install Conan globally. Otherwise, install it locally.
+   Make sure to install the 1.x version of conan as the current build file isn't compatible with 2.x.
    1. `pip install conan`
 3. In the GitHub repo, install dependencies with Conan
    1. `cd vr_interface`
@@ -88,51 +90,8 @@ Now you’re ready to connect to the headset.
 3. Scroll down and choose “Unknown Sources”.
 4. Select ALVR in the list.
 
-Make sure that the wifi is connected to RPL-metaverse-5G. You should now see a screen with mountains (before executing the VR interface script, you would see a SteamVR room).
-
-### Now, you are ready to run the simulation script.
-
-On Baymax, open a terminal and point it to the loco_manipulation repo folder. Make sure the ethernet connection to the router is on. Again, this would disrupt your internet access.
-
-In `scripts/draco3_test.py`, you can change the environment from door to kitchen or vice versa.
-
-When you are ready to execute the script, run `python scripts/draco3_test.py` from the root folder of the repo. Make sure the headset is on, put your hands in the initial position, and wait for the scene to start streaming to the headset.
-
-## VR Teleoperation Instructions
-For videos of successful demonstrations, see [here](https://utexas.app.box.com/folder/192681638686?s=fp02b1uhqvucsa1e32xdy3z87d0773k7)
-
-Once you are in the VR environment, these are your controls: 
-
-| Command | Input |
-| --- | --- |
-| Go forward | Y |
-| Go left | B |
-| Go right | Right D-Pad |
-| Turn left | Left Trigger (index finger) |
-| Turn right | Right Trigger (index finger) |
-| Grasp | Left or Right Bumper (middle finger) |
-| Segment sub-task | Left D-Pad |
-| Save Demonstration | Left and Right Trigger at the same time |
-
-You should expect 10 fps or so. It’s pretty slow, so grab your favorite podcast before you start collecting demonstrations. Data collection starts as soon as you can see the scene, and ends when you execute the Save Demonstration command. In order to segment the sub-tasks, you would need to click on the Left D-Pad when the sub-task ends. Both saving and segmentation actions will cause a line to be printed on the console, so position yourself to be able to see the console through the nose gap in the VR headset. 
-
-### Door Environment
-
-First sub-task: walk towards the door, position yourself close to the door facing it, and raise your hand to the handle so that you are ready to grasp it. Push the left D-Pad to segment here. 
-
-Second sub-task: grasp the handle, move your hand down following the arc of the door handle for about 30 degrees, and push the door slightly. You should be close to the door so that pushing the door handle doesn’t cause you to overextend your arm and fall. 
-
-Third sub-task: walk forward and push open the door repeatedly until you have completely crossed the door. It’s hard to tell when you have crossed the threshold, but a good rule of thumb is that if the handle of the open door is somewhat close to you, you are good. 
-
-### Kitchen Environment
-
-First sub-task: Walk towards the pot, position yourself close to the pot facing it (but not too close that it’s awkward to grab it). Don’t do anything with your hands yet. 
-
-Second sub-task: Reach out to the pot handles with both hands. Make sure that both grippers are around the middle of the pot handles before grasping. Lift the pot up with two hands. While keeping the controllers steady, strafe to the left and put the pot down to the stove. Retract hands and make sure to not hit anything. 
-
-Third sub-task: Use the left or right hand to carefully insert the gripper between the pot handle. Grasp it, and slowly position it on top of the pot and put it on.
+Make sure that the headset and laptop are connected to the same wifi. You should now see a screen with mountains (before executing the VR interface script, you would see a SteamVR room).
 
 ## Troubleshooting
 
-1. Don't run 2 versions of the vr script (for example, if you modify the script, put it in a separate repo, and run the modified script before running the original script). When this happens, SteamVR tends to work for a few seconds before crashing. The solution is to restart the laptop and make sure to only run one version of the script. 
-
+1. Don't run 2 versions of the vr script (for example, if you modify the script, put it in a separate repo, and run the modified script before running the original script). When this happens, SteamVR tends to work for a few seconds before crashing. The solution is to restart the laptop and make sure to only run one version of the script.
