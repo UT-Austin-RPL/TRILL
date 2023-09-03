@@ -125,7 +125,7 @@ highlight {
 </style>
 
 <div id="primarycontent">
-<center><h1><strong>Deep Imitation Learning for Humanoid Loco-manipulation through Human Teleoperation</strong></h1></center>
+<center><h1><strong>Deep Imitation Learning for Humanoid Loco-manipulation<br>through Human Teleoperation</strong></h1></center>
 <center><h2>
     <a href="https://mingyoseo.com/">Mingyo Seo</a>&nbsp;&nbsp;&nbsp;
     <a href="https://www.linkedin.com/in/stevehan2001/">Steve Han</a>&nbsp;&nbsp;&nbsp;
@@ -270,15 +270,21 @@ src="./src/figure/pipeline.png" style="width:100%;"> </a></td>
 
 <hr>
 
-<!--
+
 <center><h1>Citation</h1></center>
 <table align=center width=800px>
   <tr>
     <td>
     <pre><code style="display:block; overflow-x: auto">
-      WILL BE ADDED LATER!!
+      @misc{seo2023trill,
+        title={Learning to Walk by Steering: Perceptive Quadrupedal Locomotion 
+          in Dynamic Environments},
+        author={Seo, Mingyo and Han, Steve and Sim, Kyutae and Bang, Seung Hyeon and Gonzalez, Carlos
+          and Sentis, Luis and Zhu, Yuke},
+        year={2023}
+      }
     </code></pre>
     </td>
   </tr>
 </table>
--->
+
