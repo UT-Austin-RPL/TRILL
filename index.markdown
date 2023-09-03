@@ -277,10 +277,10 @@ src="./src/figure/pipeline.png" style="width:100%;"> </a></td>
     <td>
     <pre><code style="display:block; overflow-x: auto">
       @misc{seo2023trill,
-        title={Learning to Walk by Steering: Perceptive Quadrupedal Locomotion 
-          in Dynamic Environments},
-        author={Seo, Mingyo and Han, Steve and Sim, Kyutae and Bang, Seung Hyeon and Gonzalez, Carlos
-          and Sentis, Luis and Zhu, Yuke},
+        title={Deep Imitation Learning for Humanoid Loco-manipulation 
+	  through Human Teleoperation},
+        author={Seo, Mingyo and Han, Steve and Sim, Kyutae and Bang, Seung Hyeon
+	  and Gonzalez, Carlos and Sentis, Luis and Zhu, Yuke},
         year={2023}
       }
     </code></pre>
