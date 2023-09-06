@@ -138,9 +138,7 @@ highlight {
   <h2>
     <a href="https://www.utexas.edu/">The University of Texas at Austin</a>&nbsp;&nbsp;&nbsp;
   </h2>
-  <!--
-  <h2><a href="">Paper</a> | Code (coming soon)</h2>
-  -->
+  <h2><a href="http://arxiv.org/abs/2309.01952">Paper</a> | <a href="https://github.com/UT-Austin-RPL/TRILL">Code</a></h2>
   </center>
 
  <center><p><span style="font-size:20px;"></span></p></center>
@@ -281,6 +279,9 @@ src="./src/figure/pipeline.png" style="width:100%;"> </a></td>
 	  through Human Teleoperation},
         author={Seo, Mingyo and Han, Steve and Sim, Kyutae and Bang, Seung Hyeon
 	  and Gonzalez, Carlos and Sentis, Luis and Zhu, Yuke},
+        eprint={2309.01952},
+        archivePrefix={arXiv},
+        primaryClass={cs.RO}
         year={2023}
       }
     </code></pre>
