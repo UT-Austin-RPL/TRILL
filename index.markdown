@@ -214,7 +214,9 @@ src="./src/figure/pipeline.png" style="width:100%;"> </a></td>
       </tr>
     </tbody>
   </table>
- 
+  <table align=right width=800px><tr><td> <p align="justify" width="20%">
+    Music: <a href="https://soundcloud.com/bergscloud/happy">Happy</a> by <a href="https://soundcloud.com/bergscloud">Happy</a>
+  </p></td></tr></table>
 <hr>
 
 <h1 align="center">Real-robot Deployment</h1>
