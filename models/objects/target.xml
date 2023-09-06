@@ -1,0 +1,30 @@
+<mujoco model="target">
+  <asset>
+    <mesh file="meshes/hand.stl" name="hand_mesh" scale="0.002 0.002 0.002"/>
+    <texture file="../textures/brass-ambra.png" type="cube" name="metal" />
+    <material name="MatMetal" texture="metal" specular="1" shininess="0.3" rgba="0.9 0.9 0.9 1" />
+  </asset>
+  
+  <worldbody>
+    <body>
+      <body name="object">
+        <inertial pos="0 0 0.0005" mass="1." diaginertia="0.4 0.4 0.1"/>
+        <site name="origin" pos="0 0 0" rgba="0 0 0 0" size="0.005"/>
+        <geom name='geom_target_visual' 
+          pos="0 0.0 0.0" size="0.05" type="sphere" 
+          group="1" contype="0" conaffinity="0"
+          rgba="0.9 0.2 0.2 0.1"
+          />
+        <geom name='geom_hand_visual' 
+          pos="0 0.0 0.05" type="mesh" mesh="hand_mesh"
+          group="1" contype="0" conaffinity="0"
+          rgba="0.2 0.2 0.2 0.2"
+          />
+      </body>
+      <site name="bottom_site" pos="0 0 -0.0207" rgba="0 0 0 0" size="0.005"/>
+      <site name="top_site" pos="0 0 0.007" rgba="0 0 0 0" size="0.005"/>
+      <site name="horizontal_radius_site" pos="0 0 0" rgba="0 0 0 0" size="0.003"/>
+    </body>
+
+  </worldbody>
+</mujoco>

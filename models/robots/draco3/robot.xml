@@ -1,0 +1,465 @@
+<mujoco model="draco3">
+
+    <actuator>
+        <motor ctrllimited="true" ctrlrange="-18 18" joint="joint_right_S0" name="torque_right_arm_0"/>
+        <motor ctrllimited="true" ctrlrange="-18 18" joint="joint_right_S1" name="torque_right_arm_1"/>
+        <motor ctrllimited="true" ctrlrange="-18 18" joint="joint_right_S2" name="torque_right_arm_2"/>
+        <motor ctrllimited="true" ctrlrange="-10 10" joint="joint_right_E0" name="torque_right_arm_3"/>
+        <motor ctrllimited="true" ctrlrange="-12 12" joint="joint_right_W0" name="torque_right_arm_4"/>
+        <motor ctrllimited="true" ctrlrange="-8.8 8.8" joint="joint_right_W1" name="torque_right_arm_5"/>
+
+        <motor ctrllimited="true" ctrlrange="-18 18" joint="joint_left_S0" name="torque_left_arm_0"/>
+        <motor ctrllimited="true" ctrlrange="-18 18" joint="joint_left_S1" name="torque_left_arm_1"/>
+        <motor ctrllimited="true" ctrlrange="-18 18" joint="joint_left_S2" name="torque_left_arm_2"/>
+        <motor ctrllimited="true" ctrlrange="-10 10" joint="joint_left_E0" name="torque_left_arm_3"/>
+        <motor ctrllimited="true" ctrlrange="-12 12" joint="joint_left_W0" name="torque_left_arm_4"/>
+        <motor ctrllimited="true" ctrlrange="-8.8 8.8" joint="joint_left_W1" name="torque_left_arm_5"/>
+
+        <motor ctrllimited="true" ctrlrange="-244 244" joint="joint_right_H0" name="torque_right_leg_0"/>
+        <motor ctrllimited="true" ctrlrange="-256 256" joint="joint_right_H1" name="torque_right_leg_1"/>
+        <motor ctrllimited="true" ctrlrange="-259.6 259.6" joint="joint_right_H2" name="torque_right_leg_2"/>
+        <motor ctrllimited="true" ctrlrange="-240.85 240.85" joint="joint_right_N0" name="torque_right_leg_3"/>
+        <motor ctrllimited="true" ctrlrange="-240.85 240.85" joint="joint_right_N2" name="torque_right_leg_4"/>
+        <motor ctrllimited="true" ctrlrange="-244 244" joint="joint_right_A0" name="torque_right_leg_5"/>
+        <motor ctrllimited="true" ctrlrange="-230 230" joint="joint_right_A1" name="torque_right_leg_6"/>
+
+        <motor ctrllimited="true" ctrlrange="-244 244" joint="joint_left_H0" name="torque_left_leg_0"/>
+        <motor ctrllimited="true" ctrlrange="-256 256" joint="joint_left_H1" name="torque_left_leg_1"/>
+        <motor ctrllimited="true" ctrlrange="-259.6 259.6" joint="joint_left_H2" name="torque_left_leg_2"/>
+        <motor ctrllimited="true" ctrlrange="-240.85 240.85" joint="joint_left_N0" name="torque_left_leg_3"/>
+        <motor ctrllimited="true" ctrlrange="-240.85 240.85" joint="joint_left_N2" name="torque_left_leg_4"/>
+        <motor ctrllimited="true" ctrlrange="-244 244" joint="joint_left_A0" name="torque_left_leg_5"/>
+        <motor ctrllimited="true" ctrlrange="-230 230" joint="joint_left_A1" name="torque_left_leg_6"/>
+
+        <motor ctrllimited="true" ctrlrange="-8.8 8.8" joint="joint_head" name="torque_head"/>
+    </actuator>
+
+    <asset>
+        <material name="metal" rgba="0.58 0.58 0.58 1"/>
+        <material name="black" rgba="0.149 0.149 0.149 1"/>
+        <material name="transparent" rgba="1.0 1.0 1.0 0"/>
+
+        <mesh name="mesh_base_viz" file="meshes/torso_link.stl" />
+        <mesh name="mesh_base_col" file="meshes/torso_link.stl" />
+        <mesh name="mesh_head_viz" file="meshes/neck_pitch_link.stl" />
+
+        <mesh name="mesh_left_S0_viz" file="meshes/l_shoulder_fe_link.stl" />
+        <mesh name="mesh_left_S1_viz" file="meshes/l_shoulder_aa_link.stl" />
+        <mesh name="mesh_left_S2_viz" file="meshes/l_shoulder_ie_link.stl" />
+        <mesh name="mesh_left_E0_viz" file="meshes/l_elbow_fe_link.stl" />
+        <mesh name="mesh_left_W0_viz" file="meshes/l_wrist_ps_link.stl" />
+        <mesh name="mesh_left_W2_viz" file="meshes/l_sake_gripper_mount.stl" />
+
+        <mesh name="mesh_right_S0_viz" file="meshes/r_shoulder_fe_link.stl" />
+        <mesh name="mesh_right_S1_viz" file="meshes/r_shoulder_aa_link.stl" />
+        <mesh name="mesh_right_S2_viz" file="meshes/r_shoulder_ie_link.stl" />
+        <mesh name="mesh_right_E0_viz" file="meshes/r_elbow_fe_link.stl" />
+        <mesh name="mesh_right_W0_viz" file="meshes/r_wrist_ps_link.stl" />
+        <mesh name="mesh_right_W2_viz" file="meshes/r_sake_gripper_mount.stl" />
+
+        <mesh name="mesh_left_H0_viz" file="meshes/l_hip_ie_link.stl" />
+        <mesh name="mesh_left_H1_viz" file="meshes/l_hip_aa_link.stl" />
+        <mesh name="mesh_left_H2_viz" file="meshes/l_hip_fe_link.stl" />
+        <mesh name="mesh_left_N0_viz" file="meshes/l_knee_fe_lp.stl" />
+        <mesh name="mesh_left_N1_viz" file="meshes/l_knee_adj_link.stl" />
+        <mesh name="mesh_left_N2_viz" file="meshes/l_knee_fe_ld.stl" />
+        <mesh name="mesh_left_A0_viz" file="meshes/l_ankle_fe_link.stl" />
+        <!-- <mesh name="mesh_left_A1_viz" file="meshes/l_ankle_ie_link_big_foot.stl" /> -->
+        <mesh name="mesh_left_A1_viz" file="meshes/l_ankle_ie_link.stl" />
+
+        <mesh name="mesh_right_H0_viz" file="meshes/r_hip_ie_link.stl" />
+        <mesh name="mesh_right_H1_viz" file="meshes/r_hip_aa_link.stl" />
+        <mesh name="mesh_right_H2_viz" file="meshes/r_hip_fe_link.stl" />
+        <mesh name="mesh_right_N0_viz" file="meshes/r_knee_fe_lp.stl" />
+        <mesh name="mesh_right_N1_viz" file="meshes/r_knee_adj_link.stl" />
+        <mesh name="mesh_right_N2_viz" file="meshes/r_knee_fe_ld.stl" />
+        <mesh name="mesh_right_A0_viz" file="meshes/r_ankle_fe_link.stl" />
+        <!-- <mesh name="mesh_right_A1_viz" file="meshes/r_ankle_ie_link_big_foot.stl" /> -->
+        <mesh name="mesh_right_A1_viz" file="meshes/r_ankle_ie_link.stl" />
+    </asset>
+
+
+    <worldbody>
+        <!-- <body name="base" pos="0 0 0.91"> -->
+        <body name="base" pos="0 0 0">
+            <inertial pos="-0.0310745 -0.000497416 0.137484" mass="6.41443" fullinertia="0.171435 0.175671 0.036373 6.32882e-05 0.0271615 0.000581149"/>
+            <geom name="geom_base_viz" 
+                type="mesh" margin="0.001" mesh="mesh_base_viz" 
+                contype="0" conaffinity="0"  group="1"
+                material="metal"
+                />
+            <joint armature="0" damping="0" limited="false" name="root" pos="0 0 0" stiffness="0" type="free"/>
+
+            <body name="base_com" pos="0 0 0.087484"/>
+
+            <body name="link_right_S0" pos="-0.05 -0.156 0.2625" quat="0.9659258 -0.2588192 0 0">
+                <inertial pos="-0.0825089 0.0272215 6.40505e-05" mass="1.02127" fullinertia="0.003 0.002 0.002 -0.000198378 3.31293e-05 -3.00004e-06"/>
+                <geom name="geom_right_S0_viz" 
+                    type="mesh" margin="0.001" mesh="mesh_right_S0_viz" 
+                    pos="0.05 0.27 -0.15" quat="0.9659258 0.2588192 0 0"
+                    contype="0" conaffinity="0"  group="1"
+                    material="metal"
+                    />
+                <joint limited="true" damping="0" armature="0.01" name="joint_right_S0" type="hinge" pos="0 0 0" axis="0 1 0" range="-2.26893 0.698132" />
+            <body name="link_right_S1" pos="0 0 0" quat="0.9659258 0.2588192 0 0">
+                <inertial pos="0.0189446 0.000135529 0.00688183" mass="0.880498" fullinertia="0.00104194 0.00190054 0.00224159 5.17675e-06 -0.000110264 6.87354e-06"/>
+                <geom name="geom_right_S1_viz"
+                    type="mesh" margin="0.001" mesh="mesh_right_S1_viz" 
+                    pos="0 0 0"
+                    contype="0" conaffinity="0"  group="1"
+                    material="black"
+                    />
+                <joint limited="true" damping="0" armature="0.01" name="joint_right_S1" type="hinge" pos="0 0 0" axis="1 0 0" range="-2.0944 0" />
+            <body name="link_right_S2" pos="0 0 0" quat="1 0 0 0">
+                <inertial pos="-0.00401807 -0.029987 -0.137263" mass="1.21235" diaginertia="0.00490878 0.00459797 0.00207282"/>
+                <geom name="geom_right_S2_viz" 
+                    type="mesh" margin="0.001" mesh="mesh_right_S2_viz" 
+                    pos="0.05 0.15 -0.26"
+                    contype="0" conaffinity="0" group="1"
+                    material="metal"
+                    />
+                <joint limited="true" damping="0" armature="0.01" name="joint_right_S2" type="hinge" pos="0 0 0" axis="0 0 1" range="-1.48353 1.48353" />
+            <body name="link_right_E0" pos="0 0 -0.25" quat="1 0 0 0">
+                <inertial pos="-0.0190443 0 -0.0633779" mass="0.989887" fullinertia="0.00220347 0.00297439 0.0021045 -2.91162e-08 -0.000310918 2.27665e-07"/>
+                <geom name="geom_right_E0_viz"
+                    type="mesh" margin="0.001" mesh="mesh_right_E0_viz" 
+                    contype="0" conaffinity="0"  group="1" 
+                    pos="0.055 0.15 -0.01"
+                    material="black"
+                    />
+                <joint limited="true" damping="0" armature="0.01" name="joint_right_E0" type="hinge" pos="0 0 0" axis="0 1 0" range="-2.0944 0.0872665" />
+            <body name="link_right_W0" pos="0 0 0" quat="1 0 0 0">
+                <inertial pos="0.000229308 0.0158433 -0.154481" mass="0.64434" diaginertia="0.001 0.001 0.001"/>
+                <geom name="geom_right_W0_viz"
+                    type="mesh" margin="0.001" mesh="mesh_right_W0_viz" 
+                    contype="0" conaffinity="0" group="1" 
+                    pos="0.05 0.15 0"
+                    material="black" 
+                    />
+                <joint limited="true" damping="0" armature="0.01" name="joint_right_W0" type="hinge" pos="0 0 0" axis="0 0 1" range="-1.5708 1.5708" />
+            <body name="link_right_W1" pos="0 -0.005 -0.1478" quat="1 0 0 0">
+                <inertial pos="0 0 0" mass="1e-9" diaginertia="1e-9 1e-9 1e-9"/>
+                <joint limited="true" damping="0" armature="0.01" name="joint_right_W1" type="hinge" pos="0 0 0" axis="0 1 0" range="-1.5708 1.5708" />
+            <body name="link_right_W2" pos="0 0 0" quat="1 0 0 0">
+                <inertial pos="5.4498e-05 0.000382544 -0.0372594" mass="0.145" diaginertia="0.001 0.0004628 0.001"/>
+                <geom name="geom_right_W2_viz"
+                    type="mesh" margin="0.001" mesh="mesh_right_W2_viz" 
+                    contype="0" conaffinity="0" group="1"
+                    pos="0 0 0" quat="0 0 0.707107 -0.707107"
+                    material="metal" 
+                    />
+
+            <body name="right_eef" pos="0 0 -0.053" quat="0 1 0 0">
+                <body name="right_mount" quat="-0.707107 0 0 0.707107"/>
+                <body name="right_hand" pos="0 0 -0.073"/>
+            </body>
+
+            </body>
+            </body>
+            </body>
+            </body>
+            </body>
+            </body>
+            </body>
+
+
+            <body name="link_left_S0" pos="-0.05 0.156 0.2625" quat="0.9659258 0.2588192 0 0">
+                <inertial pos="-0.0270089 -0.0272215 0" mass="1.02127" fullinertia="0.003 0.002 0.002 0.000188 -1.077e-04 -4.214e-07"/>
+                <geom name="geom_left_S0_viz" 
+                    type="mesh" margin="0.001" mesh="mesh_left_S0_viz" 
+                    contype="0" conaffinity="0" group="1" 
+                    pos="0.05 -0.27 -0.15" quat="0.9659258 -0.2588192 0 0"
+                    material="metal"
+                    />
+                <joint limited="true" damping="0" armature="0.01" name="joint_left_S0" type="hinge" pos="0 0 0" axis="0 1 0" range="-2.26893 0.698132" />
+            <body name="link_left_S1" pos="0 0 0" quat="0.9659258 -0.2588192 0 0">
+                <inertial pos="0.0189446 0.000135529 0.00688183" mass="0.880498" fullinertia="0.00104194 0.00190054 0.00224159 5.17675e-06 -0.000110264 6.87354e-06"/>
+                <geom name="geom_left_S1_viz" 
+                    type="mesh" margin="0.001" mesh="mesh_left_S1_viz" 
+                    contype="0" conaffinity="0"  group="1" 
+                    pos="0 0 0"
+                    material="black" 
+                    />
+                <joint limited="true" damping="0" armature="0.01" name="joint_left_S1" type="hinge" pos="0 0 0" axis="1 0 0" range="0 2.0944" />
+            <body name="link_left_S2" pos="0 0 0" quat="1 0 0 0">
+                <inertial pos="-0.00401807 0.0300008 -0.137263" mass="1.21235" diaginertia="0.00490878 0.00459797 0.00207282"/>
+                <geom name="geom_left_S2_viz" 
+                    type="mesh" margin="0.001" mesh="mesh_left_S2_viz"
+                    contype="0" conaffinity="0"  group="1" 
+                    pos="0.05 -0.15 -0.26"
+                    material="metal"
+                    />
+                <joint limited="true" damping="0" armature="0.01" name="joint_left_S2" type="hinge" pos="0 0 0" axis="0 0 1" range="-1.48353 1.48353" />
+            <body name="link_left_E0" pos="0 0 -0.25" quat="1 0 0 0">
+                <inertial pos="-0.0190443 0 -0.0633779" mass="0.989887" fullinertia="0.00220347 0.00297439 0.0021045 -2.91162e-08 -0.000310918 2.27665e-07"/>
+                <geom name="geom_left_E0_viz"
+                    type="mesh" margin="0.001" mesh="mesh_left_E0_viz"
+                    contype="0" conaffinity="0"  group="1" 
+                    pos="0.055 -0.15 -0.01"
+                    material="black" 
+                    />
+                <joint limited="true" damping="0" armature="0.01" name="joint_left_E0" type="hinge" pos="0 0 0" axis="0 1 0" range="-2.0944 0.0872665" />
+            <body name="link_left_W0" pos="0 0 0" quat="1 0 0 0">
+                <inertial pos="0.000433726 0.0158433 -0.154" mass="0.64434" diaginertia="0.001 0.001 0.001"/>
+                <geom name="geom_left_W0_viz" 
+                    type="mesh" margin="0.001" mesh="mesh_left_W0_viz"
+                    contype="0" conaffinity="0"  group="1" 
+                    pos="0.05 -0.15 0"
+                    material="black" 
+                    />
+                <joint limited="true" damping="0" armature="0.01" name="joint_left_W0" type="hinge" pos="0 0 0" axis="0 0 1" range="-1.5708 1.5708" />
+            <body name="link_left_W1" pos="0 0.005 -0.1478" quat="1 0 0 0">
+                <inertial pos="0 0 0" mass="1e-9" diaginertia="1e-9 1e-9 1e-9"/>
+                <joint limited="true" damping="0" armature="0.01" name="joint_left_W1" type="hinge" pos="0 0 0" axis="0 1 0" range="-1.5708 1.5708" />
+            <body name="link_left_W2" pos="0 0 0" quat="1 0 0 0">
+                <inertial pos="5.4498e-05 0.000382544 -0.0372594" mass="0.145" diaginertia="0.001 0.0004628 0.001"/>
+                <geom name="geom_left_W2_viz"
+                    type="mesh" margin="0.001" mesh="mesh_left_W2_viz" 
+                    contype="0" conaffinity="0" group="1" 
+                    pos="0 0 0" quat="0 0 0.707107 -0.707107"
+                    material="metal"
+                    />
+
+            <body name="left_eef" pos="0 0 -0.053" quat="0 1 0 0">
+                <body name="left_mount" quat="0.707107 0 0 0.707107"/>
+                <body name="left_hand" pos="0 0 -0.073"/>
+            </body>
+
+            </body>
+            </body>
+            </body>
+            </body>
+            </body>
+            </body>
+            </body>
+
+
+            <body name="link_right_H0" pos="0 -0.06 -0.0893782" quat="0.9659258 -0.2588192 0 0">
+                <inertial pos="-0.00699855 -0.00580214 -0.0245826" mass="0.139743" fullinertia="0.00010725 0.000199571 0.00015888 6.29131e-06 5.03369e-06 2.59816e-07"/>
+                <geom name="geom_right_H0_viz"
+                    type="mesh" margin="0.001" mesh="mesh_right_H0_viz" 
+                    contype="0" conaffinity="0" group="1"  
+                    material="black" 
+                    pos="0 0 0" quat="1 0 0 0"
+                    />
+                <joint limited="true" damping="0" armature="0.01" name="joint_right_H0" type="hinge" pos="0 0 0" axis="0 0 1" range="-0.872665 0.872665"/>
+
+            <body name="link_right_H1" pos="0 0 -0.07" quat="0.9659258 0.2588192 0 0">
+                <inertial pos="-0.000513526 -0.0019221 -0.00112805" mass="0.849423" fullinertia="0.001 0.001 0.001 -1.93711e-05 1.45347e-06 -2.96392e-05"/>
+                <geom name="geom_right_H1_viz"
+                    type="mesh" margin="0.001" mesh="mesh_right_H1_viz" 
+                    contype="0" conaffinity="0" group="1" 
+                    pos="0.0 0.1 0.15" quat="1 0 0 0"
+                    material="metal" 
+                    />
+                <joint limited="true" damping="0" armature="0.01" name="joint_right_H1" type="hinge" pos="0 0 0" axis="1 0 0" range="-0.785398 0.261799"/>
+
+            <body name="link_right_H2" pos="0 0 0" quat="1 0 0 0">
+                <inertial pos="0.00121565 -0.000254558 -0.171535" mass="4.983" fullinertia="0.057 0.063 0.015 -0.0003353 0.001 -0.004"/>
+                <geom name="geom_right_H2_viz"
+                    type="mesh" margin="0.001" mesh="mesh_right_H2_viz" 
+                    contype="0" conaffinity="0" group="1"
+                    pos="0.0 0.1 0.15" quat="1 0 0 0"
+                    material="metal"
+                    />
+                <joint limited="true" damping="0" armature="0.01" name="joint_right_H2" type="hinge" pos="0 0 0" axis="0 1 0" range="-1.52716 0.523599"/>
+
+            <body name="link_right_N0" pos="0 0 -0.324231" quat="1 0 0 0">
+                <inertial pos="4.28378e-09 -0.000374047 -0.0259832" mass="0.152083" fullinertia="0.00048051 0.000329965 0.000282787 4.75046e-11 -3.71034e-11 2.06816e-05"/>
+                <!-- <inertial pos="4.28378e-09 -0.000374047 -0.0259832" mass="0.152083" fullinertia="0.001 0.000343441 0.000321184 4.75046e-11 -3.71034e-11 2.06816e-05"/> -->
+                <geom name="geom_right_N0_viz"
+                    type="mesh" margin="0.001" mesh="mesh_left_N0_viz"
+                    contype="0" conaffinity="0"  group="1" 
+                    pos="0.005 0.1 0.47" quat="0 0 0 1"
+                    material="black" 
+                    />
+                <joint limited="true" damping="0" armature="0.01" name="joint_right_N0" type="hinge" pos="0 0 0" axis="0 1 0" range="-0.0872665 1.52716"/>
+
+                <body name="link_right_N1" pos="0 0 -0.0557693" quat="1 0 0 0">
+                    <inertial pos="0 -0.006 -0.0323676" mass="0.090042" diaginertia="0.000230283 7.20839e-05 0.000195694"/>
+                    <geom name="geom_right_N1_viz"
+                        type="mesh" margin="0.001" mesh="mesh_right_N1_viz" 
+                        contype="0" conaffinity="0" group="1" 
+                        pos="0 0 0" quat="1 0 0 0"
+                        material="metal" 
+                        />
+                </body>
+
+            <body name="link_right_N2" pos="0 0 -0.1115386" quat="1 0 0 0">
+                <inertial pos="0.00392246 -0.00238405 -0.07941" mass="2.55664" fullinertia="0.011 0.013 0.005 -0.000259001 0.000169 -0.001"/>
+                <geom name="geom_right_N2_viz"
+                    type="mesh" margin="0.001" mesh="mesh_right_N2_viz" 
+                    contype="0" conaffinity="0" group="1" 
+                    pos="0 0.1 0.59" quat="1 0 0 0"
+                    material="black" 
+                    />
+                <joint limited="true" damping="0" armature="0.01" name="joint_right_N2" type="hinge" pos="0 0 0" axis="0 1 0" range="-0.0872665 1.52716"/>
+
+            <body name="link_right_A0" pos="0 -0.00599 -0.248231" quat="1 0 0 0">
+                <inertial pos="2.67715e-05 -0.0277455 -0.000699218" mass="0.183143" fullinertia="8.90758e-05 5.81098e-05 0.000101604 -2.90654e-07 -2.26413e-06 -1.95082e-07"/>
+                <geom name="geom_right_A0_viz"
+                    type="mesh" margin="0.001" mesh="mesh_right_A0_viz" 
+                    contype="0" conaffinity="0" group="1" 
+                    pos="0 0.105 0.83" quat="1 0 0 0"
+                    material="metal" 
+                    />
+                <joint limited="true" damping="0" armature="0.01" name="joint_right_A0" type="hinge" pos="0 0 0" axis="0 1 0" range="-1.5708 1.0472"/>
+
+            <body name="link_right_A1" pos="0 0 0" quat="1 0 0 0">
+                <inertial pos="-0.00320518 0.0068186 -0.0444808" mass="0.436553" fullinertia="0.000962376 0.00165909 0.00108264 2.58627e-05 0.000122026 -0.000188621"/>
+                <geom name="geom_right_A1_viz"
+                    type="mesh" margin="0.001" mesh="mesh_right_A1_viz" 
+                    contype="0" conaffinity="0" group="1" 
+                    pos="0.01 0.11 0.835" quat="1 0 0 0"
+                    material="metal" 
+                    />
+                <geom name="geom_right_A1_col"
+                    type="box" size="0.125 0.075 0.0295" 
+                    group="0"
+                    pos="0 0.005 -0.046"
+                    friction="1.5"
+                    solimp="0.95 0.99 0.001" solref="0.004 1" priority="1"
+                    />
+                <joint limited="true" damping="0" armature="0.01" name="joint_right_A1" type="hinge" pos="0 0 0" axis="1 0 0" range="-0.261799 0.785398"/>
+
+            <body name="right_foot" pos="0 0 -0.076" quat="1 0 0 0">
+            </body>
+
+            </body>
+            </body>
+            </body>
+            </body>
+            </body>
+            </body>
+            </body>
+
+
+            <body name="link_left_H0" pos="0 0.06 -0.0893782" quat="0.9659258 0.2588192 0 0">
+                <inertial pos="-0.00699855 0.00580214 -0.0245826" mass="0.139743" fullinertia="0.00010725 0.000199571 0.00015888 -6.29131e-06 5.03369e-06 -2.59816e-07"/>
+                <geom name="geom_left_H0_viz"
+                    type="mesh" margin="0.001" mesh="mesh_left_H0_viz"
+                    contype="0" conaffinity="0" group="1" 
+                    pos="0 0 0" quat="1 0 0 0"
+                    material="black" 
+                    />
+                <joint limited="true" damping="0" armature="0.01" name="joint_left_H0" type="hinge" pos="0 0 0" axis="0 0 1" range="-0.872665 0.872665"/>
+
+            <body name="link_left_H1" pos="0 0 -0.07" quat="0.9659258 -0.2588192 0 0">
+                <inertial pos="0.00107664 0.00164809 -0.00149004" mass="0.77975" fullinertia="0.001 0.001 0.001 1.93711e-05 -1.45347e-06 2.96392e-05"/>
+                <geom name="geom_left_H1_viz" 
+                    type="mesh" margin="0.001" mesh="mesh_left_H1_viz" 
+                    contype="0" conaffinity="0" group="1" 
+                    pos="0.0 -0.1 0.15" quat="1 0 0 0"
+                    material="metal" 
+                    />
+                <joint limited="true" damping="0" armature="0.01" name="joint_left_H1" type="hinge" pos="0 0 0" axis="1 0 0" range="-0.261799 0.785398"/>
+
+            <body name="link_left_H2" pos="0 0 0" quat="1 0 0 0">
+                <inertial pos="0.00057 -0.00303734 -0.164021" mass="4.549" fullinertia="0.0497956 0.0552997 0.0129964 0.000306806 0.000744022 0.00394109"/>
+                <geom name="geom_left_H2_viz" 
+                    type="mesh" margin="0.001" mesh="mesh_left_H2_viz"
+                    contype="0" conaffinity="0" group="1"
+                    pos="0.0 -0.1 0.15" quat="1 0 0 0"
+                    material="metal" 
+                    />
+                <joint limited="true" damping="0" armature="0.01" name="joint_left_H2" type="hinge" pos="0 0 0" axis="0 1 0" range="-1.52716 0.523599"/>
+
+            <body name="link_left_N0" pos="0 0 -0.324231" quat="1 0 0 0">
+                <inertial pos="-4.80156e-09 0.00425279 -0.0291238" mass="0.135683" fullinertia="0.00048051 0.000329965 0.000282787 4.39106e-11 3.91495e-11 -3.71846e-05"/>
+                <geom name="geom_left_N0_viz" 
+                    type="mesh" margin="0.001" mesh="mesh_left_N0_viz"
+                    contype="0" conaffinity="0" group="1"
+                    pos="0.005 -0.1 0.47" quat="1 0 0 0"
+                    material="black" 
+                    />
+                <joint limited="true" damping="0" armature="0.01" name="joint_left_N0" type="hinge" pos="0 0 0" axis="0 1 0" range="-0.0872665 1.52716"/>
+
+                <body name="link_left_N1" pos="0 0 -0.0557693" quat="1 0 0 0">
+                    <inertial pos="0 0.006 -0.0323676" mass="0.090042" diaginertia="0.000230283 7.20839e-05 0.000195694"/>
+                    <geom name="geom_left_N1_viz"
+                        type="mesh" margin="0.001" mesh="mesh_left_N1_viz"
+                        contype="0" conaffinity="0" group="1" 
+                        pos="0 0 0" quat="1 0 0 0"
+                        material="metal"
+                        />
+                </body>
+
+            <body name="link_left_N2" pos="0 0 -0.1115386" quat="1 0 0 0">
+                <inertial pos="0.00392246 0.00238405 -0.07941" mass="2.55664" fullinertia="0.011 0.013 0.005 -0.000259001 -0.000169 0.001"/>
+                <geom name="geom_left_N2_viz"
+                    type="mesh" margin="0.001" mesh="mesh_left_N2_viz" 
+                    contype="0" conaffinity="0" group="1"
+                    pos="0 -0.1 0.59" quat="1 0 0 0"
+                    material="black" 
+                    />
+                <joint limited="true" damping="0" armature="0.01" name="joint_left_N2" type="hinge" pos="0 0 0" axis="0 1 0" range="-0.0872665 1.52716"/>
+
+            <body name="link_left_A0" pos="0 0.006 -0.248231" quat="1 0 0 0">
+                <inertial pos="2.67715e-05 0.0277455 -0.000699218" mass="0.183143" fullinertia="8.90758e-05 5.81098e-05 0.000101604 2.90654e-07 -2.26413e-06 1.95082e-07"/>
+                <geom name="geom_left_A0_viz"
+                    type="mesh" margin="0.001" mesh="mesh_left_A0_viz"
+                    contype="0" conaffinity="0"  group="1"
+                    pos="0 -0.105 0.83" quat="1 0 0 0"
+                    material="metal" 
+                    />
+                <joint limited="true" damping="0" armature="0.01" name="joint_left_A0" type="hinge" pos="0 0 0" axis="0 1 0" range="-1.5708 1.0472"/>
+
+            <body name="link_left_A1" pos="0 0 0" quat="1 0 0 0">
+                <inertial pos="-0.00320518 -0.0068186 -0.0444808" mass="0.436553" fullinertia="0.000962376 0.00165909 0.00108264 -2.58627e-05 0.000122026 0.000188621"/>
+                <geom name="geom_left_A1_viz"
+                    type="mesh" margin="0.001" mesh="mesh_left_A1_viz" 
+                    contype="0" conaffinity="0" group="1"
+                    pos="0.01 -0.11 0.835" quat="1 0 0 0"
+                    material="metal" 
+                    />
+                <geom name="geom_left_A1_col"
+                    type="box" size="0.125 0.075 0.0295"
+                    group="0"
+                    pos="0 -0.005 -0.046"
+                    friction="1.5"
+                    solimp="0.95 0.99 0.001" solref="0.004 1" priority="1"
+                    />
+                <joint limited="true" damping="0" armature="0.01" name="joint_left_A1" type="hinge" pos="0 0 0" axis="1 0 0" range="-0.785398 0.261799"/>
+
+            <body name="left_foot" pos="0 0 -0.076" quat="1 0 0 0">
+            </body>
+
+            </body>
+            </body>
+            </body>
+            </body>
+            </body>
+            </body>
+            </body>
+
+            <body name="head" pos="-0.0025 0 0.352">
+                <inertial pos="0.0133603 -0.00105814 0.0772145" mass="1.22948" fullinertia="0.00233791 0.00192287 0.00275375 -2.09082e-05 -0.000158016 -9.56707e-05"/>
+                <geom name="geom_head_viz" 
+                    type="mesh" margin="0.001" mesh="mesh_head_viz"
+                    contype="0" conaffinity="0" group="1"
+                    pos="0 0 -0.35"
+                    material="black"
+                    />
+                <geom name="geom_head_col" 
+                    type="box" margin="0.001" size="0.05 0.06 0.03"
+                    group="0"
+                    pos="0.02 0.0 0.085"
+                    />
+                <joint limited="true" damping="0" armature="0.01" name="joint_head" type="hinge" pos="0 0 0" axis="0 1 0" range="-0.523599 1.309" />
+
+                <!-- robot view -->
+                <camera mode="fixed" fovy="120" name="robotright" pos="0.065 0.03 0.1" quat="-0.5 -0.5 0.5 0.5"/>
+                <camera mode="fixed" fovy="120" name="robotleft" pos="0.065 -0.03 0.1" quat="-0.5 -0.5 0.5 0.5"/>
+                <camera mode="fixed" fovy="120" name="robotview" pos="0.025 0 0.0" quat="-0.5 -0.5 0.5 0.5"/>
+                <camera mode="fixed" fovy="120" name="replayview" pos="0.025 0 0.0" quat="0.5 -0.5 -0.5 0.5"/>
+            </body>
+
+        </body>
+    </worldbody>
+
+    <equality>
+        <joint joint1="joint_right_N0" joint2="joint_right_N2" polycoef="0 1 0 0 0"/>
+        <joint joint1="joint_left_N0" joint2="joint_left_N2" polycoef="0 1 0 0 0"/>
+	</equality>
+
+</mujoco>

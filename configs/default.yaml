@@ -1,0 +1,394 @@
+Simulation:
+
+  Verbose: false
+  Save Data: true
+  Save Frequency: 1
+  Control Period: 0.01
+
+  Initial State:
+    Body Pos:
+      - 0.0
+      - 0.0
+      - 0.743
+    Body Quat:
+      - 0.0
+      - 0.0
+      - 0.0
+      - 1.0
+    Joint Pos:
+      # Upper Body
+      l_shoulder_fe: 0.0
+      l_shoulder_aa: 0.52360
+      l_shoulder_ie: 0.0
+      l_elbow_fe: -1.5708
+      l_wrist_ps:   0.0
+      l_wrist_pitch: 0.0
+
+      r_shoulder_fe: 0.0
+      r_shoulder_aa: -0.52360
+      r_shoulder_ie: 0.0
+      r_elbow_fe: -1.5708
+      r_wrist_ps:  0.0
+      r_wrist_pitch: 0.0
+
+      # Lower Body
+      l_hip_ie: 0.0
+      l_hip_aa: 0.087266
+      l_hip_fe: -0.78540
+      l_knee_fe_jp: 0.78540
+      l_knee_fe_jd: 0.78540
+      l_ankle_fe: -0.78540
+      l_ankle_ie: -0.087266
+
+      r_hip_ie: 0.0
+      r_hip_aa: -0.087266
+      r_hip_fe: -0.78540
+      r_knee_fe_jp: 0.78540
+      r_knee_fe_jd: 0.78540
+      r_ankle_fe: -0.78540
+      r_ankle_ie: 0.087266
+    Aux Pos:
+      neck_pitch: 0.0
+
+
+Action:
+
+  Map:
+    locomotion:
+      0: balance
+      1: walk_forward
+      2: walk_backward
+      3: sidewalk_left
+      4: sidewalk_right
+      5: turning_left
+      6: turning_right
+      7: balance
+    aux:
+      neck:
+        0: forward
+        1: down
+        2: up
+      
+    gripper:
+      left:
+        0: release
+        1: grasp
+      right:
+        0: release
+        1: grasp
+  
+  Default:
+    locomotion: 0
+    trajectory:
+      left_pos:
+        - 0.22
+        - 0.25
+        - 0.1
+      left_quat:
+        - -0.02
+        - 0.73
+        - -0.05
+        - -0.68
+      right_pos:
+        - 0.22
+        - -0.25
+        - 0.1
+      right_quat:
+        - 0.02
+        - 0.76
+        - 0.04
+        - -0.64
+    aux:
+      neck: 0
+    gripper:
+      left: 0
+      right: 0
+
+
+Gripper Control:
+  Action:
+    left:
+      grasp: 0.33
+      release: -0.33
+    right:
+      grasp: 0.33
+      release: -0.33
+  Gain:
+    left:
+      kp: 5.0e+4
+      kd: 1.0e+3
+    right:
+      kp: 5.0e+4
+      kd: 1.0e+3
+
+
+Aux Control:
+  Action:
+    neck:
+      forward: 
+        neck_pitch: 0.0
+      down: 
+        neck_pitch: 0.3
+      up: 
+        neck_pitch: -0.3
+  Gain:
+    kp:
+      neck_pitch: 10.0
+    kd:
+      neck_pitch: 2.0
+
+
+Whole-Body Contol:
+  RF Z Max: 1000.0
+
+  # Task Hierarchy Weights
+  Hierarchy:
+    COM: 20.0
+    CAM: 2.0
+    # CAM: 0.0
+    Torso: 40.0
+    Upper Body: 0.1
+    Hand Pos Min: 2.0e-0
+    Hand Pos Max: 10.0e-0
+    Hand Quat Min: 2.0e-0
+    Hand Quat Max: 10.0e-0
+    Contact Foot: 60.0
+    Swing Foot: 40.0
+
+  # Task Gains
+  kp:
+    COM:
+      - 400.0
+      - 400.0
+      - 400.0
+    CAM:
+      - 0.0
+      - 0.0
+      - 0.0
+    Torso:
+      - 100.0
+      - 100.0
+      - 100.0
+    Upper Body:
+      - 20.0
+      - 50.0
+      - 50.0
+      - 50.0
+      - 25.0
+      - 20.0
+      - 20.0
+      - 50.0
+      - 50.0
+      - 50.0
+      - 25.0
+      - 20.0
+      - 20.0
+    Hand Pos:
+      - 400.0
+      - 400.0
+      - 400.0
+    Hand Quat:
+      - 250.0
+      - 250.0
+      - 250.0
+    Foot Pos:
+      - 300.0
+      - 300.0
+      - 300.0
+    Foot Quat:
+      - 300.0
+      - 300.0
+      - 300.0
+
+  kd:
+    COM:
+      - 20.0
+      - 20.0
+      - 20.0
+    CAM:
+      # - 0.0
+      # - 0.0
+      # - 0.0
+      - 10.0
+      - 10.0
+      - 10.0
+    Torso:
+      - 10.0
+      - 10.0
+      - 10.0
+    Upper Body:
+      - 8.0
+      - 20.0
+      - 20.0
+      - 20.0
+      - 12.0
+      - 8.0
+      - 8.0
+      - 20.0
+      - 20.0
+      - 20.0
+      - 12.0
+      - 8.0
+      - 8.0
+    Hand Pos:
+      - 60.0
+      - 60.0
+      - 60.0
+    Hand Quat:
+      - 10.0
+      - 10.0
+      - 10.0
+    Foot Pos:
+      - 30.0
+      - 30.0
+      - 30.0
+    Foot Quat:
+      - 30.0
+      - 30.0
+      - 30.0
+
+  # Regularization terms
+  Reguralization:
+    Q ddot: 1.0e-8
+    RF: 1.0e-7
+
+  Use Torque Limit: false
+
+  # Integration Parameters
+  Integration:
+    Cutoff Frequency:
+      Joint Vel: 2.0  #Hz
+      Joint Pos: 1.0  #Hz
+    Joint Pos Error Max: 0.2  #Radians
+
+
+Walking:
+
+  Duration:
+    # INIT_STAND_DUR: 1.0
+    Initial Stand: 0.1
+    Additional Inititial Transfer: 0.  # sec
+    Contact Trans: 1.0
+    Swing: 1.0
+    RF Z Max: 0.05
+
+  Percentage Settle: 0.9
+  Alpha DS: 0.5
+
+  ## !! This will be overwritten in main !! ##
+  Initial Motion:
+    COM Height: 0.65  # m
+    Swing Height: 0.04  # m
+    Footwidth: 0.28
+    Forward Step: 0.2
+    Backward Step: -0.2
+    Trun Angle: 0.31416
+    Strafe Distance: 0.10
+
+
+Manipulation:
+
+  Workspace:
+    LH Min:
+    - 0.25
+    - -0.10
+    - -0.2
+    LH Max:
+    - 0.50
+    - 0.45
+    - 0.4
+    RH Min:
+    - 0.25
+    - -0.45
+    - -0.2
+    RH Max:
+    - 0.50
+    - 0.10
+    - 0.4
+
+  Duration:
+    Returning Trans: 0.1
+    Reaching Trans: 0.1
+    Reaching: 0.01
+
+  Hand Velocity Max: 10.
+  Trajectory Mode: interpolation
+
+  Initial Target:
+    LH Pos:
+      - 0.26
+      - 0.18
+      - 0.07
+    LH Quat:
+      - -0.02
+      - 0.73
+      - -0.05
+      - -0.68
+    RH Pos:
+      - 0.26
+      - -0.18
+      - 0.06
+    RH Quat:
+      - 0.02
+      - 0.76
+      - 0.04
+      - -0.64
+  
+
+Joint-Space Control:
+  kp:
+    l_hip_ie: 1.0
+    l_hip_aa: 1.0
+    l_hip_fe: 1.0
+    l_knee_fe_jp: 1.0
+    l_knee_fe_jd: 1.0
+    l_ankle_fe: 1.0
+    l_ankle_ie: 1.0
+    l_shoulder_fe: 1.0
+    l_shoulder_aa: 1.0
+    l_shoulder_ie: 1.0
+    l_elbow_fe: 1.0
+    l_wrist_ps: 1.0
+    l_wrist_pitch: 1.0
+    neck_pitch: 1.0
+    r_hip_ie: 1.0
+    r_hip_aa: 1.0
+    r_hip_fe: 1.0
+    r_knee_fe_jp: 1.0
+    r_knee_fe_jd: 1.0
+    r_ankle_fe: 1.0
+    r_ankle_ie: 1.0
+    r_shoulder_fe: 1.0
+    r_shoulder_aa: 1.0
+    r_shoulder_ie: 1.0
+    r_elbow_fe: 1.0
+    r_wrist_ps: 1.0
+    r_wrist_pitch: 1.0
+  kd:
+    l_hip_ie: 0.0
+    l_hip_aa: 0.0
+    l_hip_fe: 0.0
+    l_knee_fe_jp: 0.0
+    l_knee_fe_jd: 0.0
+    l_ankle_fe: 0.0
+    l_ankle_ie: 0.0
+    l_shoulder_fe: 0.0
+    l_shoulder_aa: 0.0
+    l_shoulder_ie: 0.0
+    l_elbow_fe: 0.0
+    l_wrist_ps: 0.0
+    l_wrist_pitch: 0.0
+    neck_pitch: 0.0
+    r_hip_ie: 0.0
+    r_hip_aa: 0.0
+    r_hip_fe: 0.0
+    r_knee_fe_jp: 0.0
+    r_knee_fe_jd: 0.0
+    r_ankle_fe: 0.0
+    r_ankle_ie: 0.0
+    r_shoulder_fe: 0.0
+    r_shoulder_aa: 0.0
+    r_shoulder_ie: 0.0
+    r_elbow_fe: 0.0
+    r_wrist_ps: 0.0
+    r_wrist_pitch: 0.0

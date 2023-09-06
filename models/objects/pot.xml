@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- from https://github.com/vikashplus/mj_envs/tree/master/mj_envs/hand_manipulation_suite/assets -->
+<!-- Information about door can be found in this paper: https://arxiv.org/pdf/1709.10087.pdf -->
+
+<mujoco model="microwave">
+  <asset>
+    <texture file="../textures/light-wood.png" type="cube" name="light-wood" />
+    <texture file="../textures/steel-brushed.png" type="cube" name="steel" />
+    <material name="MatSteel" texture="steel" specular="1" shininess="0.3" rgba="0.9 0.9 0.9 1" />
+    <!-- <material name="MatSteel" rgba="0.8 0.8 0.8 1" /> -->
+    <material name="MatLightWood" texture="light-wood" texrepeat="3 3" specular="0.4" shininess="0.1" />
+    <!-- <material name="MatLightWood" rgba="0.2 0.2 0.2 1" /> -->
+  </asset>
+    
+  <worldbody>
+    <body>
+      <body name="object">
+        <inertial pos="0 0 0" mass="0.1" diaginertia="0.00052 0.00052 0.001"/>
+        <site name="origin" pos="0 0 0" rgba="0 0 0 0" size="0.005"/>
+
+        <geom name="geom_bottom_visual" 
+          pos="0 0 0.005"
+          size="0.1 0.005" type="cylinder" 
+          group="1" contype="0" conaffinity="0"
+	  material="MatSteel" 
+          />
+
+        <geom name="geom_bottom" 
+          pos="0 0 0.005"
+          size="0.1 0.1 0.005" type="box" 
+	  group="0"
+	  friction="1 1 1"
+	  rgba="0 0 0 0"
+	  />
+
+        <geom name="geom_wall1_visual"
+          pos="0.095 0 0.05"
+          size="0.005 0.0414214 0.05" type="box" 
+          group="1" contype="0" conaffinity="0"
+          material="MatSteel"
+          />
+        <geom name="geom_wall2_visual" 
+          pos="-0.095 0 0.05"
+          size="0.005 0.0414214 0.05" type="box" 
+          group="1" contype="0" conaffinity="0"
+          material="MatSteel"
+          />
+        <geom name="geom_wall3_visual"
+          pos="0 0.095 0.05" quat="0.707107 0 0 0.707107"
+          size="0.005 0.0414214 0.05" type="box" 
+          group="1" contype="0" conaffinity="0"
+          material="MatSteel"
+          />
+        <geom name="geom_wall4_visual"
+          pos="0 -0.095 0.05" quat="0.707107 0 0 0.707107"
+          size="0.005 0.0414214 0.05" type="box" 
+          group="1" contype="0" conaffinity="0"
+          material="MatSteel"
+          />
+        <geom name="geom_wall5_visual"
+          pos="0.0671751 0.0671751 0.05" quat="0.923880 0 0 0.382683"
+          size="0.005 0.0414214 0.05" type="box" 
+          group="1" contype="0" conaffinity="0"
+          material="MatSteel"
+          />
+        <geom name="geom_wall6_visual"
+          pos="-0.0671751 -0.0671751 0.05" quat="0.923880 0 0 0.382683"
+          size="0.005 0.0414214 0.05" type="box" 
+          group="1" contype="0" conaffinity="0"
+          material="MatSteel"
+          />
+        <geom name="geom_wall7_visual"
+          pos="-0.0671751 0.0671751 0.05" quat="0.382683 0 0 0.923880"
+          size="0.005 0.0414214 0.05" type="box" 
+          group="1" contype="0" conaffinity="0"
+          material="MatSteel"
+          />
+        <geom name="geom_wall8_visual"
+          pos=" 0.0671751 -0.0671751 0.05" quat="0.382683 0 0 0.923880"
+          size="0.005 0.0414214 0.05" type="box" 
+          group="1" contype="0" conaffinity="0"
+          material="MatSteel"
+          />
+
+        <geom name="geom_wall1" 
+          pos="0.095 0 0.055"
+          size="0.005 0.0414214 0.045" type="box" 
+          group="0"
+          rgba="0 0 0 0"
+          />
+        <geom name="geom_wall2" 
+          pos="-0.095 0 0.055"
+          size="0.005 0.0414214 0.045" type="box" 
+          group="0"
+          rgba="0 0 0 0"
+          />
+        <geom name="geom_wall3" 
+          pos="0 0.095 0.055" quat="0.707107 0 0 0.707107"
+          size="0.005 0.0414214 0.045" type="box" 
+          group="0"
+          rgba="0 0 0 0"
+          />
+        <geom name="geom_wall4" 
+          pos="0 -0.095 0.055" quat="0.707107 0 0 0.707107"
+          size="0.005 0.0414214 0.045" type="box" 
+          group="0"
+          rgba="0 0 0 0"
+          />
+        <geom name="geom_wall5" 
+          pos="0.0671751 0.0671751 0.055" quat="0.923880 0 0 0.382683"
+          size="0.005 0.0414214 0.045" type="box" 
+          group="0"
+          rgba="0 0 0 0"
+          />
+        <geom name="geom_wall6" 
+          pos="-0.0671751 -0.0671751 0.055" quat="0.923880 0 0 0.382683"
+          size="0.005 0.0414214 0.045" type="box" 
+          group="0"
+          rgba="0 0 0 0"
+          />
+        <geom name="geom_wall7" 
+          pos="-0.0671751 0.0671751 0.055" quat="0.382683 0 0 0.923880"
+          size="0.005 0.0414214 0.045" type="box" 
+          group="0"
+          rgba="0 0 0 0"
+          />
+        <geom name="geom_wall8" 
+          pos=" 0.0671751 -0.0671751 0.055" quat="0.382683 0 0 0.923880"
+          size="0.005 0.0414214 0.045" type="box" 
+          group="0"
+          rgba="0 0 0 0"
+          />
+
+        <body name="left_handle" pos="0 -0.1 0.08">
+          <geom name="geom_left_root1" 
+            fromto=" 0.03  0    0  0.03 -0.02 0" size="0.005" type="capsule" 
+            group="1" contype="0" conaffinity="0"
+            material="MatSteel"/>
+          <geom name="geom_left_root2_visual"
+            fromto="-0.03  0    0 -0.03 -0.02 0" size="0.005" type="capsule" 
+            group="1" contype="0" conaffinity="0"
+            material="MatSteel"/>
+          <geom name="geom_left_handle1_visual"
+            fromto=" 0.03 -0.02 0  0.03 -0.06 0" size="0.013"  type="capsule" 
+            group="1" contype="0" conaffinity="0"
+            material="MatLightWood"/>
+          <geom name="geom_left_handle2_visual"
+            fromto="-0.03 -0.02 0 -0.03 -0.06 0" size="0.013"  type="capsule" 
+            group="1" contype="0" conaffinity="0"
+            material="MatLightWood"/>
+          <geom  name="geom_left_handle3_visual"
+            fromto="-0.03 -0.06 0  0.03 -0.06 0" size="0.013"  type="capsule" 
+            group="1" contype="0" conaffinity="0"
+            material="MatLightWood"/>
+          <geom name="geom_left_handle"
+            pos="0 -0.04 0" size="0.043 0.033 0.013" type="box" 
+            group="0" friction='1 1 1'
+            rgba="0 0 0 0"
+            />
+          <site name="left_handle" pos="0 -0.04 0" size="0.02" rgba="0 0 1 0" />
+        </body>
+
+        <body name="right_handle" pos="0 0.1 0.08" quat="0 1 0 0">
+          <geom name="geom_right_root1_visual" 
+            fromto=" 0.03  0    0  0.03 -0.02 0" size="0.005" type="cylinder" 
+            group="1" contype="0" conaffinity="0"
+            material="MatSteel"/>
+          <geom name="geom_right_root2_visual" 
+            fromto="-0.03  0    0 -0.03 -0.02 0" size="0.005" type="cylinder" 
+            group="1" contype="0" conaffinity="0"
+            material="MatSteel"/>
+          <geom name="geom_right_handle1_visual"
+            fromto=" 0.03 -0.02 0  0.03 -0.06 0" size="0.013"  type="capsule" 
+            group="1" contype="0" conaffinity="0"
+            material="MatLightWood"/>
+          <geom name="geom_right_handle2_visual"
+            fromto="-0.03 -0.02 0 -0.03 -0.06 0" size="0.013"  type="capsule" 
+            group="1" contype="0" conaffinity="0"
+            material="MatLightWood"/>
+          <geom name="geom_right_handle3_visual"
+            fromto="-0.03 -0.06 0  0.03 -0.06 0" size="0.013"  type="capsule" 
+            group="1" contype="0" conaffinity="0"
+            material="MatLightWood"/>
+          <geom name="geom_right_handle"
+            pos="0 -0.04 0" size="0.043 0.033 0.013" type="box" 
+            group="0" friction='1 1 1'
+            rgba="0 0 0 0"
+            />
+          <site name="right_handle" pos="0 -0.04 0" size="0.02" rgba="0 0 1 0" />
+        </body>
+
+      </body>
+      <site name="bottom_site" pos="0 0 -0.0207" rgba="0 0 0 0" size="0.005"/>
+      <site name="top_site" pos="0 0 0.007" rgba="0 0 0 0" size="0.005"/>
+      <site name="horizontal_radius_site" pos="0 0 0" rgba="0 0 0 0" size="0.003"/>
+    </body>
+
+  </worldbody>
+</mujoco>

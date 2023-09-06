@@ -1,0 +1,219 @@
+<mujoco model="sake_ezgripper">
+
+  <actuator>
+      <motor ctrllimited="true" ctrlrange="-20 20" joint="joint_left_driver" gear="1" name="torque_drive"/>
+  </actuator>
+
+  <asset>
+    <material name="metal" rgba="0.58 0.58 0.58 1"/>
+    <material name="black" rgba="0.149 0.149 0.149 1"/>        
+    <material name="gray" rgba="0.4627 0.4627 0.4627 1"/>
+    <material name="white" rgba="0.9 0.9 0.9 1"/>
+    <material name="silicone" rgba="0.1882 0.1882 0.1882 1"/>
+
+    <material name="tendon_line" rgba="0.95 0.3 0.3 0"/>
+    <material name="tendon_site" rgba="0.1882 0.1882 0.1882 0"/>
+
+    <mesh name="mesh_finger1" file="meshes/ezgripper_gen2/SAKE_Finger_L1_Gen2.stl"/>
+    <mesh name="mesh_finger2" file="meshes/ezgripper_gen2/SAKE_Finger_L2_Gen2.stl"/>
+    <mesh name="mesh_palm_dual" file="meshes/ezgripper_gen2/SAKE_Palm_Dual_Gen2.stl"/>
+  </asset>
+
+  <worldbody>
+    <body name="base">
+      <geom name="geom_base_viz" 
+        type="mesh" mesh="mesh_palm_dual"
+        quat="0 0.7071068 0 0.7071068"
+        group="1"
+        material="black"
+        />
+      <geom name="geom_base_col" 
+        type="box" pos="0 0 0.042" size="0.015 0.04 0.038"
+        group="0"
+        />
+      <inertial 
+        mass="0.3" diaginertia="0.01 0.01 0.01" 
+        pos="0 0 0"
+        />
+      <site name="site_left_finger1" pos="0 0.03 0" size="0.01" material="tendon_site"/>
+      <site name="site_left_finger2" pos="0 0.03 0.062569" size="0.01" material="tendon_site"/>
+      <site name="site_right_finger1" pos="0 -0.03 0" size="0.01" material="tendon_site"/>
+      <site name="site_right_finger2" pos="0 -0.03 0.062569" size="0.01" material="tendon_site"/>
+
+    <body name="left_finger1" pos="0 0.03 0.072569" quat="-0.5 0.5 0.5 0.5">
+      <joint name="joint_left_driver"
+        axis="0 1 0"
+        limited="true" range="-1.94 1.94"
+        solimplimit="0.95 0.99 0.001" solreflimit="0.005 1"
+        />
+      <geom name="geom_left_finger1" 
+        type="mesh" mesh="mesh_finger1"
+        group="1"
+        material="white"
+        />
+      <geom name="geom_left_finger1_col" 
+        type="mesh" mesh="mesh_finger1"
+        group="0"
+        />
+      <geom name="geom_left_finger1_pad" 
+        type="box" pos="0.027 0 -0.003" size="0.008 0.014 0.01"
+        group="1"
+        material="black"
+        />
+      <geom name="geom_left_finger1_pad_col" 
+        type="box" pos="0.027 0 -0.003" size="0.008 0.014 0.01"
+        group="0" solimp=".9 .99 .003" solref=".015 1" 
+        />
+      <inertial 
+        mass=".025" diaginertia="0.01 0.01 0.01" 
+        pos="0 0 0"
+        />
+      <site name="site_left_finger3" pos="0.042 0 0.01" size="0.01" material="tendon_site"/>
+
+    <body name="left_finger2" pos="0.052 0 0">
+      <joint name="joint_left_coupler"
+        axis="0 1 0"
+        limited="true" range="0 1.94"
+        solimplimit="0.95 0.99 0.001" solreflimit="0.005 1"
+        stiffness="0.4" springref="0.0" frictionloss="0.1"
+        />
+      <geom name="geom_left_finger2" 
+        type="mesh" mesh="mesh_finger2"
+        group="1"
+        material="white"
+        />
+       <geom name="geom_left_finger2_col"
+        type="mesh" mesh="mesh_finger2"
+        group="0"
+        />
+      <geom name="geom_left_finger2_pad" 
+        type="box" pos="0.040 0 0.011" quat="0.9838437 0 -0.1790296 0" size="0.02 0.014 0.01"
+        group="1"
+        material="black"
+        />
+      <geom name="geom_left_finger2_pad_col" 
+        type="box" pos="0.040 0 0.011" quat="0.9838437 0 -0.1790296 0" size="0.02 0.014 0.01"
+        group="0" solimp=".9 .99 .003" solref=".015 1" 
+        />
+      <inertial 
+        mass=".025" diaginertia="0.01 0.01 0.01" 
+        pos="0 0 0"
+        />
+      <site name="site_left_finger4" pos="0.05 0 0.01" size="0.01" material="tendon_site"/>
+
+    </body>
+    </body>
+
+    <body name="right_finger1" pos="0 -0.03 0.072569" quat="0.5 0.5 -0.5 0.5">
+      <joint name="joint_right_driver"
+        axis="0 1 0"
+        limited="true" range="-1.94 1.94"
+        solimplimit="0.95 0.99 0.001" solreflimit="0.005 1"
+        />
+      <geom name="geom_right_finger1" 
+        type="mesh" mesh="mesh_finger1"
+        group="1"
+        material="white"
+        />
+      <geom name="geom_right_finger1_col" 
+        type="mesh" mesh="mesh_finger1"
+        group="0"
+        />
+      <geom name="geom_right_finger1_pad" 
+        type="box" pos="0.027 0 -0.003" size="0.008 0.014 0.01"
+        group="1"
+        material="black"
+        />
+      <geom name="geom_right_finger1_pad_col" 
+        type="box" pos="0.027 0 -0.003" size="0.008 0.014 0.01"
+        group="0" solimp=".9 .99 .003" solref=".015 1" 
+        />
+      <inertial 
+        mass=".025" diaginertia="0.01 0.01 0.01" 
+        pos="0 0 0"
+        />
+      <site name="site_right_finger3" pos="0.042 0 0.01" size="0.01" material="tendon_site"/>
+
+    <body name="right_finger2" pos="0.052 0 0">
+      <joint name="joint_right_coupler"
+        axis="0 1 0"
+        limited="true" range="0 1.94"
+        solimplimit="0.95 0.99 0.001" solreflimit="0.005 1"
+        stiffness="0.4" springref="0.0" frictionloss="0.1"
+        />
+      <geom name="geom_right_finger2" 
+        type="mesh" mesh="mesh_finger2"
+        group="1"
+        material="white"
+        />
+      <geom name="geom_right_finger2_col" 
+        type="mesh" mesh="mesh_finger2"
+        group="0"
+        />
+      <geom name="geom_right_finger2_pad" 
+        type="box" pos="0.040 0 0.011" quat="0.9838437 0 -0.1790296 0" size="0.02 0.014 0.01"
+        group="1"
+        material="black"
+        />
+      <geom name="geom_right_finger2_pad_col"
+        type="box" pos="0.040 0 0.011" quat="0.9838437 0 -0.1790296 0" size="0.02 0.014 0.01"
+        group="0" solimp=".9 .99 .003" solref=".015 1" 
+        />
+      <inertial 
+        mass=".025" diaginertia="0.01 0.01 0.01" 
+        pos="0 0 0"
+        />
+      <site name="site_right_finger4" pos="0.05 0 0.01" size="0.01" material="tendon_site"/>
+
+    </body>
+    </body>
+
+    <body name="eef" pos="0 0 0.13" quat="1 0 0 0">
+      <!-- <site name="grip_site" pos="0 0 0" size="0.01 0.01 0.01" rgba="1 0 0 0.5" type="sphere" group="1"/>
+      <site name="ee_x" pos="0.1 0 0" size="0.005 .1"  quat="0.707105  0 0.707108 0 " rgba="1 0 0 0" type="cylinder" group="1"/>
+      <site name="ee_y" pos="0 0.1 0" size="0.005 .1" quat="0.707105 0.707108 0 0" rgba="0 1 0 0" type="cylinder" group="1"/>
+      <site name="ee_z" pos="0 0 0.1" size="0.005 .1" quat="1 0 0 0" rgba="0 0 1 0" type="cylinder" group="1"/> -->
+        <!-- This site was added for visualization. -->
+  		<!-- <site name="grip_site_cylinder" pos="0 0 0" size="0.005 10" rgba="0 1 0 0.3" type="cylinder" group="1"/> -->
+    </body>
+
+    <!-- <body name="test" pos="0 0 0.16" quat="1 0 0 0">
+      <geom name="geom_test" 
+        type="sphere"
+        size="0.03"
+        contype="8" conaffinity="8" group="0"
+        material="white"
+        />
+    </body> -->
+
+  </body>
+
+  </worldbody>
+
+  <equality>
+    <tendon tendon1="tendon_left" tendon2="tendon_right" polycoef="0 1 0 0 0"
+        solimp="0.95 0.99 0.001" solref="0.005 1"/>
+    <joint joint1="joint_right_driver" joint2="joint_left_driver" polycoef="0 1 0 0 0"
+        solimp="0.95 0.99 0.001" solref="0.005 1"/>
+  </equality>
+
+  <tendon>
+    <spatial width="0.002" material="tendon_line" name="tendon_left" 
+      limited="true" range="0 0.5" springlength="0" frictionloss="0.1" stiffness="0.4">
+      <site site="site_left_finger1"/>
+      <site site="site_left_finger2"/>
+      <site site="site_left_finger3"/>
+      <site site="site_left_finger4"/>
+    </spatial>
+
+    <spatial width="0.002" material="tendon_line" name="tendon_right" 
+      limited="true" range="0 0.5" springlength="0" frictionloss="0.1" stiffness="0.4">
+      <site site="site_right_finger1"/>
+      <site site="site_right_finger2"/>
+      <site site="site_right_finger3"/>
+      <site site="site_right_finger4"/>
+    </spatial>
+
+  </tendon>
+
+</mujoco>

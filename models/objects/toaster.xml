@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- from https://github.com/vikashplus/mj_envs/tree/master/mj_envs/hand_manipulation_suite/assets -->
+<!-- Information about door can be found in this paper: https://arxiv.org/pdf/1709.10087.pdf -->
+
+<mujoco model="toaster">
+  <asset>
+    <texture file="../textures/steel-brushed.png" type="cube" name="steel" />
+    <material name="MatSteel" texture="steel" specular="1" shininess="0.3" rgba="0.9 0.9 0.9 1" />
+  </asset>
+  <worldbody>
+    <body>
+      <body name="object">
+        <inertial pos="0 0 0" mass="1.47392" diaginertia="0.472637 0.580381 0.109316"/>
+        <site name="origin" pos="0 0 0" rgba="0 0 0 0" size="0.005"/>
+
+        <geom pos="0 0.0 0.005" size="0.075 0.125 0.005" type="box" friction="1 1 1" group="0" material="MatSteel"/>
+
+        <geom pos="0  0.105 0.065" size="0.075 0.02 0.055" type="box" friction="1 1 1" group="0" material="MatSteel"/>
+        <geom pos="0 -0.105 0.065" size="0.075 0.02 0.055" type="box" friction="1 1 1" group="0" material="MatSteel"/>
+        <geom pos=" 0.055 0 0.065" size="0.02 0.085 0.055" type="box" friction="1 1 1" group="0" material="MatSteel"/>
+        <geom pos="-0.055 0 0.065" size="0.02 0.085 0.055" type="box" friction="1 1 1" group="0" material="MatSteel"/>
+
+        <geom pos=" 0.0   0 0.1" size="0.01 0.085 0.02" type="box" friction="1 1 1" group="0" material="MatSteel"/>
+
+        <body name="rail" pos="0 0.125 0.06">
+          <geom pos=" 0     0.0025 0" size="0.005 0.0025 0.04" type="box" friction="1 1 1" group="1" rgba="0.2 0.2 0.2 1"/>
+          <geom pos="-0.01  0.0025 0" size="0.005 0.0025 0.04" type="box" friction="1 1 1" group="1" material="MatSteel"/>
+          <geom pos=" 0.01  0.0025 0" size="0.005 0.0025 0.04" type="box" friction="1 1 1" group="1" material="MatSteel"/>
+
+          <geom pos="0 0.0025 -0.045" size="0.015 0.0025 0.005" type="box" friction="1 1 1" group="1" material="MatSteel"/>
+          <geom pos="0 0.0025  0.045" size="0.015 0.0025 0.005" type="box" friction="1 1 1" group="1" material="MatSteel"/>
+        </body>
+
+        <body name="lever" pos="0 0.125 0.1">
+          <inertial pos="0 0 0" mass="1.0e-4" diaginertia="1.0e-6 1.0e-6 1.0e-6" />
+          <geom pos="0 0.02 0" size="0.02 0.015 0.01" type="box" friction="1 1 1" rgba="0.2 0.8 0.8 1"
+            group="0" />
+          <joint type="slide" name="slide_lever" pos="0 0 0" axis="0 0 -1" range="0.0 0.08" limited="true"
+            frictionloss="1" stiffness="0.5" damping="0.0025"/>
+          <site name="lever" pos="0 0.016 0.01" size="0.02" rgba="0 0 1 0" />
+        </body>
+
+        <body name="spring" pos="0 0 0.08">
+          <inertial pos="0 0 0" mass="0.001" diaginertia="0.001 0.001 0.001" />
+          <geom pos="0 0 -0.005" size="0.034 0.084 0.005" type="box" friction="1 1 1" rgba="0 0 0 1"
+            group="0" />
+          <joint name="slide_spring" type="slide" pos="0 0 0" axis="0 0 -1" range="0.0 0.06" limited="true"
+            damping="0.005"/>
+          <site name="spring" pos="0 0.016 0.01" size="0.02" rgba="0 0 1 0" />
+        </body>
+
+
+      </body>
+      <site name="bottom_site" pos="0 0 -0.0207" rgba="0 0 0 0" size="0.005"/>
+      <site name="top_site" pos="0 0 0.007" rgba="0 0 0 0" size="0.005"/>
+      <site name="horizontal_radius_site" pos="0 0 0" rgba="0 0 0 0" size="0.003"/>
+    </body>
+  </worldbody>
+
+  <equality>
+    <joint joint1="slide_spring" joint2="slide_lever" polycoef="0.06 -0.75 0 0 0"/>
+  </equality>
+
+</mujoco>

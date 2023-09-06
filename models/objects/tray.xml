@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- from https://github.com/vikashplus/mj_envs/tree/master/mj_envs/hand_manipulation_suite/assets -->
+<!-- Information about door can be found in this paper: https://arxiv.org/pdf/1709.10087.pdf -->
+
+<mujoco model="microwave">
+  <asset>
+    <texture file="../textures/steel-brushed.png" type="cube" name="steel" />
+    <material name="MatSteel" texture="steel" specular="1" shininess="0.3" rgba="0.9 0.9 0.9 1" />
+  </asset>
+  <worldbody>
+    <body>
+      <body name="object">
+        <inertial pos="0 0 0" mass="1.47392" diaginertia="0.472637 0.580381 0.109316"/>
+        <site name="origin" pos="0 0 0" rgba="0 0 0 0" size="0.005"/>
+
+        <body name="body">
+          <geom pos="0 0.0 0.01" size="0.1 0.15 0.01" type="box" friction="1 1 1" group="0" rgba="0.3 0.3 0.3 1"/>
+
+          <geom pos="0  0.16 0.03" size="0.1 0.01 0.03" type="box" friction="1 1 1" group="0" rgba="0.3 0.3 0.3 1"/>
+          <geom pos="0 -0.16 0.03" size="0.1 0.01 0.03" type="box" friction="1 1 1" group="0" rgba="0.3 0.3 0.3 1"/>
+          <geom pos=" 0.11 0 0.03" size="0.01 0.17 0.03" type="box" friction="1 1 1" group="0" rgba="0.3 0.3 0.3 1"/>
+          <geom pos="-0.11 0 0.03" size="0.01 0.17 0.03" type="box" friction="1 1 1" group="0" rgba="0.3 0.3 0.3 1"/>
+        </body>
+
+        <body name="left_handle" pos="0 -0.17 0.05">
+          <geom fromto=" 0.05  0    0  0.05 -0.03 0" size="0.01" type="capsule" group="0"/>
+          <geom fromto="-0.05  0    0 -0.05 -0.03 0" size="0.01" type="capsule" group="0"/>
+          <geom fromto="-0.05 -0.03 0  0.05 -0.03 0" size="0.01" type="capsule" group="0"/>
+          <site name="left_handle" pos="0 -0.03 0" size="0.02" rgba="0 0 1 0" />
+        </body>
+
+        <body name="right_handle" pos="0 0.17 0.05" quat="0 1 0 0">
+          <geom fromto=" 0.05  0    0  0.05 -0.03 0" size="0.01" type="capsule" group="0"/>
+          <geom fromto="-0.05  0    0 -0.05 -0.03 0" size="0.01" type="capsule" group="0"/>
+          <geom fromto="-0.05 -0.03 0  0.05 -0.03 0" size="0.01" type="capsule" group="0"/>
+          <site name="right_handle" pos="0 -0.03 0" size="0.02" rgba="0 0 1 0" />
+        </body>
+
+        <!-- <body name="left_handle" pos="0.17 0 0.5">
+          <inertial pos="-0.01 0 0" quat="0.365653 0.605347 -0.36522 0.605365" mass="0.01" diaginertia="0.01 0.01 0.0025" />
+          <geom fromto="0.0  0.05 0 -0.03  0.05 0" size="0.01" type="capsule" group="0"/>
+          <geom fromto="0.0 -0.05 0 -0.03 -0.05 0" size="0.01" type="capsule" group="0"/>
+          <geom pos="-0.04 0 -0.13 -0.04 0 0.13" size="0.01" type="capsule" group="0" name="front_handle"/>
+          <site name="handle" pos="0.125 -0.10 0" size="0.02" rgba="0 0 1 0" />
+        </body> -->
+
+
+      </body>
+      <site name="bottom_site" pos="0 0 -0.0207" rgba="0 0 0 0" size="0.005"/>
+      <site name="top_site" pos="0 0 0.007" rgba="0 0 0 0" size="0.005"/>
+      <site name="horizontal_radius_site" pos="0 0 0" rgba="0 0 0 0" size="0.003"/>
+    </body>
+
+  </worldbody>
+</mujoco>

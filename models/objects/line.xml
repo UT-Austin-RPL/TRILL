@@ -1,0 +1,23 @@
+<mujoco model="lane">
+  <asset>
+    <material name="MatPaint" rgba="0.8 0.6 0.0 1" />
+  </asset>
+  
+  <worldbody>
+    <body>
+      <body name="object">
+        <inertial pos="0 0 0.0005" mass="1." diaginertia="0.4 0.4 0.1"/>
+        <site name="origin" pos="0 0 0" rgba="0 0 0 0" size="0.005"/>
+        <geom
+          pos="0 0 0.001" size="0.075 1. 0.001" type="box" 
+          group="1" contype="0" conaffinity="0"
+          material="MatPaint"
+          />
+      </body>
+      <site name="bottom_site" pos="0 0 -0.0207" rgba="0 0 0 0" size="0.005"/>
+      <site name="top_site" pos="0 0 0.007" rgba="0 0 0 0" size="0.005"/>
+      <site name="horizontal_radius_site" pos="0 0 0" rgba="0 0 0 0" size="0.003"/>
+    </body>
+
+  </worldbody>
+</mujoco>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- from https://github.com/vikashplus/mj_envs/tree/master/mj_envs/hand_manipulation_suite/assets -->
+<!-- Information about door can be found in this paper: https://arxiv.org/pdf/1709.10087.pdf -->
+
+<mujoco model="particle">
+    <worldbody>
+      <body>
+        <body name="object">
+          <site name="origin" pos="0 0 0" rgba="0 0 0 0" size="0.005"/>
+            <geom pos="0 0.0 0.0" size="0.005 0.005 0.005" type="box" friction="1 1 1" group="0"/>
+        </body>
+        <site name="bottom_site" pos="0 0 -0.0207" rgba="0 0 0 0" size="0.005"/>
+        <site name="top_site" pos="0 0 0.007" rgba="0 0 0 0" size="0.005"/>
+        <site name="horizontal_radius_site" pos="0 0 0" rgba="0 0 0 0" size="0.003"/>
+      </body>
+
+    </worldbody>
+</mujoco>

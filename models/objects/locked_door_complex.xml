@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- from https://github.com/vikashplus/mj_envs/tree/master/mj_envs/hand_manipulation_suite/assets -->
+<!-- Information about door can be found in this paper: https://arxiv.org/pdf/1709.10087.pdf -->
+
+<mujoco model="door_lock">
+  <asset>
+    <texture file="../textures/light-wood.png" type="cube" name="light-wood" />
+    <texture file="../textures/steel-brushed.png" type="cube" name="metal" />
+    <texture file="../textures/navy.png" type="cube" name="glass" />
+    <material name="MatLightWood" texture="light-wood" texrepeat="3 3" specular="0.4" shininess="0.1" />
+    <material name="MatBright" texture="metal" specular="1" shininess="0.3" rgba="0.5 0.5 0.5 1" />
+    <material name="MatMedium" texture="metal" specular="0.2" shininess="0.3" rgba="0.3 0.3 0.3 1" />
+    <material name="MatDark" texture="metal" specular="0.2" shininess="0.3" rgba="0.1 0.1 0.1 1" />
+    <material name="MatGlass" texture="glass" specular="1" shininess="0.3" rgba="1.0 1.0 1.0 1" />
+  </asset>
+    <worldbody>
+      <body>
+        <body name="object">
+          <body quat="0 0 0 1" pos="0 0 1.0">
+            <body name="frame" pos="0 0 0" quat="0.707107 0 0 0.707107">
+              <geom name="r_frame"
+                size="0.05 1.0" pos="0.5 0 0" type="cylinder" rgba="1 1 1 1"
+                contype="0" conaffinity="0"  group="1"
+                />
+              <geom name="l_frame"
+                size="0.05 1.0" pos="-0.5 0 0" type="cylinder" rgba="1 1 1 1"
+                contype="0" conaffinity="0"  group="1"
+                />
+
+              <body name="latch_female" pos="-0.48 -0.04 0.2">
+                <geom 
+                  type="box" size="0.02 0.0045 0.03" pos="0 -0.0045 0"  
+                  material="MatDark"
+                  group="1"
+                  />
+                <geom 
+                  type="box" size="0.01 0.011 0.0045" pos="0 -0.02 0.0155"  
+                  material="MatDark"
+                  group="0"
+                  />
+                  <geom 
+                  type="box" size="0.01 0.011 0.0045" pos="0 -0.02 -0.0155"  
+                  material="MatDark"
+                  group="0"
+                  />
+                <geom 
+                  type="box" size="0.01 0.0045 0.02" pos="0 -0.0355 0"  
+                  material="MatDark"
+                  group="0"
+                  />
+            </body>
+
+              <body name="door" pos="0 0 0">
+                <inertial pos="0 0 0" mass="1.47392" diaginertia="0.472637 0.580381 0.109316"/>
+                <!-- Density 20 kg/m^3 -->
+                <joint name="hinge" pos="0.5 0 0" axis="0 0 1" range="0.0 3.0" limited="true" 
+                  damping="1" frictionloss="1" stiffness="1" 
+                  springref="0"
+                  />
+
+                <geom size="0.45 0.04 0.98" type="box" friction="1 1 1" group="1" name="panel" material="MatLightWood"/>
+                <!-- <geom fromto="0 -0.048 0.5 0 0.048 0.5" size="0.25" type="cylinder" material="MatDark"
+                  contype="0" conaffinity="0"  group="1"
+                  />
+                <geom fromto="0 -0.05 0.5 0 0.05 0.5" size="0.2" type="cylinder" material="MatGlass"
+                  contype="0" conaffinity="0"  group="1" 
+                  />
+                <geom size="0.45 0.04 0.73" type="box" friction="1 1 1" group="0" material="MatBright"/>
+                <geom size="0.20 0.04 0.98" type="box" friction="1 1 1" group="0" material="MatBright"/>
+                <geom fromto=" 0.2 -0.04  0.73  0.2  0.04  0.73" size="0.25" type="cylinder" friction="1 1 1" group="0" material="MatBright"/>
+                <geom fromto=" 0.2 -0.04 -0.73  0.2  0.04 -0.73" size="0.25" type="cylinder" friction="1 1 1" group="0" material="MatBright"/>
+                <geom fromto="-0.2 -0.04  0.73 -0.2  0.04  0.73" size="0.25" type="cylinder" friction="1 1 1" group="0" material="MatBright"/>
+                <geom fromto="-0.2 -0.04 -0.73 -0.2  0.04 -0.73" size="0.25" type="cylinder" friction="1 1 1" group="0" material="MatBright"/> -->
+
+                <body name="latch_male" pos="-0.35 0  0.2">
+
+                  <body name="latch_bar" pos="-0.088 -0.06 0">
+                    <inertial pos="0 0 0" quat="0.365653 0.605347 -0.36522 0.605365" mass="0.1" diaginertia="0.0483771 0.0410001 0.0111013" />
+                    <joint name="latch_slide_joint"
+                      type="slide"
+                      axis="-1 0 0" range="0 0.05" limited="true"
+                      damping="0" frictionloss="0.1"
+                      />
+                    <joint name="latch_revolution_joint" 
+                      axis="-1 0 0" range="0 1.6" limited="true" 
+                      damping="0" frictionloss="0.1"
+                      />
+                    <geom
+                      fromto="0.0 0 0 0.15 0 0" size="0.01" type="capsule" 
+                      group="0"
+                      material="MatBright"
+                      />
+                    <geom name="geom_latch_bar_vertical"
+                      fromto="0.1 0 0 0.1 0 -0.06" size="0.01" type="cylinder" 
+                      group="0"
+                      material="MatBright"
+                      />
+                    <geom 
+                      fromto="0.1 0 -0.06 0.1 0 -0.08" size="0.02" type="capsule" 
+                      group="0"
+                      material="MatDark"
+                      />
+                    <site name="latch" pos="0.1 0 -0.07" size="0.02" rgba="0 0 1 0" />
+                  </body>
+
+                  <body name="latch_rail" pos="-0.088 -0.04 0">
+                    <geom 
+                      type="box" size="0.065 0.0045 0.03" pos="0.075 -0.0045 0"  
+                      material="MatDark"
+                      group="0"
+                      />
+                    <geom 
+                      type="box" size="0.06 0.011 0.0045" pos="0.075 -0.02 0.0155"  
+                      material="MatDark"
+                      group="0"
+                      />
+                    <geom 
+                      type="box" size="0.01 0.011 0.0045" pos="0.125 -0.02 -0.0155"  
+                      material="MatDark"
+                      group="0"
+                      />
+                    <geom name="geom_latch_rail_middle"
+                      type="box" size="0.01 0.011 0.0045" pos="0.075 -0.02 -0.0155"  
+                      material="MatDark"
+                      group="0"
+                      />
+                    <geom 
+                      type="box" size="0.01 0.011 0.0045" pos="0.025 -0.02 -0.0155"  
+                      material="MatDark"
+                      group="0"
+                      />
+                    <geom 
+                      type="box" size="0.01 0.0045 0.02" pos="0.025 -0.0355 0"  
+                      material="MatDark"
+                      group="0"
+                      />
+                    <geom 
+                      type="box" size="0.01 0.0045 0.02" pos="0.125 -0.0355 0"  
+                      material="MatDark"
+                      group="0"
+                      />
+                  </body>
+                      <!-- <geom fromto="0 0 0 0  -0.075 0" size="0.05" type="cylinder" group="0" name="handle_latch" material="MatDark"/>
+                    <geom size="0.05 0.015 0.01" pos="0 -0.09 0" type="box" group="0" name="front_latch" material="MatDark"/> -->
+                </body>
+
+                <body name="lock" pos="-0.35 0  0.0">
+                    <inertial pos="0 0 0" mass="0.1" diaginertia="0.01 0.01 0.01" />
+                    <joint name="lock_joint" pos="0 0 0" axis="0 1 0" range="0 1.57" 
+                      frictionloss="0.1" damping="0" limited="true" 
+                      />
+                    <geom fromto="0 0 0 0  -0.075 0" size="0.05" type="cylinder" group="0" name="handle_lock" material="MatBright"/>
+                    <geom size="0.05 0.015 0.01" pos="0 -0.09 0" type="box" group="0" name="front_lock" material="MatBright"/>
+                    <site name="lock" pos="0.125 -0.10 0" size="0.02" rgba="0 0 1 0" />
+                </body>
+
+                <body name="handle" pos="-0.35 0 -0.15">
+                  <inertial pos="-0.017762 0 0" quat="0.365653 0.605347 -0.36522 0.605365" mass="0.1" diaginertia="0.0483771 0.0410001 0.0111013" />
+                  <joint name="handle_joint" pos="0 0 0" axis="0 1 0" range="-1.57 1.57" frictionloss="0.1" damping="0" limited="true" springref="0" stiffness="1" />
+                  <geom fromto="0 0.125 0 0 -0.125 0" size="0.025" type="cylinder" group="0" name="handle_base" material="MatBright"/>
+                  <geom size="0.1 0.015 0.02" pos="0.1 -0.10 0" type="box" group="0" name="front_handle" material="MatBright"/>
+                  <geom size="0.1 0.015 0.02" pos="0.1  0.10 0" type="box" group="0" name="back_handle" material="MatBright"/>
+                  <!-- Don't render the door handle site by default -->
+                  <site name="handle" pos="0.125 -0.10 0" size="0.02" rgba="0 0 1 0" />
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+        <site name="bottom_site" pos="0 0 -0.6" rgba="0 0 0 0" size="0.005"/>
+        <site name="top_site" pos="0 0 0.6" rgba="0 0 0 0" size="0.005"/>
+        <site name="horizontal_radius_site" pos="0.3 0 0" rgba="0 0 0 0" size="0.1"/>
+      </body>
+    </worldbody>
+
+  <contact>
+    <pair geom1="geom_latch_bar_vertical" geom2="geom_latch_rail_middle"/>
+  </contact>
+
+</mujoco>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- from https://github.com/vikashplus/mj_envs/tree/master/mj_envs/hand_manipulation_suite/assets -->
+<!-- Information about door can be found in this paper: https://arxiv.org/pdf/1709.10087.pdf -->
+
+<mujoco model="pegboard">
+  <asset>
+    <texture file="../textures/light-wood.png" type="cube" name="light-wood" />
+    <texture file="../textures/dark-wood.png" type="cube" name="dark-wood" />
+    <texture file="../textures/brass-ambra.png" type="cube" name="metal" />
+    <texture file="../textures/steel-brushed.png" type="cube" name="steel" />
+    <material name="MatDarkWood" texture="dark-wood" texrepeat="3 3" specular="0.4" shininess="0.1" />
+    <material name="MatLightWood" texture="light-wood" texrepeat="3 3" specular="0.4" shininess="0.1" />
+    <material name="MatMetal" texture="metal" specular="1" shininess="0.3" rgba="0.9 0.9 0.9 1" />
+    <material name="MatSteel" texture="steel" specular="1" shininess="0.3" rgba="0.9 0.9 0.9 1" />
+    <material name="MatBlack" specular="0.2" shininess="0.3" rgba="0.1 0.1 0.1 1" />
+  </asset>
+    
+  <worldbody>
+    <body>
+      <body name="object">
+        <inertial pos="0 0 0" mass="5000" diaginertia="0.5 0.5 0.1"/>
+        <site name="origin" pos="0 0 0" rgba="0 0 0 0" size="0.005"/>
+
+        <geom
+          pos="0 0.275 0.025" size="0.1 0.025 0.025" type="box" 
+          group="1" contype="0" conaffinity="0"
+          material="MatDarkWood"
+          />
+
+        <geom
+          pos="0 -0.275 0.025" size="0.1 0.025 0.025" type="box" 
+          group="1" contype="0" conaffinity="0"
+          material="MatDarkWood"
+          />
+
+        <geom
+          pos="0 0 0.525" size="0.05 0.3 0.475" type="box" 
+          group="1" contype="0" conaffinity="0"
+          material="MatMetal"
+          />
+
+        <geom
+          pos="0 0 0.525" size="0.05 0.3 0.475" type="box" 
+          group="0" friction='1 1 1'
+          rgba="0 0 0 0"
+          />
+
+        <body name="hanger" pos="0 0 0.9">
+          <geom
+            fromto="-0.05 -0.05 0 -0.27 -0.05 0" size="0.015" type="capsule" 
+            group="1" contype="0" conaffinity="0"
+            material="MatSteel"
+            />
+
+          <geom
+            fromto="-0.05 0.05 0 -0.27 0.05 0" size="0.015" type="capsule" 
+            group="1" contype="0" conaffinity="0"
+            material="MatSteel"
+            />
+
+          <geom
+            fromto="-0.05 -0.05 0 -0.27 -0.05 0" size="0.015" type="capsule" 
+            group="0" friction='1 1 1'
+            rgba="0 0 0 0"
+            />
+
+          <geom
+            fromto="-0.05 0.05 0 -0.27 0.05 0" size="0.015" type="capsule" 
+            group="0" friction='1 1 1'
+            rgba="0 0 0 0"
+            />
+        </body>
+
+      </body>
+      <site name="bottom_site" pos="0 0 -0.0207" rgba="0 0 0 0" size="0.005"/>
+      <site name="top_site" pos="0 0 0.007" rgba="0 0 0 0" size="0.005"/>
+      <site name="horizontal_radius_site" pos="0 0 0" rgba="0 0 0 0" size="0.003"/>
+    </body>
+
+  </worldbody>
+</mujoco>

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- from https://github.com/vikashplus/mj_envs/tree/master/mj_envs/hand_manipulation_suite/assets -->
+<!-- Information about door can be found in this paper: https://arxiv.org/pdf/1709.10087.pdf -->
+
+<mujoco model="brush">
+  <asset>
+    <texture file="../textures/light-wood.png" type="cube" name="light-wood" />
+    <texture file="../textures/dark-wood.png" type="cube" name="dark-wood" />
+    <material name="MatDarkWood" texture="dark-wood" texrepeat="3 3" specular="0.4" shininess="0.1" />
+    <material name="MatLightWood" texture="light-wood" texrepeat="3 3" specular="0.4" shininess="0.1" />
+  </asset>
+    <worldbody>
+      <body>
+        <body name="object">
+          <site name="origin" pos="0 0 0" rgba="0 0 0 0" size="0.005"/>
+
+          <body name="body" pos="0 0 0.02">          
+            <geom pos="0.0 -0.02 0.0" size="0.05 0.02 0.02" type="box" friction="1 1 1" group="0" name="body" material="MatLightWood"/>
+            <geom pos="0 0.05 0.0" size="0.006 0.05 0.01" type="box" friction="1 1 1" group="0" name="handle" material="MatLightWood"/>
+
+            <site name="handle" pos="0 0.05 0" rgba="0 0 0 0" size="0.02"/>
+
+            <inertial pos="0. 0 0" quat="0.5 0.5 0.5 0.5" mass="0.01"  diaginertia="0.0001 0.0001 0.0001" />
+            <body name="furs" pos="0 -0.04 0">
+
+              <joint name="joint_brush"
+                  type="ball"
+                  stiffness="5.0" springref="0.0" damping="0.01"
+                  />
+              <inertial pos="0. 0 0" mass="0.01"  diaginertia="0.0001 0.0001 0.0001" />
+
+            <body name="fur_row1" pos="-0.04 0 0">
+              <body pos="0 0 -0.01">
+                <geom fromto="0 0 0 0 -0.05 0" size="0.003" type="cylinder" group="0" material="MatDarkWood"/>
+              </body>
+              <body pos="0 0 0">
+                <geom fromto="0 0 0 0 -0.05 0" size="0.003" type="cylinder" group="0" material="MatDarkWood"/>
+              </body>
+              <body pos="0 0 0.01">
+                <geom fromto="0 0 0 0 -0.05 0" size="0.003" type="cylinder" group="0" material="MatDarkWood"/>
+              </body>            
+            </body>
+
+            <body name="fur_row2" pos="-0.03 0 0">
+              <body pos="0 0 -0.01">
+                <geom fromto="0 0 0 0 -0.05 0" size="0.003" type="cylinder" group="0" material="MatDarkWood"/>
+              </body>
+              <body pos="0 0 0">
+                <geom fromto="0 0 0 0 -0.05 0" size="0.003" type="cylinder" group="0" material="MatDarkWood"/>
+              </body>
+              <body pos="0 0 0.01">
+                <geom fromto="0 0 0 0 -0.05 0" size="0.003" type="cylinder" group="0" material="MatDarkWood"/>
+              </body>
+            </body>
+
+            <body name="fur_row3" pos="-0.02 0 0">
+              <body pos="0 0 -0.01">
+                <geom fromto="0 0 0 0 -0.05 0" size="0.003" type="cylinder" group="0" material="MatDarkWood"/>
+              </body>
+              <body pos="0 0 0">
+                <geom fromto="0 0 0 0 -0.05 0" size="0.003" type="cylinder" group="0" material="MatDarkWood"/>
+              </body>
+              <body pos="0 0 0.01">
+                <geom fromto="0 0 0 0 -0.05 0" size="0.003" type="cylinder" group="0" material="MatDarkWood"/>
+              </body>
+            </body>
+
+            <body name="fur_row4" pos="-0.01 0 0">
+              <body pos="0 0 -0.01">
+                <geom fromto="0 0 0 0 -0.05 0" size="0.003" type="cylinder" group="0" material="MatDarkWood"/>
+              </body>
+              <body pos="0 0 0">
+                <geom fromto="0 0 0 0 -0.05 0" size="0.003" type="cylinder" group="0" material="MatDarkWood"/>
+              </body>
+              <body pos="0 0 0.01">
+                <geom fromto="0 0 0 0 -0.05 0" size="0.003" type="cylinder" group="0" material="MatDarkWood"/>
+              </body>
+            </body>
+
+            <body name="fur_row5" pos="0 0 0">
+              <body pos="0 0 -0.01">
+                <geom fromto="0 0 0 0 -0.05 0" size="0.003" type="cylinder" group="0" material="MatDarkWood"/>
+              </body>
+              <body pos="0 0 0">
+                <geom fromto="0 0 0 0 -0.05 0" size="0.003" type="cylinder" group="0" material="MatDarkWood"/>
+              </body>
+              <body pos="0 0 0.01">
+                <geom fromto="0 0 0 0 -0.05 0" size="0.003" type="cylinder" group="0" material="MatDarkWood"/>
+              </body>
+            </body>
+
+            <body name="fur_row6" pos="0.01 0 0">
+              <body pos="0 0 -0.01">
+                <geom fromto="0 0 0 0 -0.05 0" size="0.003" type="cylinder" group="0" material="MatDarkWood"/>
+              </body>
+              <body pos="0 0 0">
+                <geom fromto="0 0 0 0 -0.05 0" size="0.003" type="cylinder" group="0" material="MatDarkWood"/>
+              </body>
+              <body pos="0 0 0.01">
+                <geom fromto="0 0 0 0 -0.05 0" size="0.003" type="cylinder" group="0" material="MatDarkWood"/>
+              </body>
+            </body>
+
+            <body name="fur_row7" pos="0.02 0 0">
+              <body pos="0 0 -0.01">
+                <geom fromto="0 0 0 0 -0.05 0" size="0.003" type="cylinder" group="0" material="MatDarkWood"/>
+              </body>
+              <body pos="0 0 0">
+                <geom fromto="0 0 0 0 -0.05 0" size="0.003" type="cylinder" group="0" material="MatDarkWood"/>
+              </body>
+              <body pos="0 0 0.01">
+                <geom fromto="0 0 0 0 -0.05 0" size="0.003" type="cylinder" group="0" material="MatDarkWood"/>
+              </body>
+            </body>
+
+            <body name="fur_row8" pos="0.03 0 0">
+              <body pos="0 0 -0.01">
+                <geom fromto="0 0 0 0 -0.05 0" size="0.003" type="cylinder" group="0" material="MatDarkWood"/>
+              </body>
+              <body pos="0 0 0">
+                <geom fromto="0 0 0 0 -0.05 0" size="0.003" type="cylinder" group="0" material="MatDarkWood"/>
+              </body>
+              <body pos="0 0 0.01">
+                <geom fromto="0 0 0 0 -0.05 0" size="0.003" type="cylinder" group="0" material="MatDarkWood"/>
+              </body>
+            </body>
+
+            <body name="fur_row9" pos="0.04 0 0">
+              <body pos="0 0 -0.01">
+                <geom fromto="0 0 0 0 -0.05 0" size="0.003" type="cylinder" group="0" material="MatDarkWood"/>
+              </body>
+              <body pos="0 0 0">
+                <geom fromto="0 0 0 0 -0.05 0" size="0.003" type="cylinder" group="0" material="MatDarkWood"/>
+              </body>
+              <body pos="0 0 0.01">
+                <geom fromto="0 0 0 0 -0.05 0" size="0.003" type="cylinder" group="0" material="MatDarkWood"/>
+              </body>
+            </body>
+
+            </body>
+          </body>
+
+        </body>
+        <site name="bottom_site" pos="0 0 -0.6" rgba="0 0 0 0" size="0.005"/>
+        <site name="top_site" pos="0 0 0.6" rgba="0 0 0 0" size="0.005"/>
+        <site name="horizontal_radius_site" pos="0.3 0 0" rgba="0 0 0 0" size="0.1"/>
+      </body>
+    </worldbody>
+</mujoco>

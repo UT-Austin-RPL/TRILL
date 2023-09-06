@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- from https://github.com/vikashplus/mj_envs/tree/master/mj_envs/hand_manipulation_suite/assets -->
+<!-- Information about door can be found in this paper: https://arxiv.org/pdf/1709.10087.pdf -->
+
+<mujoco model="microwave">
+    <texture file="../textures/steel-brushed.png" type="cube" name="steel" />
+    <material name="MatSteel" texture="steel" specular="1" shininess="0.3" rgba="0.9 0.9 0.9 1" />
+    
+    <worldbody>
+      <body>
+        <body name="object">
+          <inertial pos="0 0 0" mass="1.47392" diaginertia="0.472637 0.580381 0.109316"/>
+          <site name="origin" pos="0 0 0" rgba="0 0 0 0" size="0.005"/>
+          <geom pos="0 0.0 0.015" size="0.15 0.25 0.015" type="box" friction="1 1 1" group="0" rgba="0.3 0.3 0.3 1"/>
+          <geom pos="0 0.0 0.315" size="0.15 0.25 0.015" type="box" friction="1 1 1" group="0" rgba="0.3 0.3 0.3 1"/>
+
+          <geom pos="0 0.0 0.031" size="0.1 0.001" type="cylinder" friction="1 1 1" group="0" rgba="0.9 0.2 0.2 1"/>
+
+          <geom pos="0 0.31 0.165" size="0.15 0.06 0.165" type="box" friction="1 1 1" group="0" rgba="0.3 0.3 0.3 1"/>
+          <geom pos="-0.165 0.32 0.165" size="0.015 0.05 0.165" type="box" friction="1 1 1" group="0" rgba="0.1 0.1 0.1 1"/>
+
+          <!-- <geom pos="0 0.26 0.165" size="0.15 0.05 0.165" type="box" friction="1 1 1" group="0" rgba="0.3 0.3 0.3 1"/> -->
+          <geom pos="0 -0.26 0.165" size="0.15 0.01 0.165" type="box" friction="1 1 1" group="0" rgba="0.3 0.3 0.3 1"/>
+
+          <geom pos="0.16 0.05 0.165" size="0.01 0.32 0.165" type="box" friction="1 1 1" group="0" rgba="0.1 0.1 0.1 1"/>
+
+          <body name="button" pos="-0.168 0.32 0.05">
+            <inertial pos="0 0 0" mass="0.001" diaginertia="0.001 0.001 0.001" />
+            <geom pos="-0.015 0 0" size="0.01 0.03 0.02" type="box" friction="1 1 1" rgba="0.2 0.8 0.8 1"
+              group="0" />
+            <joint type="slide" pos="0 0 0" axis="1 0 0" range="0.0 0.01" limited="true"
+              springref="0.0" stiffness="0.5" damping="0.005" />
+            <site name="button" pos="0 0 0" size="0.02" rgba="0 0 1 0" />
+          </body>
+
+          <body name="door" pos="-0.15 -0.27 0">
+
+            <inertial pos="0 0 0" mass="0.1" diaginertia="0.05 0.05 0.01"/>
+            <joint name="hinge" pos="0 0 0" axis="0 0 1" range="0.0 3.0" limited="true" 
+              damping="1" frictionloss="1" stiffness="10" springref="0."
+              />
+
+            <!-- <geom pos="0 0 0" size="0.01 0.5" type="cylinder" friction="1 1 1"
+              contype="0" conaffinity="0"  group="1"
+              /> -->
+            <geom pos="-0.015 0.265 0.04" size="0.015 0.205 0.04" type="box" friction="1 1 1" group="0" rgba="0.1 0.1 0.1 1"/>
+            <geom pos="-0.015 0.265 0.29" size="0.015 0.205 0.04" type="box" friction="1 1 1" group="0" rgba="0.1 0.1 0.1 1"/>
+
+            <geom pos="-0.015 0.04 0.165" size="0.015 0.04 0.165" type="box" friction="1 1 1" group="0" rgba="0.1 0.1 0.1 1"/>
+            <geom pos="-0.015 0.49 0.165" size="0.015 0.04 0.165" type="box" friction="1 1 1" group="0" rgba="0.1 0.1 0.1 1"/>
+
+            <geom pos="-0.015 0.265 0.165" size="0.015 0.185 0.085" type="box" friction="1 1 1" group="0" rgba="1.0 1.0 1.0 0.1"/>
+
+            <!-- <geom pos="-0.015 0.26 0.165" size="0.015 0.26 0.165" type="box" friction="1 1 1" group="0" rgba="0.1 0.1 0.1 0.3"/> -->
+
+            <body name="handle" pos="-0.03 0.49 0.165">
+              <inertial pos="-0.01 0 0" quat="0.365653 0.605347 -0.36522 0.605365" mass="0.01" diaginertia="0.01 0.01 0.0025" />
+              <geom fromto="0 0  0.13 -0.04 0  0.13" size="0.01" type="cylinder" group="0" name="handle_up"/>
+              <geom fromto="0 0 -0.13 -0.04 0 -0.13" size="0.01" type="cylinder" group="0" name="handle_bottom"/>
+              <geom fromto="-0.04 0 -0.13 -0.04 0 0.13" size="0.01" type="capsule" group="0" name="front_handle"/>
+              <!-- Don't render the door handle site by default -->
+              <site name="handle" pos="0.125 -0.10 0" size="0.02" rgba="0 0 1 0" />
+            </body>
+
+          </body>
+        </body>
+        <site name="bottom_site" pos="0 0 -0.0207" rgba="0 0 0 0" size="0.005"/>
+        <site name="top_site" pos="0 0 0.007" rgba="0 0 0 0" size="0.005"/>
+        <site name="horizontal_radius_site" pos="0 0 0" rgba="0 0 0 0" size="0.003"/>
+      </body>
+
+    </worldbody>
+</mujoco>

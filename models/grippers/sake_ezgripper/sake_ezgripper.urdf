@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+<xacro:macro name="draco_3_end_effector" params="parent prefix">
+    <!--=============================== ${prefix}_wrist_mount (${prefix}_sake_gripper_link) ===========================-->
+    <joint name="${prefix}_wrist_mount" type="fixed">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <parent link="${parent}" />
+      <child link="${prefix}_sake_gripper_link" />
+    </joint>
+
+    <link name="${prefix}_sake_gripper_link">
+      <visual>
+      <origin xyz="0 0 0" rpy="0 -0 0" />
+      <geometry>
+      <mesh filename="package://draco_3_model_meshes/meshes/${prefix}_sake_gripper_link${hand_head_mesh_suffix}"/>
+      </geometry>
+      <material name="${prefix}_sake_gripper_link_material">
+      <color rgba="0.5 0.5 0.5 1.0"/>
+      </material>
+      </visual>
+      <collision>
+      <origin xyz="0 0 0" rpy="0 -0 0" />
+      <geometry>
+      <mesh filename="package://draco_3_model_meshes/meshes/${prefix}_sake_gripper_link${hand_head_mesh_suffix}"/>
+      </geometry>
+      <material name="${prefix}_sake_gripper_link_material">
+      <color rgba="0.5 0.5 0.5 1.0"/>
+      </material>
+      </collision>
+      <inertial>
+      <origin xyz="5.4498e-05 0.000382544 -0.0372594" rpy="0 0 0"/>
+      <mass value="0.545" />
+      <inertia ixx="0.001" ixy="3.07738e-09"  ixz="2.26958e-07" iyy="0.0004628" iyz="-6.35882e-06" izz="0.001" />
+      </inertial>
+    </link>
+
+    <!--=============================== ${prefix}_hand_contact_frame (${prefix}_hand_contact) ===========================-->
+    <joint name="${prefix}_hand_contact_frame" type="fixed">
+      <origin xyz="6.93889e-18 -5.55112e-17 -0.150052" rpy="-1.2326e-31 1.26435e-32 -2.84264e-31" />
+      <parent link="${prefix}_sake_gripper_link" />
+      <child link="${prefix}_hand_contact" />
+      <axis xyz="0 0 0"/>
+    </joint>
+
+    <link name="${prefix}_hand_contact">
+      <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="1e-9" />
+      <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+      </inertial>
+    </link>
+</xacro:macro>
+</robot>

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- from https://github.com/vikashplus/mj_envs/tree/master/mj_envs/hand_manipulation_suite/assets -->
+<!-- Information about door can be found in this paper: https://arxiv.org/pdf/1709.10087.pdf -->
+
+<mujoco model="toolbox">
+  <asset>
+    <texture file="../textures/light-wood.png" type="cube" name="light-wood" />
+    <texture file="../textures/steel-brushed.png" type="cube" name="steel" />
+    <material name="MatSteel" texture="steel" specular="1" shininess="0.3" rgba="0.9 0.9 0.9 1" />
+    <material name="MatLightWood" texture="light-wood" texrepeat="3 3" specular="0.4" shininess="0.1" />
+  </asset>
+  <worldbody>
+    <body>
+      <body name="object">
+        <inertial pos="0 0 0" mass="0.1" diaginertia="0.00052 0.0012 0.001"/>
+        <site name="origin" pos="0 0 0" rgba="0 0 0 0" size="0.005"/>
+
+        <geom name="handle"
+          pos="0 0 0.04" size="0.02 0.02 0.08" type="box" 
+          density="1.0"
+          group="0" friction="2 2 2"
+          rgba="0 0 0 0"
+          />
+        <!-- <geom name="handle1"
+          pos="0 0 0.04" size="0.02 0.00828427 0.08" type="box" 
+          density="1.0"
+          group="0" friction="1 1 1"
+          rgba="0 0 0 0"
+          />
+        <geom name="handle2"
+          pos="0 0 0.04" size="0.02 0.00828427 0.08" quat="0.707107 0 0 0.707107" type="box" 
+          density="1.0"
+          group="0" friction="1 1 1"
+          rgba="0 0 0 0"
+          />
+        <geom name="handle3"
+          pos="0 0 0.04" size="0.02 0.00828427 0.08" quat="0.923880 0 0 0.382683" type="box" 
+          density="1.0"
+          group="0" friction="1 1 1"
+          rgba="0 0 0 0"
+          />
+        <geom name="handle4"
+          pos="0 0 0.04" size="0.02 0.00828427 0.08" quat="0.382683 0 0 0.923880" type="box" 
+          density="1.0"
+          group="0" friction="1 1 1"
+          rgba="0 0 0 0"
+          /> -->
+
+        <geom name="head"
+          size="0.056539 0.0282695 0.0282695" pos="0 0 0.14827" type="box"
+          density="0.5"
+          group="0" friction="1 1 1"
+          rgba="0 0 0 0"
+          />        
+        <geom name="neck"
+          size="0.0226156 0.0056539" pos="0.0621929 0 0.14827" quat="0.707107 0 0.707107 0" type="cylinder" 
+          density="0.5"
+          group="0" friction="1 1 1"
+          rgba="0 0 0 0"
+          />
+        <geom name="face"
+          size="0.0282695 0.0113078" pos="0.0791546 0 0.14827" quat="0.707107 0 0.707107 0" type="cylinder"
+          density="0.5"
+          group="0" friction="1 1 1"
+          rgba="0 0 0 0"
+          />
+        <geom name="claw"
+          size="0.0199922 0.026856 0.0199922" pos="-0.056539 0 0.14827" quat="0.92388 0 0.382683 0" type="box"
+          group="0" friction="1 1 1"
+          rgba="0 0 0 0"
+          />
+
+        <geom name="handle_vis"
+          pos="0 0 0.04" size="0.02 0.02 0.08" type="box" 
+          group="1" contype="0" conaffinity="0"
+          material="MatLightWood"
+          />
+        <!-- <geom name="handle1_vis"
+          pos="0 0 0.04" size="0.02 0.00828427 0.08" type="box" 
+          group="1" contype="0" conaffinity="0"
+          material="MatLightWood"
+          />
+        <geom name="handle2_vis"
+          pos="0 0 0.04" size="0.02 0.00828427 0.08" quat="0.707107 0 0 0.707107" type="box" 
+          group="1" contype="0" conaffinity="0"
+          material="MatLightWood"
+          />
+        <geom name="handle3_vis"
+          pos="0 0 0.04" size="0.02 0.00828427 0.08" quat="0.923880 0 0 0.382683" type="box" 
+          group="1" contype="0" conaffinity="0"
+          material="MatLightWood"
+          />
+        <geom name="handle4_vis"
+          pos="0 0 0.04" size="0.02 0.00828427 0.08" quat="0.382683 0 0 0.923880" type="box" 
+          group="1" contype="0" conaffinity="0"
+          material="MatLightWood"
+          /> -->
+
+        <geom name="head_vis"
+          size="0.056539 0.0282695 0.0282695" pos="0 0 0.14827" type="box"
+          group="1" contype="0" conaffinity="0"
+          material="MatSteel"
+          />
+        <geom name="neck_vis"
+          size="0.0226156 0.0056539" pos="0.0621929 0 0.14827" quat="0.707107 0 0.707107 0" type="cylinder"
+          group="1" contype="0" conaffinity="0"
+          material="MatSteel"
+          />
+        <geom name="face_vis"
+          size="0.0282695 0.0113078" pos="0.0791546 0 0.14827" quat="0.707107 0 0.707107 0" type="cylinder"
+          group="1" contype="0" conaffinity="0"
+          material="MatSteel"
+          />
+        <geom name="claw_vis"
+          size="0.0199922 0.026856 0.0199922" pos="-0.056539 0 0.14827" quat="0.92388 0 0.382683 0" type="box"
+          group="1" contype="0" conaffinity="0"
+          material="MatSteel"
+          />
+
+      </body>
+      <site name="bottom_site" pos="0 0 -0.0207" rgba="0 0 0 0" size="0.005"/>
+      <site name="top_site" pos="0 0 0.007" rgba="0 0 0 0" size="0.005"/>
+      <site name="horizontal_radius_site" pos="0 0 0" rgba="0 0 0 0" size="0.003"/>
+    </body>
+
+  </worldbody>
+</mujoco>

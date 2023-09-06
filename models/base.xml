@@ -1,0 +1,32 @@
+<!-- This is the base xml for all physics simulations. Set global configs here. -->
+<mujoco model="base">
+    <compiler angle="radian" meshdir="./meshes/" inertiagrouprange="0 0" />
+    <option impratio="20" cone="elliptic" density="1.2" viscosity="0.00002" timestep="0.002" />
+    <option integrator="RK4" solver="PGS" iterations="50"  gravity='0 0 -9.81'/>
+
+  <asset>
+  </asset>
+
+  <visual>
+    <map znear="0.001" />
+  </visual>
+
+  <actuator>
+  </actuator>
+  <worldbody>
+    <camera mode="fixed" fovy="89" name="envview" pos="-2.0 0 0.75" quat="0.5 -0.5 -0.5 0.5"/>
+    <camera mode="fixed" fovy="60" name="backview" pos="-2.0 0 0.75" quat="0.5 -0.5 -0.5 0.5" />
+    <camera mode="fixed" name="testview" pos="1.5 0.0 1.0" quat="0.5 -0.5 0.5 -0.5" />
+    <camera mode="fixed" name="upview" pos="-1.0 0.0 2.0" quat="0.6532815 -0.2705981 -0.2705981 0.6532815 " />
+    <!-- <camera mode="fixed" name="testview" pos="2.0 0.0 2.0" quat="0.6532815 -0.2705981 0.2705981 -0.6532815" /> -->
+    <camera mode="fixed" name="kitchenview" pos="1.2 0 1.0" quat="0.5 -0.5 0.5 -0.5"/>
+    <camera mode="fixed" name="objectview" pos="0.5 0.0 3" quat="0.7071 0 0 0.7071" />
+    <camera mode="fixed" name="door_testview" pos="3.0 0.0 1.1" quat="0.5 -0.5 0.5 -0.5" />
+    <camera mode="fixed" name="door_topview" pos="2.2 0.0 2" quat="0.7071 0 0 0.7071" />
+    <camera mode="fixed" name="topview" pos="1.0 0.0 2.2" quat="0.7071 0 0 0.7071" />
+    <geom size="3 3 0.1" pos="0 0 -0.1" quat="0 0 0 1" type="box" group="0" name="ground" rgba="0 0 0 0" margin="-0.005" conaffinity="15" condim="3" friction="1"/>
+  </worldbody>
+
+  <equality>
+  </equality>
+</mujoco>

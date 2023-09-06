@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- from https://github.com/vikashplus/mj_envs/tree/master/mj_envs/hand_manipulation_suite/assets -->
+<!-- Information about door can be found in this paper: https://arxiv.org/pdf/1709.10087.pdf -->
+
+<mujoco model="stove">
+    <texture file="../textures/brass-ambra.png" type="cube" name="metal" />
+    <material name="MatMetal" texture="metal" specular="1" shininess="0.3" rgba="0.9 0.9 0.9 1" />
+    
+    <worldbody>
+      <body>
+        <body name="object">
+          <site name="origin" pos="0 0 0" rgba="0 0 0 0" size="0.005"/>
+          <geom name='body'
+            pos="-0.03 0.0 0.01" size="0.15 0.12 0.01" type="box"
+            group="0" friction="1 1 1"
+            rgba="0 0 0 0"
+            />
+          <geom name='geom_body_visual'
+            pos="-0.03 0.0 0.01" size="0.15 0.12 0.01" type="box"
+            group="1" contype="0" conaffinity="0"
+            rgba="0.2 0.2 0.2 1" 
+            />
+          <geom name='geom_heat_visual' 
+            pos="0 0.0 0.0205" size="0.1 0.0005" type="cylinder" 
+            group="1" contype="0" conaffinity="0"
+            rgba="0.9 0.2 0.2 0.1"
+            />
+
+          <body name="button" pos="-0.14 0.08 0.02">
+            <inertial pos="0 0 0" mass="0.001" diaginertia="0.001 0.001 0.001" />
+            <geom name='geom_button' 
+              pos="0 0 0.0075" size="0.02 0.0025" type="cylinder" 
+              group="0" friction="1 1 1" 
+              />
+            <geom name='geom_button_visual' 
+              pos="0 0 0.0075" size="0.02 0.0025" type="cylinder" 
+              group="1" contype="0" conaffinity="0"
+              rgba="0.2 0.2 0.2 1"
+              />
+
+	    <!--<joint type="slide" pos="0 0 0" axis="0 0 -1" range="0.0 0.01" limited="true"
+              springref="0.0" stiffness="2.5" damping="0.005" />
+	    <site name="button" pos="0 0 0" size="0.02" rgba="0 0 1 0" />!-->
+          </body>
+
+        </body>
+        <site name="bottom_site" pos="0 0 -0.0207" rgba="0 0 0 0" size="0.005"/>
+        <site name="top_site" pos="0 0 0.007" rgba="0 0 0 0" size="0.005"/>
+        <site name="horizontal_radius_site" pos="0 0 0" rgba="0 0 0 0" size="0.003"/>
+      </body>
+
+    </worldbody>
+</mujoco>
