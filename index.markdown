@@ -9,7 +9,7 @@ categories: projects
   <title>Deep Imitation Learning for Humanoid Loco-manipulation through Human Teleoperation</title>
 
 
-<meta property="og:image" content="./src/figure/approach.png">
+<meta property="og:image" content="https://github.com/UT-Austin-RPL/TRILL/blob/website/src/figure/approach.png">
 <meta property="og:title" content="TRILL">
 
 <script src="./src/popup.js" type="text/javascript"></script>
