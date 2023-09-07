@@ -5,7 +5,7 @@
 
 ![intro](architecture.png)
 
-## Introduction
+## Abstract
 We tackle the problem of developing humanoid loco-manipulation skills with deep imitation learning. The challenge of collecting human demonstrations for humanoids, in conjunction with the difficulty of policy training under a high degree of freedom, presents substantial challenges. We introduce TRILL, a data-efficient framework for learning humanoid loco-manipulation policies from human demonstrations. In this framework, we collect human demonstration data through an intuitive Virtual Reality (VR) interface. We employ the whole-body control formulation to transform task-space commands from human operators into the robot's joint-torque actuation while stabilizing its dynamics. By employing high-level action abstractions tailored for humanoid robots, our method can efficiently learn complex loco-manipulation skills. We demonstrate the effectiveness of TRILL in simulation and on a real-world robot for performing various types of tasks. 
 
 If you find our work useful in your research, please consider [citing](#citing).
@@ -30,7 +30,7 @@ python <robosuite-home>/scripts/setup_macros.py
 
 ## Usage
 
-This is a preview version of our codebase. We will provide tutorials and examples for applying our codebase to your humanoid systems.
+This is a preview version of our codebase. We will provide tutorials and examples for applying our codebase to various humanoid systems.
 
 ### Creating a demo dataset through VR teleoperation
 
@@ -96,7 +96,7 @@ Here, you must specify the path to the pre-trained checkpoint as `PATH_TO_CHECKP
 We provide our demonstration dataset in the `door` simulation environment ([link](https://utexas.box.com/s/3610huk9fu33m6wic16oe7crx8cahpl8)) and trained models of the Visuomotor Policies ([link](https://utexas.box.com/s/qn3156sxpejx4zf4piq5zh97srl5zcto)). We also plan to open our demonstration dataset and trained models in the `workbench` simulation environment in the near future.
 
 ## Tutorial
-We plan to provide tutorials for applying TRILL to your humanoid systems soon.
+We plan to provide tutorials for applying TRILL to various humanoid systems.
 
 ## Citing
 ```
