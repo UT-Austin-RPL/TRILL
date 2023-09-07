@@ -9,7 +9,7 @@ categories: projects
   <title>Deep Imitation Learning for Humanoid Loco-manipulation through Human Teleoperation</title>
 
 
-<meta property="og:image" content="src/figure/approach.png">
+<!-- <meta property="og:image" content="src/figure/approach.png"> -->
 <meta property="og:title" content="TRILL">
 
 <script src="./src/popup.js" type="text/javascript"></script>
@@ -168,7 +168,7 @@ We demonstrate the effectiveness of TRILL in simulation and on a real-world robo
     <tbody>
       <tr>
 	<td align="center" valign="middle">
-	  <a href="src/figure/approach.png"><img src="src/figure/approach.png" style="width:100%;"> </a>
+	  <a href="./src/figure/approach.png"><img src="./src/figure/approach.png" style="width:100%;"> </a>
         </td>
       </tr>
     </tbody>
@@ -186,8 +186,8 @@ We demonstrate the effectiveness of TRILL in simulation and on a real-world robo
 <br><br><hr> <h1 align="center">Hierarchical Loco-manipulation Pipeline</h1> <!-- <h2
 align="center"></h2> --> <table border="0" cellspacing="10"
 cellpadding="0" align="center"><tbody><tr><td align="center"
-valign="middle"><a href="src/figure/pipeline.png"> <img
-src="src/figure/pipeline.png" style="width:100%;"> </a></td>
+valign="middle"><a href="./src/figure/pipeline.png"> <img
+src="./src/figure/pipeline.png" style="width:100%;"> </a></td>
 </tr> </tbody> </table>
 
 <table align=center width=800px><tr><td> <p align="justify" width="20%">
@@ -208,7 +208,7 @@ src="src/figure/pipeline.png" style="width:100%;"> </a></td>
       <tr> 
         <td align="center" valign="middle">
           <video controls width="798">
-            <source src="src/video/demo_ramen.mp4"  type="video/mp4">
+            <source src="./src/video/demo_ramen.mp4"  type="video/mp4">
           </video>
         </td>
       </tr>
@@ -232,12 +232,12 @@ src="src/figure/pipeline.png" style="width:100%;"> </a></td>
       <tr> 
         <td align="center" valign="middle">
           <video muted controls width="394">
-            <source src="src/video/deploy_box.mp4"  type="video/mp4">
+            <source src="./src/video/deploy_box.mp4"  type="video/mp4">
           </video>
         </td>
         <td align="center" valign="middle">
           <video muted controls width="394">
-            <source src="src/video/deploy_cap.mp4"  type="video/mp4">
+            <source src="./src/video/deploy_cap.mp4"  type="video/mp4">
           </video>
         </td>
       </tr>
@@ -258,12 +258,12 @@ src="src/figure/pipeline.png" style="width:100%;"> </a></td>
       <tr>
         <td align="center" valign="middle">
           <video muted controls width="394">
-            <source src="src/video/deploy_door.mp4"  type="video/mp4">
+            <source src="./src/video/deploy_door.mp4"  type="video/mp4">
           </video>
         </td>
         <td align="center" valign="middle">
           <video muted controls width="394">
-            <source src="src/video/deploy_workbench.mp4"  type="video/mp4">
+            <source src="./src/video/deploy_workbench.mp4"  type="video/mp4">
           </video>
         </td>
       </tr>
