@@ -12,8 +12,8 @@ If you find our work useful in your research, please consider [citing](#citing).
 
 ## Dependencies
 - Python 3.8.5 (recommended)
-- [Robosuite](https://github.com/ARISE-Initiative/robosuite)
-- [Robomimic](https://github.com/ARISE-Initiative/robomimic)
+- [Robosuite  1.4.0](https://github.com/ARISE-Initiative/robosuite/tree/v1.4)
+- [Robomimic 0.2.0](https://github.com/ARISE-Initiative/robomimic/tree/v0.2.0)
 - [PyTorch](https://github.com/pytorch/pytorch)
 
 ## Installation
@@ -30,7 +30,7 @@ python <robosuite-home>/scripts/setup_macros.py
 
 ## Usage
 
-This is a preview version of our codebase. We will provide tutorials and examples for applying our codebase to various humanoid systems.
+This is a preview version of our codebase. We plan to provide tutorials and examples for applying our codebase to various humanoid systems.
 
 ### Creating a demo dataset through VR teleoperation
 
