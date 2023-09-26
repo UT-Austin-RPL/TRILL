@@ -1,8 +1,8 @@
 ![architecture diagram](architecture_diagram.jpeg)
 
-A script for getting controller input from and streaming stereoscopic video to a VR headset, built with OpenVR.
-
 ## Introduction
+
+This is a script for getting controller input from and streaming stereoscopic video to a VR headset, built with OpenVR.
 
 Developed for teleoperation of robots, the script reports the 6-DOF poses of left and right controllers as well as additional buttons for locomotion and gripper control.
 In addition, stereoscopic images are streamed and displayed on the VR headset to create depth perception for the wearer.
