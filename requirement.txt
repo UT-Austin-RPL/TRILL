@@ -15,10 +15,12 @@ pin
 pyyaml
 termcolor
 robosuite==1.4.0
+robomimic==0.2.0
 tensorboardX
 tensorboard
 gym
 ipdb
+wandb
 h5py
 torch==1.8.2
 torchvision==0.9.2
