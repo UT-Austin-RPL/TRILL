@@ -96,7 +96,7 @@ Here, you must specify the path to the pre-trained checkpoint as `PATH_TO_CHECKP
 We provide our demonstration dataset in the `door` simulation environment ([link](https://utexas.box.com/s/3610huk9fu33m6wic16oe7crx8cahpl8)) and trained models of the Visuomotor Policies ([link](https://utexas.box.com/s/qn3156sxpejx4zf4piq5zh97srl5zcto)). We also plan to open our demonstration dataset and trained models in the `workbench` simulation environment in the near future.
 
 
-## Related Repositories
+## Related repository
 The implementation of the whole-body control is based on [PyPnC](https://github.com/junhyeokahn/PyPnC).
 
 
