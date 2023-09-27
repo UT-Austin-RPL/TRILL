@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This is a script for getting controller input from and streaming stereoscopic video to a VR headset, built with OpenVR.
+This is a script for getting controller input from and streaming stereoscopic video to a VR headset, built with OpenVR. We recommend running this on a separate GPU machine dedicated to the VR interface, rather than on the machine running the TRILL simulation environments, though it is optional.
 
 Developed for teleoperation of robots, the script reports the 6-DOF poses of left and right controllers as well as additional buttons for locomotion and gripper control.
 In addition, stereoscopic images are streamed and displayed on the VR headset to create depth perception for the wearer.
@@ -12,9 +12,9 @@ The protobuf file is contained in the messages folder. Examples on how to intera
 
 ### Architecture
 
-We use OpenVR (implemented in SteamVR) and ALVR (Air Light VR) for the communication between the laptop and the headset. OpenVR is a low-level API designed to support a wide range of VR devices. ALVR is an open-source project that allows streaming Steam VR games from the laptop to the headset via Wi-Fi. It implements technologies such as Asynchronous Timewarp and Fixed Foveated Rendering for a smoother experience. ZMQ is an asynchronous messaging library that simplies message-passing between different programs or devices.
+We use OpenVR (implemented in SteamVR) and ALVR (Air Light VR) for the communication between the GPU machine and the headset. OpenVR is a low-level API designed to support a wide range of VR devices. ALVR is an open-source project that allows streaming Steam VR games from the GPU machine to the headset via Wi-Fi. It implements technologies such as Asynchronous Timewarp and Fixed Foveated Rendering for a smoother experience. ZMQ is an asynchronous messaging library that simplies message-passing between different programs or devices.
 
-For the simulation, we use Mujoco with Python binding for the physical simulation and Robosuite for the objects in the scene. We first render the scene using a virtual stereoscopic camera that is adjusted to match the interpupillary distance of the VR headset. Then, the rendered pixels are copied from the GPU to CPU and sent to the VR interface using ZMQ and ethernet. The interface code listens to the images and writes them into a GPU texture used by OpenVR. Finally, SteamVR and ALVR transmit the images through a router and displays them in the VR headset. At the same time, the interface polls the VR headset for the poses of the headset and controllers through OpenVR. It transforms the controller poses to the local frame of the headset, and they are then mapped to the poses of the robot hands in the robot’s local frame.
+For the simulation, we use Mujoco with Python binding for the physical simulation and Robosuite for the objects in the scene. We first render the scene using a virtual stereoscopic camera that is adjusted to match the interpupillary distance of the VR headset. Then, the rendered pixels are copied from the GPU to CPU and sent to the VR interface using ZMQ and ethernet. The interface code listens to the images and writes them into a GPU texture used by OpenVR. Finally, SteamVR and ALVR transmit the images through a network router and displays them in the VR headset. At the same time, the interface polls the VR headset for the poses of the headset and controllers through OpenVR. It transforms the controller poses to the local frame of the headset, and they are then mapped to the poses of the robot hands in the robot’s local frame.
 The transformed hand poses are then published continuously using a ZMQ pub socket. When the simulation needs a VR command, it pulls the most recent command from the queue and sends it to the whole-body controller.
 
 ## Ubuntu Installation Instructions (with GPU)
@@ -67,15 +67,15 @@ Essentially you have to install side quest to side load the app to the oculus qu
 
 ## VR Usage Instructions
 
-The code is meant to be run on the GPU laptop. ALVR is used to connect the laptop and the VR headset. ALVR uses a desktop client and a VR headset side-loaded app to establish connection over a local network.
+The code is meant to be run on the GPU machine. ALVR is used to connect the GPU machine and the VR headset. ALVR uses a desktop client and a VR headset side-loaded app to establish connection over a local network.
 
 To run this setup, you need to first
 
-### Launch the ALVR app on the laptop
+### Launch the ALVR app on the GPU machine
 
 1. Navigate to the `~/alvr` folder or wherever alvr is installed
 2. Run `./bin/alvr_launcher.` This should automatically start Steam and ALVR, and you’ll be greeted with a dashboard.
-3. Turn on the wired connection on the GPU laptop to connect to the router. Note that this will disrupt your internet access since the router doesn’t have wifi connection.
+3. Turn on the wired connection on the GPU machine to connect to the router.
 
 If the ALVR dashboard is already running, you might have to restart it since the previous session might be stale. Also, every time that you quit the VR interface script, you would have to restart the ALVR to avoid a segfault. Here’s how
 
@@ -107,20 +107,17 @@ Now you’re ready to connect to the headset.
 3. Scroll down and choose “Unknown Sources”.
 4. Select ALVR in the list.
 
-Make sure that the headset and laptop are connected to the same wifi. You should now see a screen with mountains (before executing the VR interface script, you would see a SteamVR room).
+Make sure that the headset and the GPU machine are connected to the same network. You should now see a screen with mountains (before executing the VR interface script, you would see a SteamVR room).
 
 ## Troubleshooting
 
-1. Don't run 2 versions of the vr script (for example, if you modify the script, put it in a separate repo, and run the modified script before running the original script). When this happens, SteamVR tends to work for a few seconds before crashing. The solution is to restart the laptop and make sure to only run one version of the script.
+1. Don't run 2 versions of the vr script (for example, if you modify the script, put it in a separate repo, and run the modified script before running the original script). When this happens, SteamVR tends to work for a few seconds before crashing. The solution is to restart the GPU machine and make sure to only run one version of the script.
 
 ## Design Choices
 
 Some design decisions were made to satisfy the requirements defined above. They are explained in this section in hopes of providing documentation and guidance for others working on similar systems.
 
 ### OpenVR
-
-Initially, a website was created based on WebXR and JavaScript to stream controller poses over the internet. I wanted to improve the latency by keeping the connection within a local network, but I encountered difficulty in setting up HTTPS certificates in the campus lab. After getting tired of tunneling the connection over the internet, I decided to pursue a more low-level approach.
-The native Oculus SDK could work, but it would limit the option to change VR systems in the future. Unity is a good option for cross-platform compatibility, but since there's only a need to stream images and controller poses, a game engine is an overkill. I also don't believe that Unity exposes the low-level functionality to directly show the stereoscopic images in the headset. Since Unity uses the low-level OpenVR API, I decided to use it directly. Although a newer API called OpenXR is gaining steam, I feel that the performance benefits of OpenXR doesn't justify its complexity compared to OpenVR.
 
 Using OpenVR has several advantages. First, it has great performance since it is used by VR games and has direct support from VR headset manufacturers. Second, it delegates the work of video streaming to existing technologies. Many VR headsets support direct HDMI connection from the computer's graphics card, which OpenVR can take full advantage of since it takes input images from OpenGL. Even though the Quest doesn't have an HDMI cable, it is still possible to use the Oculus Link (over an USB cable) or Oculus Air Link (over a local network) with OpenVR. These are sophisticated streaming technologies that predict the user's movements and streaming latency to render ahead of time, and they encode the frames as slices in H.264. ALVR is an open-source alternative that implements similar technologies with the added benefit of having experimental support for Linux. Using these technologies is much more performant and scalable than hand-coding an image streaming pipeline. Finally, OpenVR works on a variety of Operating Systems and targets many VR headsets.
 
@@ -135,4 +132,4 @@ The last approach was chosen to make the design more adaptable to the real robot
 
 The simulation uses a ZMQ sub socket to get actions from the pub socket in the interface script. Usually this is done synchronously, meaning that the simulation waits for the interface to provide a response after requesting. However, this approach usually takes 70 milliseconds for the message round-trip. This delay can be reduced to .1 milliseconds by using an asynchronous approach. In this case, the sender and receiver simply run at their own pace, and the ZMQ threads in the background takes care of getting the messages ready. When the simulation requests an action, the ZMQ simply gets the most recently received message in its queue and returns it. Since the interface runs at a higher frequency than the simulation, there will never be a case where no action is available. Also, by setting the "conflate" option in ZMQ, we can reduce the need of a queue by only keeping the most recent message.
 
-The performance of the VR Interface is acceptable. Using asynchronous message passing and a separate laptop for VR interface, receiving images and sending commands are both sub-millisecond operations. The biggest contributor to latency is ALVR, which adds about 70 milliseconds of latency.
+The performance of the VR Interface is acceptable. Using asynchronous message passing and a separate GPU machine for VR interface, receiving images and sending commands are both sub-millisecond operations. The biggest contributor to latency is ALVR, which adds about 70 milliseconds of latency.
