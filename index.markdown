@@ -138,6 +138,7 @@ highlight {
   <h2>
     <a href="https://www.utexas.edu/">The University of Texas at Austin</a>&nbsp;&nbsp;&nbsp;
   </h2>
+  <h3>IEEE-RAS International Conference on Humanoid Robots (Humanoids), 2023</h3>
   <h2><a href="http://arxiv.org/abs/2309.01952">Paper</a> | <a href="https://github.com/UT-Austin-RPL/TRILL">Code</a></h2>
   </center>
 
