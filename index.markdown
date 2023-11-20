@@ -126,18 +126,18 @@ highlight {
 
 <div id="primarycontent">
 <center><h1><strong>Deep Imitation Learning for Humanoid Loco-manipulation<br>through Human Teleoperation</strong></h1></center>
-<center><h2>
+<center><h3>
     <a href="https://mingyoseo.com/">Mingyo Seo</a>&nbsp;&nbsp;&nbsp;
     <a href="https://www.linkedin.com/in/stevehan2001/">Steve Han</a>&nbsp;&nbsp;&nbsp;
     <a href="https://www.linkedin.com/in/kyutae-sim-888593166">Kyutae Sim</a>&nbsp;&nbsp;&nbsp;
     <a href="https://sites.utexas.edu/hcrl/people/">Seung Hyeon Bang</a>&nbsp;&nbsp;&nbsp;
-    <a href="https://sites.utexas.edu/hcrl/people/">Carlos Gonzalez</a><br>
+    <a href="https://sites.utexas.edu/hcrl/people/">Carlos Gonzalez</a>&nbsp;&nbsp;&nbsp;
     <a href="https://www.ae.utexas.edu/people/faculty/faculty-directory/sentis">Luis Sentis</a>&nbsp;&nbsp;&nbsp; 
     <a href="https://cs.utexas.edu/~yukez">Yuke Zhu</a>
-  </h2>
-  <h2>
+  </h3>
+  <h3>
     <a href="https://www.utexas.edu/">The University of Texas at Austin</a>&nbsp;&nbsp;&nbsp;
-  </h2>
+  </h3>
   <h3>
     IEEE-RAS International Conference on Humanoid Robots (Humanoids), 2023<br>
     <b>Oral Presentation</b>
