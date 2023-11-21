@@ -207,7 +207,7 @@ src="./src/figure/pipeline.png" style="width:100%;"> </a></td>
 </tr> </tbody> </table>
 
 <table align=center width=800px><tr><td> <p align="justify" width="20%">
-  The trained policies generate the target task-space command at 20Hz from the onboard stereo camera observation and the robot's proprioceptive feedback. The robot control interface realizes the task-space commands and computes the desired joint torques at 100Hz and sends them to the humanoid robot for actuation.
+  The trained policies generate the target task-space command at 20Hz from the onboard stereo camera observation and the robot's proprioceptive feedback. The robot control interface realizes the task-space commands and computes the desired joint torques at 100Hz and sends them to the humanoid robot for actuation. More implementation details can be found in <a href="https://github.com/UT-Austin-RPL/TRILL/blob/main/implementation.md">this page</a>.
 </p></td></tr></table>
 <br>
 
@@ -294,18 +294,15 @@ src="./src/figure/pipeline.png" style="width:100%;"> </a></td>
   <tr>
     <td>
     <pre><code style="display:block; overflow-x: auto">
-      @misc{seo2023trill,
+      @inproceedings{seo2023trill,
         title={Deep Imitation Learning for Humanoid Loco-manipulation 
 	  through Human Teleoperation},
         author={Seo, Mingyo and Han, Steve and Sim, Kyutae and Bang, Seung Hyeon
 	  and Gonzalez, Carlos and Sentis, Luis and Zhu, Yuke},
-        eprint={2309.01952},
-        archivePrefix={arXiv},
-        primaryClass={cs.RO}
+        booktitle={IEEE-RAS International Conference on Humanoid Robots (Humanoids)},
         year={2023}
       }
     </code></pre>
     </td>
   </tr>
 </table>
-
