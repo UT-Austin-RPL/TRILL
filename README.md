@@ -3,7 +3,7 @@
 
 [Project](https://ut-austin-rpl.github.io/TRILL) | [arXiv](https://arxiv.org/abs/2309.01952)
 
-![intro](architecture.png)
+![intro](approach.png)
 
 ## Abstract
 We tackle the problem of developing humanoid loco-manipulation skills with deep imitation learning. The challenge of collecting human demonstrations for humanoids, in conjunction with the difficulty of policy training under a high degree of freedom, presents substantial challenges. We introduce TRILL, a data-efficient framework for learning humanoid loco-manipulation policies from human demonstrations. In this framework, we collect human demonstration data through an intuitive Virtual Reality (VR) interface. We employ the whole-body control formulation to transform task-space commands from human operators into the robot's joint-torque actuation while stabilizing its dynamics. By employing high-level action abstractions tailored for humanoid robots, our method can efficiently learn complex loco-manipulation skills. We demonstrate the effectiveness of TRILL in simulation and on a real-world robot for performing various types of tasks. 
@@ -70,7 +70,7 @@ hdf5 dataset
     ├── lh_eef_quat: 4D value
     ├── rf_foot_quat: 4D value
     ├── lf_foot_quat: 4D value
-    ├── joint: 78D value
+    ├── joint: 81D value
     ├── state: 1D value
     └── action: 15D value (not used)
 ```
@@ -96,20 +96,22 @@ Here, you must specify the path to the pre-trained checkpoint as `PATH_TO_CHECKP
 We provide our demonstration dataset in the `door` simulation environment ([link](https://utexas.box.com/s/3610huk9fu33m6wic16oe7crx8cahpl8)) and trained models of the Visuomotor Policies ([link](https://utexas.box.com/s/qn3156sxpejx4zf4piq5zh97srl5zcto)). We also plan to open our demonstration dataset and trained models in the `workbench` simulation environment in the near future.
 
 
+## Implementation Details
+Please see [this page](implementation.md) for detailed information on our implementation, including the whole-body controller, model architecture, and teleoperation system.
+
+
 ## Related repository
 The implementation of the whole-body control is based on [PyPnC](https://github.com/junhyeokahn/PyPnC).
 
 
 ## Citing
 ```
-@misc{seo2023trill,
+@inproceedings{seo2023trill,
    title={Deep Imitation Learning for Humanoid Loco-manipulation through Human Teleoperation},
    author={Seo, Mingyo and Han, Steve and Sim, Kyutae and 
            Bang, Seung Hyeon and Gonzalez, Carlos and 
            Sentis, Luis and Zhu, Yuke},
-   eprint={2309.01952},
-   archivePrefix={arXiv},
-   primaryClass={cs.RO}
+   booktitle={IEEE-RAS International Conference on Humanoid Robots (Humanoids)},
    year={2023}
 }
 ```
