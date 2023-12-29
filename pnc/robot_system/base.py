@@ -130,7 +130,7 @@ class RobotSystem(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def _config_robot(self, urdf_file):
+    def _config_robot(self, urdf_file, package_dir):
         """
         Configure following properties:
             n_floating (int):

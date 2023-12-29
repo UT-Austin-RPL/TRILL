@@ -332,7 +332,7 @@ class DCMPlanner(object):
             if i == 0:
                 t_exp_step_end = self._compute_ds_t_end(i + 1)
 
-            if t_ds_step_start <= t and t <= t_exp_step_end:
+            if t_ds_step_start <= t <= t_exp_step_end:
                 return i
 
         return len(self._vrp_list) - 1

@@ -256,16 +256,16 @@ class Player():
             self._post_fcn(self)
 
     def _load_data(self, file_path):
-        NotImplementedError
+        raise NotImplementedError()
 
     def _read_qpos(self):
-        NotImplementedError
+        raise NotImplementedError
 
     def _read_action(self):
-        NotImplementedError
+        raise NotImplementedError
 
     def _read_obs(self):
-        NotImplementedError
+        raise NotImplementedError
 
     def _render(self):
         if self._env.renderer == None:

@@ -9,7 +9,7 @@ class SingleSupportSwing(StateMachine):
         super(SingleSupportSwing, self).__init__(id, robot)
         self._trajectory_managers = tm
         self._leg_side = leg_side
-        self._sp = DracoManipulationStateProvider()
+        self._sp = DracoManipulationStateProvider(robot)
         self._start_time = 0.
 
     def first_visit(self):

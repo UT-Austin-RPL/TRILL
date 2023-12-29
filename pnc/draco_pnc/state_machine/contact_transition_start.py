@@ -14,7 +14,7 @@ class ContactTransitionStart(StateMachine):
         self._hierarchy_managers = hm
         self._force_managers = fm
         self._leg_side = leg_side
-        self._sp = DracoManipulationStateProvider()
+        self._sp = DracoManipulationStateProvider(robot)
         self._start_time = 0.
         self._planning_id = 0
 

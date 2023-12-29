@@ -234,7 +234,7 @@ class DracoManipulationControlArchitecture(ControlArchitecture):
         self._b_state_first_visit = True
         self._b_manipulation_first_visit = True
 
-        self._sp = DracoManipulationStateProvider()
+        self._sp = DracoManipulationStateProvider(robot)
 
     def get_command(self):
         if self._b_state_first_visit:

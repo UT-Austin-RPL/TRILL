@@ -39,4 +39,4 @@ class DracoManipulationStateEstimator(object):
         alpha_dcm_vel = 0.1  # TODO : Get this from Hz
         self._sp.dcm_vel = alpha_dcm_vel * (
             self._sp.dcm - self._sp.prev_dcm) / self._config['Simulation']['Control Period']
-        +(1.0 - alpha_dcm_vel) * self._sp.dcm_vel
+        +(1.0 - alpha_dcm_vel) * self._sp.dcm_vel()

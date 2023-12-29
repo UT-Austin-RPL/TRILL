@@ -17,7 +17,7 @@ class DoubleSupportStand(StateMachine):
         self._rf_z_max_time = 0.
         self._com_height_des = 0.
         self._start_time = 0.
-        self._sp = DracoManipulationStateProvider()
+        self._sp = DracoManipulationStateProvider(robot)
         self._lhand_iso = np.zeros((4, 4))
         self._rhand_iso = np.zeros((4, 4))
 
