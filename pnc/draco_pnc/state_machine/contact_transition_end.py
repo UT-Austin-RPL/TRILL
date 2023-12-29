@@ -1,7 +1,7 @@
-from pnc.draco_pnc.state_machine import LocomanipulationState
-from pnc.state_machine import StateMachine
 from pnc.dcm import Footstep
+from pnc.draco_pnc.state_machine import LocomanipulationState
 from pnc.draco_pnc.state_provider import DracoManipulationStateProvider
+from pnc.state_machine import StateMachine
 
 
 class ContactTransitionEnd(StateMachine):
@@ -12,7 +12,7 @@ class ContactTransitionEnd(StateMachine):
         self._force_managers = fm
         self._leg_side = leg_side
         self._sp = DracoManipulationStateProvider(robot)
-        self._start_time = 0.
+        self._start_time = 0.0
 
     def first_visit(self):
         if self._leg_side == Footstep.RIGHT_SIDE:
@@ -20,23 +20,28 @@ class ContactTransitionEnd(StateMachine):
         else:
             print("[LocomanipulationState] LeftLeg ContactTransitionEnd")
         self._start_time = self._sp.curr_time
-        self._end_time = self._trajectory_managers[
-            "dcm"].compute_rf_z_ramp_down_time()
+        self._end_time = self._trajectory_managers["dcm"].compute_rf_z_ramp_down_time()
 
         if self._leg_side == Footstep.LEFT_SIDE:
             self._force_managers["lfoot"].initialize_ramp_to_min(
-                self._sp.curr_time, self._end_time)
+                self._sp.curr_time, self._end_time
+            )
             self._hierarchy_managers["lfoot_pos"].initialize_ramp_to_min(
-                self._sp.curr_time, self._end_time)
+                self._sp.curr_time, self._end_time
+            )
             self._hierarchy_managers["lfoot_ori"].initialize_ramp_to_min(
-                self._sp.curr_time, self._end_time)
+                self._sp.curr_time, self._end_time
+            )
         elif self._leg_side == Footstep.RIGHT_SIDE:
             self._force_managers["rfoot"].initialize_ramp_to_min(
-                self._sp.curr_time, self._end_time)
+                self._sp.curr_time, self._end_time
+            )
             self._hierarchy_managers["rfoot_pos"].initialize_ramp_to_min(
-                self._sp.curr_time, self._end_time)
+                self._sp.curr_time, self._end_time
+            )
             self._hierarchy_managers["rfoot_ori"].initialize_ramp_to_min(
-                self._sp.curr_time, self._end_time)
+                self._sp.curr_time, self._end_time
+            )
         else:
             raise ValueError("Wrong Leg Side")
 
@@ -45,26 +50,21 @@ class ContactTransitionEnd(StateMachine):
 
         # Update max normal reaction forces and task hieararchy weights
         if self._leg_side == Footstep.LEFT_SIDE:
-            self._force_managers["lfoot"].update_ramp_to_min(
-                self._sp.curr_time)
-            self._hierarchy_managers["lfoot_pos"].update_ramp_to_min(
-                self._sp.curr_time)
-            self._hierarchy_managers["lfoot_ori"].update_ramp_to_min(
-                self._sp.curr_time)
+            self._force_managers["lfoot"].update_ramp_to_min(self._sp.curr_time)
+            self._hierarchy_managers["lfoot_pos"].update_ramp_to_min(self._sp.curr_time)
+            self._hierarchy_managers["lfoot_ori"].update_ramp_to_min(self._sp.curr_time)
         elif self._leg_side == Footstep.RIGHT_SIDE:
-            self._force_managers["rfoot"].update_ramp_to_min(
-                self._sp.curr_time)
-            self._hierarchy_managers["rfoot_pos"].update_ramp_to_min(
-                self._sp.curr_time)
-            self._hierarchy_managers["rfoot_ori"].update_ramp_to_min(
-                self._sp.curr_time)
+            self._force_managers["rfoot"].update_ramp_to_min(self._sp.curr_time)
+            self._hierarchy_managers["rfoot_pos"].update_ramp_to_min(self._sp.curr_time)
+            self._hierarchy_managers["rfoot_ori"].update_ramp_to_min(self._sp.curr_time)
 
         else:
             raise ValueError("Wrong Leg Side")
 
         # Update floating base task
         self._trajectory_managers["dcm"].update_floating_base_task_desired(
-            self._sp.curr_time)
+            self._sp.curr_time
+        )
 
         # Update foot task
         self._trajectory_managers["lfoot"].use_current()

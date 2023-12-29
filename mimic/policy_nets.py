@@ -1,20 +1,19 @@
-import numpy as np
 from collections import OrderedDict
 
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
-import torch.distributions as D
-
 import robomimic.utils.tensor_utils as TensorUtils
-from robomimic.models.obs_nets import MIMO_MLP, RNN_MIMO_MLP
+import torch
+import torch.distributions as D
+import torch.nn.functional as F
 from robomimic.models.distributions import TanhWrappedDistribution
+from robomimic.models.obs_nets import RNN_MIMO_MLP
 from robomimic.models.policy_nets import RNNActorNetwork
+
 
 class RNNHybridActorNetwork(RNNActorNetwork):
     """
     An RNN GMM policy network that predicts sequences of action distributions from observation sequences.
     """
+
     def __init__(
         self,
         obs_shapes,
@@ -97,15 +96,18 @@ class RNNHybridActorNetwork(RNNActorNetwork):
             "softplus": F.softplus,
             "exp": torch.exp,
         }
-        assert std_activation in self.activations, \
-            "std_activation must be one of: {}; instead got: {}".format(self.activations.keys(), std_activation)
+        assert (
+            std_activation in self.activations
+        ), "std_activation must be one of: {}; instead got: {}".format(
+            self.activations.keys(), std_activation
+        )
         self.std_activation = std_activation
 
         super(RNNHybridActorNetwork, self).__init__(
             obs_shapes=obs_shapes,
             ac_dim=ac_dim,
-            #trajectory_dim=trajectory_dim,
-            #discrete_dim=discrete_dim,
+            # trajectory_dim=trajectory_dim,
+            # discrete_dim=discrete_dim,
             mlp_layer_dims=mlp_layer_dims,
             rnn_hidden_dim=rnn_hidden_dim,
             rnn_num_layers=rnn_num_layers,
@@ -115,23 +117,24 @@ class RNNHybridActorNetwork(RNNActorNetwork):
             encoder_kwargs=encoder_kwargs,
         )
 
-
     def _get_output_shapes(self):
         """
         Tells @MIMO_MLP superclass about the output dictionary that should be generated
         at the last layer. Network outputs parameters of GMM distribution.
         """
         return OrderedDict(
-            mean=(self.num_modes, self.trajectory_dim), 
-            scale=(self.num_modes, self.trajectory_dim), 
+            mean=(self.num_modes, self.trajectory_dim),
+            scale=(self.num_modes, self.trajectory_dim),
             logits=(self.num_modes,),
-            discrete=(max(self.discrete_classes), self.discrete_dim)
+            discrete=(max(self.discrete_classes), self.discrete_dim),
         )
 
-    def forward_train(self, obs_dict, goal_dict=None, rnn_init_state=None, return_state=False):
+    def forward_train(
+        self, obs_dict, goal_dict=None, rnn_init_state=None, return_state=False
+    ):
         """
         Return full GMM distribution, which is useful for computing
-        quantities necessary at train-time, like log-likelihood, KL 
+        quantities necessary at train-time, like log-likelihood, KL
         divergence, etc.
 
         Args:
@@ -148,16 +151,23 @@ class RNNHybridActorNetwork(RNNActorNetwork):
             assert goal_dict is not None
             # repeat the goal observation in time to match dimension with obs_dict
             mod = list(obs_dict.keys())[0]
-            goal_dict = TensorUtils.unsqueeze_expand_at(goal_dict, size=obs_dict[mod].shape[1], dim=1)
+            goal_dict = TensorUtils.unsqueeze_expand_at(
+                goal_dict, size=obs_dict[mod].shape[1], dim=1
+            )
 
         outputs = RNN_MIMO_MLP.forward(
-            self, obs=obs_dict, goal=goal_dict, rnn_init_state=rnn_init_state, return_state=return_state)
+            self,
+            obs=obs_dict,
+            goal=goal_dict,
+            rnn_init_state=rnn_init_state,
+            return_state=return_state,
+        )
 
         if return_state:
             outputs, state = outputs
         else:
             state = None
-        
+
         means = outputs["mean"]
         scales = outputs["scale"]
         logits = outputs["logits"]
@@ -177,7 +187,9 @@ class RNNHybridActorNetwork(RNNActorNetwork):
         # mixture components - make sure that `batch_shape` for the distribution is equal
         # to (batch_size, timesteps, num_modes) since MixtureSameFamily expects this shape
         component_distribution = D.Normal(loc=means, scale=scales)
-        component_distribution = D.Independent(component_distribution, 1) # shift action dim to event shape
+        component_distribution = D.Independent(
+            component_distribution, 1
+        )  # shift action dim to event shape
 
         # unnormalized logits to categorical distribution for mixing the modes
         mixture_distribution = D.Categorical(logits=logits)
@@ -189,7 +201,7 @@ class RNNHybridActorNetwork(RNNActorNetwork):
 
         if self.use_tanh:
             # Wrap distribution with Tanh
-            dists = TanhWrappedDistribution(base_dist=dists, scale=1.)
+            dists = TanhWrappedDistribution(base_dist=dists, scale=1.0)
 
         discrete_logits = torch.softmax(discrete, dim=-2)
 
@@ -198,7 +210,9 @@ class RNNHybridActorNetwork(RNNActorNetwork):
         else:
             return (dists, discrete_logits)
 
-    def forward(self, obs_dict, goal_dict=None, rnn_init_state=None, return_state=False):
+    def forward(
+        self, obs_dict, goal_dict=None, rnn_init_state=None, return_state=False
+    ):
         """
         Samples actions from the policy distribution.
 
@@ -209,7 +223,12 @@ class RNNHybridActorNetwork(RNNActorNetwork):
         Returns:
             action (torch.Tensor): batch of actions from policy distribution
         """
-        out = self.forward_train(obs_dict=obs_dict, goal_dict=goal_dict, rnn_init_state=rnn_init_state, return_state=return_state)
+        out = self.forward_train(
+            obs_dict=obs_dict,
+            goal_dict=goal_dict,
+            rnn_init_state=rnn_init_state,
+            return_state=return_state,
+        )
         if return_state:
             ad, state = out
             dists, discrete_logits = ad
@@ -222,11 +241,10 @@ class RNNHybridActorNetwork(RNNActorNetwork):
             discrete_args = torch.argmax(discrete_logits, dim=-2)
             return (trajectory_sample, discrete_args)
 
-
     def forward_train_step(self, obs_dict, goal_dict=None, rnn_state=None):
         """
-        Unroll RNN over single timestep to get action GMM distribution, which 
-        is useful for computing quantities necessary at train-time, like 
+        Unroll RNN over single timestep to get action GMM distribution, which
+        is useful for computing quantities necessary at train-time, like
         log-likelihood, KL divergence, etc.
 
         Args:
@@ -241,7 +259,8 @@ class RNNHybridActorNetwork(RNNActorNetwork):
         """
         obs_dict = TensorUtils.to_sequence(obs_dict)
         ad, state = self.forward_train(
-            obs_dict, goal_dict, rnn_init_state=rnn_state, return_state=True)
+            obs_dict, goal_dict, rnn_init_state=rnn_state, return_state=True
+        )
 
         dists, discrete_logits = ad
 
@@ -254,7 +273,9 @@ class RNNHybridActorNetwork(RNNActorNetwork):
             scale=dists.component_distribution.base_dist.scale.squeeze(1),
         )
         component_distribution = D.Independent(component_distribution, 1)
-        mixture_distribution = D.Categorical(logits=dists.mixture_distribution.logits.squeeze(1))
+        mixture_distribution = D.Categorical(
+            logits=dists.mixture_distribution.logits.squeeze(1)
+        )
         dists = D.MixtureSameFamily(
             mixture_distribution=mixture_distribution,
             component_distribution=component_distribution,
@@ -278,10 +299,14 @@ class RNNHybridActorNetwork(RNNActorNetwork):
         """
         obs_dict = TensorUtils.to_sequence(obs_dict)
         acts, state = self.forward(
-            obs_dict, goal_dict, rnn_init_state=rnn_state, return_state=True)
+            obs_dict, goal_dict, rnn_init_state=rnn_state, return_state=True
+        )
         dist_act, discrete_act = acts
         assert dist_act.shape[1] == 1
-        out = torch.zeros((discrete_act.shape[0], self.discrete_dim + self.trajectory_dim), device=discrete_act.device)
+        out = torch.zeros(
+            (discrete_act.shape[0], self.discrete_dim + self.trajectory_dim),
+            device=discrete_act.device,
+        )
         # out[:, self.discrete_indices] = discrete_act[:, 0]
         out[:, self.discrete_indices] = discrete_act[:, 0].type(torch.float32)
         out[:, self.trajectory_indices] = dist_act[:, 0]
@@ -290,15 +315,21 @@ class RNNHybridActorNetwork(RNNActorNetwork):
     def _to_string(self):
         """Info to pretty print."""
         msg = "trajectory_dim={}, discrete_dim={}, std_activation={}, low_noise_eval={}, num_nodes={}, min_std={}".format(
-            self.trajectory_dim, self.discrete_dim, self.std_activation, self.low_noise_eval, self.num_modes, self.min_std)
+            self.trajectory_dim,
+            self.discrete_dim,
+            self.std_activation,
+            self.low_noise_eval,
+            self.num_modes,
+            self.min_std,
+        )
         return msg
-
 
 
 class HierarchicalRNNDeterministicActorNetwork(RNNActorNetwork):
     """
     An RNN GMM policy network that predicts sequences of action distributions from observation sequences.
     """
+
     def __init__(
         self,
         obs_shapes,
@@ -382,8 +413,8 @@ class HierarchicalRNNDeterministicActorNetwork(RNNActorNetwork):
         super(HierarchicalRNNDeterministicActorNetwork, self).__init__(
             obs_shapes=obs_shapes,
             ac_dim=ac_dim,
-            #trajectory_dim=trajectory_dim,
-            #discrete_dim=discrete_dim,
+            # trajectory_dim=trajectory_dim,
+            # discrete_dim=discrete_dim,
             mlp_layer_dims=mlp_layer_dims,
             rnn_hidden_dim=rnn_hidden_dim,
             rnn_num_layers=rnn_num_layers,
@@ -393,23 +424,24 @@ class HierarchicalRNNDeterministicActorNetwork(RNNActorNetwork):
             encoder_kwargs=encoder_kwargs,
         )
 
-
     def _get_output_shapes(self):
         """
         Tells @MIMO_MLP superclass about the output dictionary that should be generated
         at the last layer. Network outputs parameters of GMM distribution.
         """
         return OrderedDict(
-            trajectory=(self.trajectory_dim,), 
+            trajectory=(self.trajectory_dim,),
             trg_activation=(2, self.discrete_trg_dim),
-            trg_discrete=(max(self.discrete_trg_classes)-1, self.discrete_trg_dim),
+            trg_discrete=(max(self.discrete_trg_classes) - 1, self.discrete_trg_dim),
             con_discrete=(max(self.discrete_con_classes), self.discrete_con_dim),
         )
 
-    def forward_train(self, obs_dict, goal_dict=None, rnn_init_state=None, return_state=False):
+    def forward_train(
+        self, obs_dict, goal_dict=None, rnn_init_state=None, return_state=False
+    ):
         """
         Return full GMM distribution, which is useful for computing
-        quantities necessary at train-time, like log-likelihood, KL 
+        quantities necessary at train-time, like log-likelihood, KL
         divergence, etc.
 
         Args:
@@ -426,16 +458,23 @@ class HierarchicalRNNDeterministicActorNetwork(RNNActorNetwork):
             assert goal_dict is not None
             # repeat the goal observation in time to match dimension with obs_dict
             mod = list(obs_dict.keys())[0]
-            goal_dict = TensorUtils.unsqueeze_expand_at(goal_dict, size=obs_dict[mod].shape[1], dim=1)
+            goal_dict = TensorUtils.unsqueeze_expand_at(
+                goal_dict, size=obs_dict[mod].shape[1], dim=1
+            )
 
         outputs = RNN_MIMO_MLP.forward(
-            self, obs=obs_dict, goal=goal_dict, rnn_init_state=rnn_init_state, return_state=return_state)
+            self,
+            obs=obs_dict,
+            goal=goal_dict,
+            rnn_init_state=rnn_init_state,
+            return_state=return_state,
+        )
 
         if return_state:
             outputs, state = outputs
         else:
             state = None
-        
+
         trajectories = outputs["trajectory"]
         con_discrete = outputs["con_discrete"]
         trg_discrete = outputs["trg_discrete"]
@@ -454,7 +493,9 @@ class HierarchicalRNNDeterministicActorNetwork(RNNActorNetwork):
         else:
             return (trajectories, con_logits, trg_dists, trg_logits)
 
-    def forward(self, obs_dict, goal_dict=None, rnn_init_state=None, return_state=False):
+    def forward(
+        self, obs_dict, goal_dict=None, rnn_init_state=None, return_state=False
+    ):
         """
         Samples actions from the policy distribution.
 
@@ -465,24 +506,32 @@ class HierarchicalRNNDeterministicActorNetwork(RNNActorNetwork):
         Returns:
             action (torch.Tensor): batch of actions from policy distribution
         """
-        out = self.forward_train(obs_dict=obs_dict, goal_dict=goal_dict, rnn_init_state=rnn_init_state, return_state=return_state)
+        out = self.forward_train(
+            obs_dict=obs_dict,
+            goal_dict=goal_dict,
+            rnn_init_state=rnn_init_state,
+            return_state=return_state,
+        )
         if return_state:
             ad, state = out
             trajectories, continuous_logits, trigger_dists, trigger_logits = ad
             continuous_args = torch.argmax(continuous_logits, dim=-2)
-            trigger_args = trigger_dists.sample() * (torch.argmax(trigger_logits, dim=-2) + 1)
+            trigger_args = trigger_dists.sample() * (
+                torch.argmax(trigger_logits, dim=-2) + 1
+            )
             return (trajectories, continuous_args, trigger_args), state
         else:
             trajectories, continuous_logits, trigger_dists, trigger_logits = out
             continuous_args = torch.argmax(continuous_logits, dim=-2)
-            trigger_args = trigger_dists.sample() * (torch.argmax(trigger_logits, dim=-2) + 1)
+            trigger_args = trigger_dists.sample() * (
+                torch.argmax(trigger_logits, dim=-2) + 1
+            )
             return (trajectories, continuous_args, trigger_args)
-
 
     def forward_train_step(self, obs_dict, goal_dict=None, rnn_state=None):
         """
-        Unroll RNN over single timestep to get action GMM distribution, which 
-        is useful for computing quantities necessary at train-time, like 
+        Unroll RNN over single timestep to get action GMM distribution, which
+        is useful for computing quantities necessary at train-time, like
         log-likelihood, KL divergence, etc.
 
         Args:
@@ -497,7 +546,8 @@ class HierarchicalRNNDeterministicActorNetwork(RNNActorNetwork):
         """
         obs_dict = TensorUtils.to_sequence(obs_dict)
         ad, state = self.forward_train(
-            obs_dict, goal_dict, rnn_init_state=rnn_state, return_state=True)
+            obs_dict, goal_dict, rnn_init_state=rnn_state, return_state=True
+        )
 
         trajectories, con_logits, trg_dists, trg_logits = ad
 
@@ -519,10 +569,17 @@ class HierarchicalRNNDeterministicActorNetwork(RNNActorNetwork):
         """
         obs_dict = TensorUtils.to_sequence(obs_dict)
         acts, state = self.forward(
-            obs_dict, goal_dict, rnn_init_state=rnn_state, return_state=True)
+            obs_dict, goal_dict, rnn_init_state=rnn_state, return_state=True
+        )
         traj_act, disc_con_act, disc_trg_act = acts
         assert traj_act.shape[1] == 1
-        out = torch.zeros((disc_con_act.shape[0], self.trajectory_dim + self.discrete_trg_dim + self.discrete_con_dim), device=disc_con_act.device)
+        out = torch.zeros(
+            (
+                disc_con_act.shape[0],
+                self.trajectory_dim + self.discrete_trg_dim + self.discrete_con_dim,
+            ),
+            device=disc_con_act.device,
+        )
         # out[:, self.discrete_indices] = discrete_act[:, 0]
         out[:, self.discrete_con_indices] = disc_con_act[:, 0].type(torch.float32)
         out[:, self.discrete_trg_indices] = disc_trg_act[:, 0].type(torch.float32)
@@ -532,15 +589,16 @@ class HierarchicalRNNDeterministicActorNetwork(RNNActorNetwork):
     def _to_string(self):
         """Info to pretty print."""
         msg = "trajectory_dim={}, discrete_trg_dim={}, discrete_con_dim={}".format(
-            self.trajectory_dim, self.discrete_trg_dim, self.discrete_con_dim)
+            self.trajectory_dim, self.discrete_trg_dim, self.discrete_con_dim
+        )
         return msg
-
 
 
 class RNNHumanoidActorNetwork(RNNActorNetwork):
     """
     An RNN GMM policy network that predicts sequences of action distributions from observation sequences.
     """
+
     def __init__(
         self,
         obs_shapes,
@@ -628,15 +686,18 @@ class RNNHumanoidActorNetwork(RNNActorNetwork):
             "softplus": F.softplus,
             "exp": torch.exp,
         }
-        assert std_activation in self.activations, \
-            "std_activation must be one of: {}; instead got: {}".format(self.activations.keys(), std_activation)
+        assert (
+            std_activation in self.activations
+        ), "std_activation must be one of: {}; instead got: {}".format(
+            self.activations.keys(), std_activation
+        )
         self.std_activation = std_activation
 
         super(RNNHumanoidActorNetwork, self).__init__(
             obs_shapes=obs_shapes,
             ac_dim=ac_dim,
-            #trajectory_dim=trajectory_dim,
-            #discrete_dim=discrete_dim,
+            # trajectory_dim=trajectory_dim,
+            # discrete_dim=discrete_dim,
             mlp_layer_dims=mlp_layer_dims,
             rnn_hidden_dim=rnn_hidden_dim,
             rnn_num_layers=rnn_num_layers,
@@ -646,24 +707,25 @@ class RNNHumanoidActorNetwork(RNNActorNetwork):
             encoder_kwargs=encoder_kwargs,
         )
 
-
     def _get_output_shapes(self):
         """
         Tells @MIMO_MLP superclass about the output dictionary that should be generated
         at the last layer. Network outputs parameters of GMM distribution.
         """
         return OrderedDict(
-            mean=(self.num_modes, self.trajectory_dim), 
-            scale=(self.num_modes, self.trajectory_dim), 
+            mean=(self.num_modes, self.trajectory_dim),
+            scale=(self.num_modes, self.trajectory_dim),
             logits=(self.num_modes,),
             prob_discrete=(max(self.discrete_prob_classes), self.discrete_prob_dim),
             det_discrete=(max(self.discrete_det_classes), self.discrete_det_dim),
         )
 
-    def forward_train(self, obs_dict, goal_dict=None, rnn_init_state=None, return_state=False):
+    def forward_train(
+        self, obs_dict, goal_dict=None, rnn_init_state=None, return_state=False
+    ):
         """
         Return full GMM distribution, which is useful for computing
-        quantities necessary at train-time, like log-likelihood, KL 
+        quantities necessary at train-time, like log-likelihood, KL
         divergence, etc.
 
         Args:
@@ -680,16 +742,23 @@ class RNNHumanoidActorNetwork(RNNActorNetwork):
             assert goal_dict is not None
             # repeat the goal observation in time to match dimension with obs_dict
             mod = list(obs_dict.keys())[0]
-            goal_dict = TensorUtils.unsqueeze_expand_at(goal_dict, size=obs_dict[mod].shape[1], dim=1)
+            goal_dict = TensorUtils.unsqueeze_expand_at(
+                goal_dict, size=obs_dict[mod].shape[1], dim=1
+            )
 
         outputs = RNN_MIMO_MLP.forward(
-            self, obs=obs_dict, goal=goal_dict, rnn_init_state=rnn_init_state, return_state=return_state)
+            self,
+            obs=obs_dict,
+            goal=goal_dict,
+            rnn_init_state=rnn_init_state,
+            return_state=return_state,
+        )
 
         if return_state:
             outputs, state = outputs
         else:
             state = None
-        
+
         means = outputs["mean"]
         scales = outputs["scale"]
         logits = outputs["logits"]
@@ -710,7 +779,9 @@ class RNNHumanoidActorNetwork(RNNActorNetwork):
         # mixture components - make sure that `batch_shape` for the distribution is equal
         # to (batch_size, timesteps, num_modes) since MixtureSameFamily expects this shape
         component_distribution = D.Normal(loc=means, scale=scales)
-        component_distribution = D.Independent(component_distribution, 1) # shift action dim to event shape
+        component_distribution = D.Independent(
+            component_distribution, 1
+        )  # shift action dim to event shape
 
         # unnormalized logits to categorical distribution for mixing the modes
         mixture_distribution = D.Categorical(logits=logits)
@@ -722,7 +793,7 @@ class RNNHumanoidActorNetwork(RNNActorNetwork):
 
         if self.use_tanh:
             # Wrap distribution with Tanh
-            traj_dists = TanhWrappedDistribution(base_dist=traj_dists, scale=1.)
+            traj_dists = TanhWrappedDistribution(base_dist=traj_dists, scale=1.0)
 
         disc_probs = torch.softmax(prob_discrete, dim=-2)
         disc_dists = D.Categorical(probs=disc_probs.transpose(-1, -2))
@@ -733,7 +804,9 @@ class RNNHumanoidActorNetwork(RNNActorNetwork):
         else:
             return (traj_dists, disc_dists, disc_logits)
 
-    def forward(self, obs_dict, goal_dict=None, rnn_init_state=None, return_state=False):
+    def forward(
+        self, obs_dict, goal_dict=None, rnn_init_state=None, return_state=False
+    ):
         """
         Samples actions from the policy distribution.
 
@@ -744,7 +817,12 @@ class RNNHumanoidActorNetwork(RNNActorNetwork):
         Returns:
             action (torch.Tensor): batch of actions from policy distribution
         """
-        out = self.forward_train(obs_dict=obs_dict, goal_dict=goal_dict, rnn_init_state=rnn_init_state, return_state=return_state)
+        out = self.forward_train(
+            obs_dict=obs_dict,
+            goal_dict=goal_dict,
+            rnn_init_state=rnn_init_state,
+            return_state=return_state,
+        )
         if return_state:
             ad, state = out
             trajectory_dists, discrete_dists, discrete_logits = ad
@@ -759,11 +837,10 @@ class RNNHumanoidActorNetwork(RNNActorNetwork):
             discrete_args = torch.argmax(discrete_logits, dim=-2)
             return (trajectory_sample, discrete_sample, discrete_args)
 
-
     def forward_train_step(self, obs_dict, goal_dict=None, rnn_state=None):
         """
-        Unroll RNN over single timestep to get action GMM distribution, which 
-        is useful for computing quantities necessary at train-time, like 
+        Unroll RNN over single timestep to get action GMM distribution, which
+        is useful for computing quantities necessary at train-time, like
         log-likelihood, KL divergence, etc.
 
         Args:
@@ -778,7 +855,8 @@ class RNNHumanoidActorNetwork(RNNActorNetwork):
         """
         obs_dict = TensorUtils.to_sequence(obs_dict)
         ad, state = self.forward_train(
-            obs_dict, goal_dict, rnn_init_state=rnn_state, return_state=True)
+            obs_dict, goal_dict, rnn_init_state=rnn_state, return_state=True
+        )
 
         trajectory_dists, discrete_dists, discrete_logits = ad
 
@@ -791,7 +869,9 @@ class RNNHumanoidActorNetwork(RNNActorNetwork):
             scale=trajectory_dists.component_distribution.base_dist.scale.squeeze(1),
         )
         component_distribution = D.Independent(component_distribution, 1)
-        mixture_distribution = D.Categorical(logits=trajectory_dists.mixture_distribution.logits.squeeze(1))
+        mixture_distribution = D.Categorical(
+            logits=trajectory_dists.mixture_distribution.logits.squeeze(1)
+        )
         trajectory_dists = D.MixtureSameFamily(
             mixture_distribution=mixture_distribution,
             component_distribution=component_distribution,
@@ -815,10 +895,17 @@ class RNNHumanoidActorNetwork(RNNActorNetwork):
         """
         obs_dict = TensorUtils.to_sequence(obs_dict)
         acts, state = self.forward(
-            obs_dict, goal_dict, rnn_init_state=rnn_state, return_state=True)
+            obs_dict, goal_dict, rnn_init_state=rnn_state, return_state=True
+        )
         traj_act, disc_prob_act, disc_det_act = acts
         assert traj_act.shape[1] == 1
-        out = torch.zeros((disc_det_act.shape[0], self.trajectory_dim + self.discrete_prob_dim + self.discrete_det_dim), device=disc_det_act.device)
+        out = torch.zeros(
+            (
+                disc_det_act.shape[0],
+                self.trajectory_dim + self.discrete_prob_dim + self.discrete_det_dim,
+            ),
+            device=disc_det_act.device,
+        )
         # out[:, self.discrete_indices] = discrete_act[:, 0]
         out[:, self.discrete_det_indices] = disc_det_act[:, 0].type(torch.float32)
         out[:, self.discrete_prob_indices] = disc_prob_act[:, 0].type(torch.float32)
@@ -828,7 +915,14 @@ class RNNHumanoidActorNetwork(RNNActorNetwork):
     def _to_string(self):
         """Info to pretty print."""
         msg = "trajectory_dim={}, discrete_prob_dim={}, discrete_det_dim={}, std_activation={}, low_noise_eval={}, num_nodes={}, min_std={}".format(
-            self.trajectory_dim, self.discrete_prob_dim, self.discrete_det_dim, self.std_activation, self.low_noise_eval, self.num_modes, self.min_std)
+            self.trajectory_dim,
+            self.discrete_prob_dim,
+            self.discrete_det_dim,
+            self.std_activation,
+            self.low_noise_eval,
+            self.num_modes,
+            self.min_std,
+        )
         return msg
 
 
@@ -836,6 +930,7 @@ class HierarchicalRNNHumanoidActorNetwork(RNNActorNetwork):
     """
     An RNN GMM policy network that predicts sequences of action distributions from observation sequences.
     """
+
     def __init__(
         self,
         obs_shapes,
@@ -923,15 +1018,18 @@ class HierarchicalRNNHumanoidActorNetwork(RNNActorNetwork):
             "softplus": F.softplus,
             "exp": torch.exp,
         }
-        assert std_activation in self.activations, \
-            "std_activation must be one of: {}; instead got: {}".format(self.activations.keys(), std_activation)
+        assert (
+            std_activation in self.activations
+        ), "std_activation must be one of: {}; instead got: {}".format(
+            self.activations.keys(), std_activation
+        )
         self.std_activation = std_activation
 
         super(HierarchicalRNNHumanoidActorNetwork, self).__init__(
             obs_shapes=obs_shapes,
             ac_dim=ac_dim,
-            #trajectory_dim=trajectory_dim,
-            #discrete_dim=discrete_dim,
+            # trajectory_dim=trajectory_dim,
+            # discrete_dim=discrete_dim,
             mlp_layer_dims=mlp_layer_dims,
             rnn_hidden_dim=rnn_hidden_dim,
             rnn_num_layers=rnn_num_layers,
@@ -941,25 +1039,26 @@ class HierarchicalRNNHumanoidActorNetwork(RNNActorNetwork):
             encoder_kwargs=encoder_kwargs,
         )
 
-
     def _get_output_shapes(self):
         """
         Tells @MIMO_MLP superclass about the output dictionary that should be generated
         at the last layer. Network outputs parameters of GMM distribution.
         """
         return OrderedDict(
-            mean=(self.num_modes, self.trajectory_dim), 
-            scale=(self.num_modes, self.trajectory_dim), 
+            mean=(self.num_modes, self.trajectory_dim),
+            scale=(self.num_modes, self.trajectory_dim),
             logits=(self.num_modes,),
             trg_activation=(2, self.discrete_trg_dim),
-            trg_discrete=(max(self.discrete_trg_classes)-1, self.discrete_trg_dim),
+            trg_discrete=(max(self.discrete_trg_classes) - 1, self.discrete_trg_dim),
             con_discrete=(max(self.discrete_con_classes), self.discrete_con_dim),
         )
 
-    def forward_train(self, obs_dict, goal_dict=None, rnn_init_state=None, return_state=False):
+    def forward_train(
+        self, obs_dict, goal_dict=None, rnn_init_state=None, return_state=False
+    ):
         """
         Return full GMM distribution, which is useful for computing
-        quantities necessary at train-time, like log-likelihood, KL 
+        quantities necessary at train-time, like log-likelihood, KL
         divergence, etc.
 
         Args:
@@ -976,16 +1075,23 @@ class HierarchicalRNNHumanoidActorNetwork(RNNActorNetwork):
             assert goal_dict is not None
             # repeat the goal observation in time to match dimension with obs_dict
             mod = list(obs_dict.keys())[0]
-            goal_dict = TensorUtils.unsqueeze_expand_at(goal_dict, size=obs_dict[mod].shape[1], dim=1)
+            goal_dict = TensorUtils.unsqueeze_expand_at(
+                goal_dict, size=obs_dict[mod].shape[1], dim=1
+            )
 
         outputs = RNN_MIMO_MLP.forward(
-            self, obs=obs_dict, goal=goal_dict, rnn_init_state=rnn_init_state, return_state=return_state)
+            self,
+            obs=obs_dict,
+            goal=goal_dict,
+            rnn_init_state=rnn_init_state,
+            return_state=return_state,
+        )
 
         if return_state:
             outputs, state = outputs
         else:
             state = None
-        
+
         means = outputs["mean"]
         scales = outputs["scale"]
         logits = outputs["logits"]
@@ -1007,7 +1113,9 @@ class HierarchicalRNNHumanoidActorNetwork(RNNActorNetwork):
         # mixture components - make sure that `batch_shape` for the distribution is equal
         # to (batch_size, timesteps, num_modes) since MixtureSameFamily expects this shape
         component_distribution = D.Normal(loc=means, scale=scales)
-        component_distribution = D.Independent(component_distribution, 1) # shift action dim to event shape
+        component_distribution = D.Independent(
+            component_distribution, 1
+        )  # shift action dim to event shape
 
         # unnormalized logits to categorical distribution for mixing the modes
         mixture_distribution = D.Categorical(logits=logits)
@@ -1019,7 +1127,7 @@ class HierarchicalRNNHumanoidActorNetwork(RNNActorNetwork):
 
         if self.use_tanh:
             # Wrap distribution with Tanh
-            traj_dists = TanhWrappedDistribution(base_dist=traj_dists, scale=1.)
+            traj_dists = TanhWrappedDistribution(base_dist=traj_dists, scale=1.0)
 
         trg_dists = D.Categorical(logits=trg_activation.transpose(-1, -2))
         trg_logits = torch.softmax(trg_discrete, dim=-2)
@@ -1030,7 +1138,9 @@ class HierarchicalRNNHumanoidActorNetwork(RNNActorNetwork):
         else:
             return (traj_dists, con_logits, trg_dists, trg_logits)
 
-    def forward(self, obs_dict, goal_dict=None, rnn_init_state=None, return_state=False):
+    def forward(
+        self, obs_dict, goal_dict=None, rnn_init_state=None, return_state=False
+    ):
         """
         Samples actions from the policy distribution.
 
@@ -1041,26 +1151,34 @@ class HierarchicalRNNHumanoidActorNetwork(RNNActorNetwork):
         Returns:
             action (torch.Tensor): batch of actions from policy distribution
         """
-        out = self.forward_train(obs_dict=obs_dict, goal_dict=goal_dict, rnn_init_state=rnn_init_state, return_state=return_state)
+        out = self.forward_train(
+            obs_dict=obs_dict,
+            goal_dict=goal_dict,
+            rnn_init_state=rnn_init_state,
+            return_state=return_state,
+        )
         if return_state:
             ad, state = out
             trajectory_dists, continuous_logits, trigger_dists, trigger_logits = ad
             trajectory_sample = trajectory_dists.sample()
             continuous_args = torch.argmax(continuous_logits, dim=-2)
-            trigger_args = trigger_dists.sample() * (torch.argmax(trigger_logits, dim=-2) + 1)
+            trigger_args = trigger_dists.sample() * (
+                torch.argmax(trigger_logits, dim=-2) + 1
+            )
             return (trajectory_sample, continuous_args, trigger_args), state
         else:
             trajectory_dists, continuous_logits, trigger_dists, trigger_logits = out
             trajectory_sample = trajectory_dists.sample()
             continuous_args = torch.argmax(continuous_logits, dim=-2)
-            trigger_args = trigger_dists.sample() * (torch.argmax(trigger_logits, dim=-2) + 1)
+            trigger_args = trigger_dists.sample() * (
+                torch.argmax(trigger_logits, dim=-2) + 1
+            )
             return (trajectory_sample, continuous_args, trigger_args)
-
 
     def forward_train_step(self, obs_dict, goal_dict=None, rnn_state=None):
         """
-        Unroll RNN over single timestep to get action GMM distribution, which 
-        is useful for computing quantities necessary at train-time, like 
+        Unroll RNN over single timestep to get action GMM distribution, which
+        is useful for computing quantities necessary at train-time, like
         log-likelihood, KL divergence, etc.
 
         Args:
@@ -1075,7 +1193,8 @@ class HierarchicalRNNHumanoidActorNetwork(RNNActorNetwork):
         """
         obs_dict = TensorUtils.to_sequence(obs_dict)
         ad, state = self.forward_train(
-            obs_dict, goal_dict, rnn_init_state=rnn_state, return_state=True)
+            obs_dict, goal_dict, rnn_init_state=rnn_state, return_state=True
+        )
 
         traj_dists, con_logits, trg_dists, trg_logits = ad
 
@@ -1088,7 +1207,9 @@ class HierarchicalRNNHumanoidActorNetwork(RNNActorNetwork):
             scale=trajectory_dists.component_distribution.base_dist.scale.squeeze(1),
         )
         component_distribution = D.Independent(component_distribution, 1)
-        mixture_distribution = D.Categorical(logits=trajectory_dists.mixture_distribution.logits.squeeze(1))
+        mixture_distribution = D.Categorical(
+            logits=trajectory_dists.mixture_distribution.logits.squeeze(1)
+        )
         trajectory_dists = D.MixtureSameFamily(
             mixture_distribution=mixture_distribution,
             component_distribution=component_distribution,
@@ -1112,10 +1233,17 @@ class HierarchicalRNNHumanoidActorNetwork(RNNActorNetwork):
         """
         obs_dict = TensorUtils.to_sequence(obs_dict)
         acts, state = self.forward(
-            obs_dict, goal_dict, rnn_init_state=rnn_state, return_state=True)
+            obs_dict, goal_dict, rnn_init_state=rnn_state, return_state=True
+        )
         traj_act, disc_con_act, disc_trg_act = acts
         assert traj_act.shape[1] == 1
-        out = torch.zeros((disc_con_act.shape[0], self.trajectory_dim + self.discrete_trg_dim + self.discrete_con_dim), device=disc_con_act.device)
+        out = torch.zeros(
+            (
+                disc_con_act.shape[0],
+                self.trajectory_dim + self.discrete_trg_dim + self.discrete_con_dim,
+            ),
+            device=disc_con_act.device,
+        )
         # out[:, self.discrete_indices] = discrete_act[:, 0]
         out[:, self.discrete_con_indices] = disc_con_act[:, 0].type(torch.float32)
         out[:, self.discrete_trg_indices] = disc_trg_act[:, 0].type(torch.float32)
@@ -1125,6 +1253,12 @@ class HierarchicalRNNHumanoidActorNetwork(RNNActorNetwork):
     def _to_string(self):
         """Info to pretty print."""
         msg = "trajectory_dim={}, discrete_trg_dim={}, discrete_con_dim={}, std_activation={}, low_noise_eval={}, num_nodes={}, min_std={}".format(
-            self.trajectory_dim, self.discrete_trg_dim, self.discrete_con_dim, self.std_activation, self.low_noise_eval, self.num_modes, self.min_std)
+            self.trajectory_dim,
+            self.discrete_trg_dim,
+            self.discrete_con_dim,
+            self.std_activation,
+            self.low_noise_eval,
+            self.num_modes,
+            self.min_std,
+        )
         return msg
-

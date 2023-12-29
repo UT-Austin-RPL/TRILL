@@ -1,11 +1,12 @@
 import robomimic.utils.tensor_utils as TU
-from robomimic.utils.obs_utils import Modality, process_frame, process_frame 
-import robomimic.utils.tensor_utils as TensorUtils
+from robomimic.utils.obs_utils import Modality, process_frame
+
 
 class GrayModality(Modality):
     """
     Modality for RGB image observations
     """
+
     name = "gray"
 
     @classmethod
@@ -20,7 +21,7 @@ class GrayModality(Modality):
             processed_obs (np.array or torch.Tensor): processed image
         """
 
-        return process_frame(frame=obs, channel_dim=1, scale=255.)
+        return process_frame(frame=obs, channel_dim=1, scale=255.0)
 
         # out = process_frame(frame=obs, channel_dim=1, scale=255.)
 
@@ -43,5 +44,4 @@ class GrayModality(Modality):
             unprocessed_obs (np.array or torch.Tensor): image passed through
                 inverse operation of @process_frame
         """
-        return TU.to_uint8(unprocess_frame(frame=obs, channel_dim=1, scale=255.))
-
+        return TU.to_uint8(unprocess_frame(frame=obs, channel_dim=1, scale=255.0))

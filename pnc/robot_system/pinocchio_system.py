@@ -21,28 +21,35 @@ class PinocchioRobotSystem(RobotSystem):
     Note that first six element of generalized velocities are represented in the
     base joint frame acting on the base joint frame.
     """
-    def __init__(self,
-                 urdf_file,
-                 package_dir,
-                 b_fixed_base,
-                 b_print_info=False):
-        super(PinocchioRobotSystem, self).__init__(urdf_file, package_dir,
-                                                   b_fixed_base, b_print_info)
+
+    def __init__(self, urdf_file, package_dir, b_fixed_base, b_print_info=False):
+        super(PinocchioRobotSystem, self).__init__(
+            urdf_file, package_dir, b_fixed_base, b_print_info
+        )
 
     def _config_robot(self, urdf_file, package_dir):
         if self._b_fixed_base:
             # Fixed based robot
-            self._model, self._collision_model, self._visual_model = pin.buildModelsFromUrdf(
-                urdf_file, package_dir)
+            (
+                self._model,
+                self._collision_model,
+                self._visual_model,
+            ) = pin.buildModelsFromUrdf(urdf_file, package_dir)
             self._n_floating = 0
         else:
             # Floating based robot
-            self._model, self._collision_model, self._visual_model = pin.buildModelsFromUrdf(
-                urdf_file, package_dir, pin.JointModelFreeFlyer())
+            (
+                self._model,
+                self._collision_model,
+                self._visual_model,
+            ) = pin.buildModelsFromUrdf(
+                urdf_file, package_dir, pin.JointModelFreeFlyer()
+            )
             self._n_floating = 6
 
         self._data, self._collision_data, self._visual_data = pin.createDatas(
-            self._model, self._collision_model, self._visual_model)
+            self._model, self._collision_model, self._visual_model
+        )
 
         self._n_q = self._model.nq
         self._n_q_dot = self._model.nv
@@ -50,13 +57,13 @@ class PinocchioRobotSystem(RobotSystem):
 
         passing_idx = 0
         for j_id, j_name in enumerate(self._model.names):
-            if j_name == 'root_joint' or j_name == 'universe':
+            if j_name == "root_joint" or j_name == "universe":
                 passing_idx += 1
             else:
                 self._joint_id[j_name] = j_id - passing_idx
 
         for f_id, frame in enumerate(self._model.frames):
-            if frame.name == 'root_joint' or frame.name == 'universe':
+            if frame.name == "root_joint" or frame.name == "universe":
                 pass
             else:
                 if f_id % 2 == 0:
@@ -69,27 +76,22 @@ class PinocchioRobotSystem(RobotSystem):
 
         assert len(self._joint_id) == self._n_a
 
-        self._total_mass = sum(
-            [inertia.mass for inertia in self._model.inertias])
+        self._total_mass = sum([inertia.mass for inertia in self._model.inertias])
 
         if self._b_fixed_base:
-            self._joint_pos_limit = np.stack([
-                self._model.lowerPositionLimit, self._model.upperPositionLimit
-            ],
-                                             axis=1)
+            self._joint_pos_limit = np.stack(
+                [self._model.lowerPositionLimit, self._model.upperPositionLimit], axis=1
+            )
         else:
-            self._joint_pos_limit = np.stack([
-                self._model.lowerPositionLimit, self._model.upperPositionLimit
-            ],
-                                             axis=1)[self._n_floating +
-                                                     1:self._n_floating + 1 +
-                                                     self._n_a, :]
+            self._joint_pos_limit = np.stack(
+                [self._model.lowerPositionLimit, self._model.upperPositionLimit], axis=1
+            )[self._n_floating + 1 : self._n_floating + 1 + self._n_a, :]
         self._joint_vel_limit = np.stack(
-            [-self._model.velocityLimit, self._model.velocityLimit],
-            axis=1)[self._n_floating:self._n_floating + self._n_a, :]
+            [-self._model.velocityLimit, self._model.velocityLimit], axis=1
+        )[self._n_floating : self._n_floating + self._n_a, :]
         self._joint_trq_limit = np.stack(
-            [-self._model.effortLimit, self._model.effortLimit],
-            axis=1)[self._n_floating:self._n_floating + self._n_a, :]
+            [-self._model.effortLimit, self._model.effortLimit], axis=1
+        )[self._n_floating : self._n_floating + self._n_a, :]
 
     def get_q_idx(self, joint_id):
         if type(joint_id) is list:
@@ -107,11 +109,12 @@ class PinocchioRobotSystem(RobotSystem):
         if type(joint_id) is list:
             return [self.get_joint_idx(j_id) for j_id in joint_id]
         else:
-            return self._model.joints[self._model.getJointId(
-                joint_id)].idx_v - self._n_floating
+            return (
+                self._model.joints[self._model.getJointId(joint_id)].idx_v
+                - self._n_floating
+            )
 
-    def create_cmd_ordered_dict(self, joint_pos_cmd, joint_vel_cmd,
-                                joint_trq_cmd):
+    def create_cmd_ordered_dict(self, joint_pos_cmd, joint_vel_cmd, joint_trq_cmd):
         command = OrderedDict()
         command["joint_pos"] = OrderedDict()
         command["joint_vel"] = OrderedDict()
@@ -124,19 +127,20 @@ class PinocchioRobotSystem(RobotSystem):
 
         return command
 
-    def update_system(self,
-                      base_com_pos,
-                      base_com_quat,
-                      base_com_lin_vel,
-                      base_com_ang_vel,
-                      base_joint_pos,
-                      base_joint_quat,
-                      base_joint_lin_vel,
-                      base_joint_ang_vel,
-                      joint_pos,
-                      joint_vel,
-                      b_cent=True):
-
+    def update_system(
+        self,
+        base_com_pos,
+        base_com_quat,
+        base_com_lin_vel,
+        base_com_ang_vel,
+        base_joint_pos,
+        base_joint_quat,
+        base_joint_lin_vel,
+        base_joint_ang_vel,
+        joint_pos,
+        joint_vel,
+        b_cent=True,
+    ):
         # assert len(joint_pos.keys()) == self._n_a
 
         self._q = np.zeros(self._n_q)
@@ -155,8 +159,9 @@ class PinocchioRobotSystem(RobotSystem):
             augrot_joint_world = np.zeros((6, 6))
             augrot_joint_world[0:3, 0:3] = rot_w_basejoint.transpose()
             augrot_joint_world[3:6, 3:6] = rot_w_basejoint.transpose()
-            twist_basejoint_in_joint = np.dot(augrot_joint_world,
-                                              twist_basejoint_in_world)
+            twist_basejoint_in_joint = np.dot(
+                augrot_joint_world, twist_basejoint_in_world
+            )
             self._q_dot[0:3] = twist_basejoint_in_joint[3:6]
             self._q_dot[3:6] = twist_basejoint_in_joint[0:3]
         else:
@@ -164,13 +169,17 @@ class PinocchioRobotSystem(RobotSystem):
             pass
 
         self._q[self.get_q_idx(list(joint_pos.keys()))] = np.copy(
-            list(joint_pos.values()))
+            list(joint_pos.values())
+        )
         self._q_dot[self.get_q_dot_idx(list(joint_vel.keys()))] = np.copy(
-            list(joint_vel.values()))
-        self._joint_positions[self.get_joint_idx(list(
-            joint_pos.keys()))] = np.copy(list(joint_pos.values()))
-        self._joint_velocities[self.get_joint_idx(list(
-            joint_vel.keys()))] = np.copy(list(joint_vel.values()))
+            list(joint_vel.values())
+        )
+        self._joint_positions[self.get_joint_idx(list(joint_pos.keys()))] = np.copy(
+            list(joint_pos.values())
+        )
+        self._joint_velocities[self.get_joint_idx(list(joint_vel.keys()))] = np.copy(
+            list(joint_vel.values())
+        )
 
         pin.forwardKinematics(self._model, self._data, self._q, self._q_dot)
 
@@ -202,13 +211,13 @@ class PinocchioRobotSystem(RobotSystem):
         return np.copy(pin.crba(self._model, self._data, self._q))
 
     def get_gravity(self):
-        return np.copy(
-            pin.computeGeneralizedGravity(self._model, self._data, self._q))
+        return np.copy(pin.computeGeneralizedGravity(self._model, self._data, self._q))
 
     def get_coriolis(self):
         return np.copy(
             pin.nonLinearEffects(self._model, self._data, self._q, self._q_dot)
-            - self.get_gravity())
+            - self.get_gravity()
+        )
 
     def get_com_pos(self):
         pin.centerOfMass(self._model, self._data, self._q, self._q_dot)
@@ -219,13 +228,17 @@ class PinocchioRobotSystem(RobotSystem):
         return np.copy(self._data.vcom[0])
 
     def get_com_lin_jacobian(self):
-        return np.copy(
-            pin.jacobianCenterOfMass(self._model, self._data, self._q))
+        return np.copy(pin.jacobianCenterOfMass(self._model, self._data, self._q))
 
     def get_com_lin_jacobian_dot(self):
-        return np.copy((pin.computeCentroidalMapTimeVariation(
-            self._model, self._data, self._q, self._q_dot)[0:3, :]) /
-                       self._total_mass)
+        return np.copy(
+            (
+                pin.computeCentroidalMapTimeVariation(
+                    self._model, self._data, self._q, self._q_dot
+                )[0:3, :]
+            )
+            / self._total_mass
+        )
 
     def get_link_iso(self, link_id):
         ret = np.eye(4)
@@ -240,8 +253,8 @@ class PinocchioRobotSystem(RobotSystem):
         frame_id = self._model.getFrameId(link_id)
 
         spatial_vel = pin.getFrameVelocity(
-            self._model, self._data, frame_id,
-            pin.ReferenceFrame.LOCAL_WORLD_ALIGNED)
+            self._model, self._data, frame_id, pin.ReferenceFrame.LOCAL_WORLD_ALIGNED
+        )
 
         ret[0:3] = spatial_vel.angular
         ret[3:6] = spatial_vel.linear
@@ -251,8 +264,9 @@ class PinocchioRobotSystem(RobotSystem):
     def get_link_jacobian(self, link_id):
         frame_id = self._model.getFrameId(link_id)
         pin.computeJointJacobians(self._model, self._data, self._q)
-        jac = pin.getFrameJacobian(self._model, self._data, frame_id,
-                                   pin.ReferenceFrame.LOCAL_WORLD_ALIGNED)
+        jac = pin.getFrameJacobian(
+            self._model, self._data, frame_id, pin.ReferenceFrame.LOCAL_WORLD_ALIGNED
+        )
 
         # Pinocchio has linear on top of angular
         ret = np.zeros_like(jac)
@@ -264,11 +278,12 @@ class PinocchioRobotSystem(RobotSystem):
     def get_link_jacobian_dot_times_qdot(self, link_id):
         frame_id = self._model.getFrameId(link_id)
 
-        pin.forwardKinematics(self._model, self._data, self._q, self._q_dot,
-                              0 * self._q_dot)
+        pin.forwardKinematics(
+            self._model, self._data, self._q, self._q_dot, 0 * self._q_dot
+        )
         jdot_qdot = pin.getFrameClassicalAcceleration(
-            self._model, self._data, frame_id,
-            pin.ReferenceFrame.LOCAL_WORLD_ALIGNED)
+            self._model, self._data, frame_id, pin.ReferenceFrame.LOCAL_WORLD_ALIGNED
+        )
 
         ret = np.zeros_like(jdot_qdot)
         ret[0:3] = jdot_qdot.angular
@@ -281,6 +296,6 @@ class PinocchioRobotSystem(RobotSystem):
 
     def get_Ig(self):
         return np.copy(self._Ig)
-    
+
     def get_hg(self):
         return np.copy(self._hg)

@@ -1,8 +1,8 @@
 import numpy as np
 
-from pnc.state_machine import StateMachine
-from pnc.draco_pnc.state_provider import DracoManipulationStateProvider
 from pnc.draco_pnc.state_machine import LocomanipulationState
+from pnc.draco_pnc.state_provider import DracoManipulationStateProvider
+from pnc.state_machine import StateMachine
 from util import geom
 
 
@@ -12,9 +12,9 @@ class Manipulation(StateMachine):
         self._trajectory_managers = tm
         self._hierarchy_managers = hm
         self._sp = DracoManipulationStateProvider(robot)
-        self._start_time = 0.
+        self._start_time = 0.0
         self._moving_duration = 0.0
-        self._trans_duration = 0.
+        self._trans_duration = 0.0
         self._rh_target_pos = np.zeros(3)
         self._rh_target_quat = np.zeros(4)
         self._lh_target_pos = np.zeros(3)
@@ -25,30 +25,19 @@ class Manipulation(StateMachine):
 
         # Update Hierarchy
         if self._state_id == LocomanipulationState.BALANCE:
-            self._hierarchy_managers["lhand_pos"].update_ramp_to_max(
-                self._sp.curr_time)
-            self._hierarchy_managers["lhand_ori"].update_ramp_to_max(
-                self._sp.curr_time)
-            self._hierarchy_managers["rhand_pos"].update_ramp_to_max(
-                self._sp.curr_time)
-            self._hierarchy_managers["rhand_ori"].update_ramp_to_max(
-                self._sp.curr_time)
+            self._hierarchy_managers["lhand_pos"].update_ramp_to_max(self._sp.curr_time)
+            self._hierarchy_managers["lhand_ori"].update_ramp_to_max(self._sp.curr_time)
+            self._hierarchy_managers["rhand_pos"].update_ramp_to_max(self._sp.curr_time)
+            self._hierarchy_managers["rhand_ori"].update_ramp_to_max(self._sp.curr_time)
         else:
-            self._hierarchy_managers["lhand_pos"].update_ramp_to_min(
-                self._sp.curr_time)
-            self._hierarchy_managers["lhand_ori"].update_ramp_to_min(
-                self._sp.curr_time)
-            self._hierarchy_managers["rhand_pos"].update_ramp_to_min(
-                self._sp.curr_time)
-            self._hierarchy_managers["rhand_ori"].update_ramp_to_min(
-                self._sp.curr_time)
+            self._hierarchy_managers["lhand_pos"].update_ramp_to_min(self._sp.curr_time)
+            self._hierarchy_managers["lhand_ori"].update_ramp_to_min(self._sp.curr_time)
+            self._hierarchy_managers["rhand_pos"].update_ramp_to_min(self._sp.curr_time)
+            self._hierarchy_managers["rhand_ori"].update_ramp_to_min(self._sp.curr_time)
 
         # Update Hand Task
-        self._trajectory_managers['lhand'].update_hand_pose(
-        self._sp.curr_time)
-        self._trajectory_managers['rhand'].update_hand_pose(
-        self._sp.curr_time)
-
+        self._trajectory_managers["lhand"].update_hand_pose(self._sp.curr_time)
+        self._trajectory_managers["rhand"].update_hand_pose(self._sp.curr_time)
 
     def first_visit(self):
         self._start_time = self._sp.curr_time
@@ -61,36 +50,41 @@ class Manipulation(StateMachine):
         target_lh_iso[0:3, 0:3] = geom.quat_to_rot(self._lh_target_quat)
         target_lh_iso[0:3, 3] = self._lh_target_pos
 
-        self._trajectory_managers[
-            'rhand'].initialize_hand_pose(
-                self._start_time, self._moving_duration,
-                target_rh_iso)
+        self._trajectory_managers["rhand"].initialize_hand_pose(
+            self._start_time, self._moving_duration, target_rh_iso
+        )
 
-        self._trajectory_managers[
-            'lhand'].initialize_hand_pose(
-                self._start_time, self._moving_duration,
-                target_lh_iso)
+        self._trajectory_managers["lhand"].initialize_hand_pose(
+            self._start_time, self._moving_duration, target_lh_iso
+        )
 
         if self._state_id == LocomanipulationState.BALANCE:
             self._hierarchy_managers["rhand_pos"].initialize_ramp_to_max(
-                self._sp.curr_time, self._trans_duration)
+                self._sp.curr_time, self._trans_duration
+            )
             self._hierarchy_managers["rhand_ori"].initialize_ramp_to_max(
-                self._sp.curr_time, self._trans_duration)
+                self._sp.curr_time, self._trans_duration
+            )
 
             self._hierarchy_managers["lhand_pos"].initialize_ramp_to_max(
-                self._sp.curr_time, self._trans_duration)
+                self._sp.curr_time, self._trans_duration
+            )
             self._hierarchy_managers["lhand_ori"].initialize_ramp_to_max(
-                self._sp.curr_time, self._trans_duration)
+                self._sp.curr_time, self._trans_duration
+            )
         else:
             self._hierarchy_managers["lhand_pos"].initialize_ramp_to_min(
-                self._sp.curr_time, self._trans_duration)
+                self._sp.curr_time, self._trans_duration
+            )
             self._hierarchy_managers["lhand_ori"].initialize_ramp_to_min(
-                self._sp.curr_time, self._trans_duration)
+                self._sp.curr_time, self._trans_duration
+            )
             self._hierarchy_managers["rhand_pos"].initialize_ramp_to_min(
-                self._sp.curr_time, self._trans_duration)
+                self._sp.curr_time, self._trans_duration
+            )
             self._hierarchy_managers["rhand_ori"].initialize_ramp_to_min(
-                self._sp.curr_time, self._trans_duration)
-
+                self._sp.curr_time, self._trans_duration
+            )
 
     def last_visit(self):
         pass
@@ -151,4 +145,3 @@ class Manipulation(StateMachine):
     @lh_target_quat.setter
     def lh_target_quat(self, value):
         self._lh_target_quat = value
-

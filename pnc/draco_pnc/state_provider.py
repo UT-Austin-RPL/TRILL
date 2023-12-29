@@ -1,13 +1,14 @@
-import numpy as np
 from collections import OrderedDict
+
+import numpy as np
+
 
 class MetaSingleton(type):
     _instances = {}
 
     def __call__(cls, *args, **kwargs):
         if cls not in cls._instances:
-            cls._instances[cls] = super(MetaSingleton,
-                                        cls).__call__(*args, **kwargs)
+            cls._instances[cls] = super(MetaSingleton, cls).__call__(*args, **kwargs)
         return cls._instances[cls]
 
 
@@ -17,7 +18,7 @@ class DracoManipulationStateProvider(metaclass=MetaSingleton):
         self._nominal_joint_pos = OrderedDict()
         self._state = 0
         self._prev_state = 0
-        self._curr_time = 0.
+        self._curr_time = 0.0
         self._dcm = np.zeros(3)
         self._prev_dcm = np.zeros(3)
         self._dcm_vel = np.zeros(3)

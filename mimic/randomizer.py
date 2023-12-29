@@ -1,14 +1,15 @@
 import numpy as np
+import robomimic.utils.tensor_utils as TensorUtils
 import torch
 import torchvision
 from robomimic.models.base_nets import Randomizer
-import robomimic.utils.tensor_utils as TensorUtils
 
 
 class ImgColorJitterRandomizer(Randomizer):
     """
     Randomly sample crops at input, and then average across crop features at output.
     """
+
     def __init__(
         self,
         input_shape,
@@ -20,18 +21,17 @@ class ImgColorJitterRandomizer(Randomizer):
         epsilon=0.05,
     ):
         super(ImgColorJitterRandomizer, self).__init__()
-        assert len(input_shape) == 3 # (C, H, W)
-        self.color_jitter = torchvision.transforms.ColorJitter(brightness=brightness, 
-                                                               contrast=contrast, 
-                                                               saturation=saturation, 
-                                                               hue=hue)
+        assert len(input_shape) == 3  # (C, H, W)
+        self.color_jitter = torchvision.transforms.ColorJitter(
+            brightness=brightness, contrast=contrast, saturation=saturation, hue=hue
+        )
         self.input_shape = input_shape
         self.epsilon = epsilon
         self.num_rands = num_rands
 
     def output_shape_in(self, input_shape=None):
         return list(input_shape)
-    
+
     def output_shape_out(self, input_shape=None):
         return list(input_shape)
 
@@ -50,16 +50,18 @@ class ImgColorJitterRandomizer(Randomizer):
         to result in shape [B, ...] to make sure the network output is consistent with
         what would have happened if there were no randomization.
         """
-        batch_size = (inputs.shape[0] // self.num_rands)
-        out = TensorUtils.reshape_dimensions(inputs, begin_axis=0, end_axis=0, 
-            target_dims=(batch_size, self.num_rands))
+        batch_size = inputs.shape[0] // self.num_rands
+        out = TensorUtils.reshape_dimensions(
+            inputs, begin_axis=0, end_axis=0, target_dims=(batch_size, self.num_rands)
+        )
         return out.mean(dim=1)
 
     def __repr__(self):
         """Pretty print network."""
-        header = '{}'.format(str(self.__class__.__name__))
+        header = "{}".format(str(self.__class__.__name__))
         msg = header + "(input_shape={}, num_rands={}, epsilon={})".format(
-            self.input_shape, self.num_rands, self.epsilon)
+            self.input_shape, self.num_rands, self.epsilon
+        )
         return msg
 
 
@@ -67,6 +69,7 @@ class ImgGaussianBlurRandomizer(Randomizer):
     """
     Randomly sample crops at input, and then average across crop features at output.
     """
+
     def __init__(
         self,
         input_shape,
@@ -76,15 +79,17 @@ class ImgGaussianBlurRandomizer(Randomizer):
         epsilon=0.05,
     ):
         super(ImgGaussianBlurRandomizer, self).__init__()
-        assert len(input_shape) == 3 # (C, H, W)
-        self.blur = torchvision.transforms.GaussianBlur(kernel_size=kernel_size, sigma=sigma)
+        assert len(input_shape) == 3  # (C, H, W)
+        self.blur = torchvision.transforms.GaussianBlur(
+            kernel_size=kernel_size, sigma=sigma
+        )
         self.input_shape = input_shape
         self.epsilon = epsilon
         self.num_rands = num_rands
 
     def output_shape_in(self, input_shape=None):
         return list(input_shape)
-    
+
     def output_shape_out(self, input_shape=None):
         return list(input_shape)
 
@@ -103,15 +108,16 @@ class ImgGaussianBlurRandomizer(Randomizer):
         to result in shape [B, ...] to make sure the network output is consistent with
         what would have happened if there were no randomization.
         """
-        batch_size = (inputs.shape[0] // self.num_rands)
-        out = TensorUtils.reshape_dimensions(inputs, begin_axis=0, end_axis=0, 
-            target_dims=(batch_size, self.num_rands))
+        batch_size = inputs.shape[0] // self.num_rands
+        out = TensorUtils.reshape_dimensions(
+            inputs, begin_axis=0, end_axis=0, target_dims=(batch_size, self.num_rands)
+        )
         return out.mean(dim=1)
 
     def __repr__(self):
         """Pretty print network."""
-        header = '{}'.format(str(self.__class__.__name__))
+        header = "{}".format(str(self.__class__.__name__))
         msg = header + "(input_shape={}, num_rands={}, epsilon={})".format(
-            self.input_shape, self.num_rands, self.epsilon)
+            self.input_shape, self.num_rands, self.epsilon
+        )
         return msg
-

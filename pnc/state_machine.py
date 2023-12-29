@@ -10,7 +10,7 @@ class StateMachine(abc.ABC):
         robot (RobotSystem)
         """
         self._robot = robot
-        self._state_machine_time = 0.
+        self._state_machine_time = 0.0
         self._state_id = state_id
 
     @property

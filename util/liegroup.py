@@ -52,8 +52,7 @@ def VecToso3(omg):
                   [ 3,  0, -1],
                   [-2,  1,  0]])
     """
-    return np.array([[0, -omg[2], omg[1]], [omg[2], 0, -omg[0]],
-                     [-omg[1], omg[0], 0]])
+    return np.array([[0, -omg[2], omg[1]], [omg[2], 0, -omg[0]], [-omg[1], omg[0], 0]])
 
 
 def so3ToVec(so3mat):
@@ -103,8 +102,11 @@ def MatrixExp3(so3mat):
     else:
         theta = AxisAng3(omgtheta)[1]
         omgmat = so3mat / theta
-        return np.eye(3) + np.sin(theta) * omgmat \
-               + (1 - np.cos(theta)) * np.dot(omgmat, omgmat)
+        return (
+            np.eye(3)
+            + np.sin(theta) * omgmat
+            + (1 - np.cos(theta)) * np.dot(omgmat, omgmat)
+        )
 
 
 def MatrixLog3(R):
@@ -125,14 +127,17 @@ def MatrixLog3(R):
         return np.zeros((3, 3))
     elif acosinput <= -1:
         if not NearZero(1 + R[2][2]):
-            omg = (1.0 / np.sqrt(2 * (1 + R[2][2]))) \
-                  * np.array([R[0][2], R[1][2], 1 + R[2][2]])
+            omg = (1.0 / np.sqrt(2 * (1 + R[2][2]))) * np.array(
+                [R[0][2], R[1][2], 1 + R[2][2]]
+            )
         elif not NearZero(1 + R[1][1]):
-            omg = (1.0 / np.sqrt(2 * (1 + R[1][1]))) \
-                  * np.array([R[0][1], 1 + R[1][1], R[2][1]])
+            omg = (1.0 / np.sqrt(2 * (1 + R[1][1]))) * np.array(
+                [R[0][1], 1 + R[1][1], R[2][1]]
+            )
         else:
-            omg = (1.0 / np.sqrt(2 * (1 + R[0][0]))) \
-                  * np.array([1 + R[0][0], R[1][0], R[2][0]])
+            omg = (1.0 / np.sqrt(2 * (1 + R[0][0]))) * np.array(
+                [1 + R[0][0], R[1][0], R[2][0]]
+            )
         return VecToso3(np.pi * omg)
     else:
         theta = np.arccos(acosinput)
@@ -214,12 +219,13 @@ def VecTose3(V):
                   [-2,  1,  0, 6],
                   [ 0,  0,  0, 0]])
     """
-    return np.r_[np.c_[VecToso3([V[0], V[1], V[2]]), [V[3], V[4], V[5]]],
-                 np.zeros((1, 4))]
+    return np.r_[
+        np.c_[VecToso3([V[0], V[1], V[2]]), [V[3], V[4], V[5]]], np.zeros((1, 4))
+    ]
 
 
 def se3ToVec(se3mat):
-    """ Converts an se3 matrix into a spatial velocity vector
+    """Converts an se3 matrix into a spatial velocity vector
     :param se3mat: A 4x4 matrix in se3
     :return: The spatial velocity 6-vector corresponding to se3mat
     Example Input:
@@ -230,8 +236,10 @@ def se3ToVec(se3mat):
     Output:
         np.array([1, 2, 3, 4, 5, 6])
     """
-    return np.r_[[se3mat[2][1], se3mat[0][2], se3mat[1][0]],
-                 [se3mat[0][3], se3mat[1][3], se3mat[2][3]]]
+    return np.r_[
+        [se3mat[2][1], se3mat[0][2], se3mat[1][0]],
+        [se3mat[0][3], se3mat[1][3], se3mat[2][3]],
+    ]
 
 
 def Adjoint(T):
@@ -314,13 +322,19 @@ def MatrixExp6(se3mat):
     else:
         theta = AxisAng3(omgtheta)[1]
         omgmat = se3mat[0:3, 0:3] / theta
-        return np.r_[np.c_[MatrixExp3(se3mat[0: 3, 0: 3]),
-                           np.dot(np.eye(3) * theta \
-                                  + (1 - np.cos(theta)) * omgmat \
-                                  + (theta - np.sin(theta)) \
-                                    * np.dot(omgmat,omgmat),
-                                  se3mat[0: 3, 3]) / theta],
-                     [[0, 0, 0, 1]]]
+        return np.r_[
+            np.c_[
+                MatrixExp3(se3mat[0:3, 0:3]),
+                np.dot(
+                    np.eye(3) * theta
+                    + (1 - np.cos(theta)) * omgmat
+                    + (theta - np.sin(theta)) * np.dot(omgmat, omgmat),
+                    se3mat[0:3, 3],
+                )
+                / theta,
+            ],
+            [[0, 0, 0, 1]],
+        ]
 
 
 def MatrixLog6(T):
@@ -341,17 +355,25 @@ def MatrixLog6(T):
     R, p = TransToRp(T)
     omgmat = MatrixLog3(R)
     if np.array_equal(omgmat, np.zeros((3, 3))):
-        return np.r_[np.c_[np.zeros((3, 3)), [T[0][3], T[1][3], T[2][3]]],
-                     [[0, 0, 0, 0]]]
+        return np.r_[
+            np.c_[np.zeros((3, 3)), [T[0][3], T[1][3], T[2][3]]], [[0, 0, 0, 0]]
+        ]
     else:
         theta = np.arccos((np.trace(R) - 1) / 2.0)
-        return np.r_[np.c_[omgmat,
-                           np.dot(np.eye(3) - omgmat / 2.0 \
-                           + (1.0 / theta - 1.0 / np.tan(theta / 2.0) / 2) \
-                              * np.dot(omgmat,omgmat) / theta,[T[0][3],
-                                                               T[1][3],
-                                                               T[2][3]])],
-                     [[0, 0, 0, 0]]]
+        return np.r_[
+            np.c_[
+                omgmat,
+                np.dot(
+                    np.eye(3)
+                    - omgmat / 2.0
+                    + (1.0 / theta - 1.0 / np.tan(theta / 2.0) / 2)
+                    * np.dot(omgmat, omgmat)
+                    / theta,
+                    [T[0][3], T[1][3], T[2][3]],
+                ),
+            ],
+            [[0, 0, 0, 0]],
+        ]
 
 
 def ProjectToSO3(mat):
@@ -422,7 +444,7 @@ def DistanceToSO3(mat):
     if np.linalg.det(mat) > 0:
         return np.linalg.norm(np.dot(np.array(mat).T, mat) - np.eye(3))
     else:
-        return 1e+9
+        return 1e9
 
 
 def DistanceToSE3(mat):
@@ -448,11 +470,15 @@ def DistanceToSE3(mat):
     """
     matR = np.array(mat)[0:3, 0:3]
     if np.linalg.det(matR) > 0:
-        return np.linalg.norm(np.r_[np.c_[np.dot(np.transpose(matR), matR),
-                                          np.zeros((3, 1))],
-                                    [np.array(mat)[3, :]]] - np.eye(4))
+        return np.linalg.norm(
+            np.r_[
+                np.c_[np.dot(np.transpose(matR), matR), np.zeros((3, 1))],
+                [np.array(mat)[3, :]],
+            ]
+            - np.eye(4)
+        )
     else:
-        return 1e+9
+        return 1e9
 
 
 def TestIfSO3(mat):

@@ -1,4 +1,5 @@
 import abc
+
 import numpy as np
 
 
@@ -9,12 +10,13 @@ class Contact(abc.ABC):
     Usage:
         update_contact
     """
+
     def __init__(self, robot, dim):
         self._robot = robot
         self._dim_contact = dim
         self._jacobian = np.zeros((self._dim_contact, self._robot.n_q))
         self._jacobian_dot_q_dot = np.zeros(self._dim_contact)
-        self._rf_z_max = 0.
+        self._rf_z_max = 0.0
         self._cone_constraint_mat = None
         self._cone_constraint_vec = None
 
@@ -36,7 +38,7 @@ class Contact(abc.ABC):
 
     @rf_z_max.setter
     def rf_z_max(self, value):
-        if value <= 0.:
+        if value <= 0.0:
             value = 1e-3
         self._rf_z_max = value
 

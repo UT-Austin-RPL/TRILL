@@ -1,8 +1,9 @@
-from .base import BaseEnv
 from robosuite.models.arenas import EmptyArena
 
-class EmptyEnv(BaseEnv):
+from .base import BaseEnv
 
+
+class EmptyEnv(BaseEnv):
     def _load_model(self):
         # Create an environment
         super()._load_model()
