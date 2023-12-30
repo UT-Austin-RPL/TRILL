@@ -1,6 +1,6 @@
 # Creating the Data Set
 
-Use the following commands to collect human demonstration data for a Visuomotor Policy. You may need [Meta's Oculus Quest 2](https://www.meta.com/quest/products/quest-2). Before collecting human demonstration, set up the VR headset as described in our [`vr` branch](https://github.com/UT-Austin-RPL/TRILL/tree/vr). Then, run the following script on the host machine.
+Use the following commands to collect human demonstration data for a Visuomotor Policy. Then, run the following script on the host machine.
 ```
 python3 scripts/demo.py --env_type=ENV_TYPE --subtask=SUBTASK_INDEX --subtask=DEMONSTRATORS_NAME --host=HOST_IP_ADDRESS
 ```

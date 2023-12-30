@@ -17,23 +17,14 @@ If you find our work useful in your research, please consider [citing](#citing).
 - [PyTorch](https://github.com/pytorch/pytorch)
 
 ## Installation
-Install the environments and dependencies by running the following commands.
-```
-pip install -r requirement.txt
-```
-Then, set up the colors of collision meshes transparent in [these lines](https://github.com/ARISE-Initiative/robosuite/blob/eb01e1ffa46f1af0a3aa3ac363d5e63097a6cbcc/robosuite/utils/mjcf_utils.py#L18C39-L18C39) at `<robosuite-home>/utils/mjcf_utils.py`.
 
-(Optional) Set up `robosuite` macros by running the following commands,
-```
-python <robosuite-home>/scripts/setup_macros.py
-```
 
 ## Usage
 
 Please see [Getting Started](docs/Getting-Started.md).
 
 
-### Dataset and pre-trained models
+## Dataset and pre-trained models
 We provide our demonstration dataset in the `door` simulation environment ([link](https://utexas.box.com/s/3610huk9fu33m6wic16oe7crx8cahpl8)) and trained models of the Visuomotor Policies ([link](https://utexas.box.com/s/qn3156sxpejx4zf4piq5zh97srl5zcto)). We also plan to open our demonstration dataset and trained models in the `workbench` simulation environment in the near future.
 
 
@@ -56,3 +47,5 @@ The implementation of the whole-body control is based on [PyPnC](https://github.
    year={2023}
 }
 ```
+=======
+

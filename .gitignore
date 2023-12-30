@@ -4,3 +4,5 @@ qodana.yaml
 door_upview_0.mp4
 data/
 .idea/
+build
+.cache

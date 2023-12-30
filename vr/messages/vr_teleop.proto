@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+message vr_teleop_msg {
+  repeated float lh_pos = 1;
+  repeated float rh_pos = 2;
+  repeated float lh_ori = 3;
+  repeated float rh_ori = 4;
+
+  bool l_trigger = 5;
+  bool l_bump = 6;
+  bool l_button = 7;
+  bool l_pad = 8;
+
+  bool r_trigger = 9;
+  bool r_bump = 10;
+  bool r_button = 11;
+  bool r_pad = 12;
+
+  int64 vr_timestamp = 13;
+}
