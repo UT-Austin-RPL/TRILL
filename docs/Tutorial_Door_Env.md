@@ -5,7 +5,7 @@ This tutorial will walk you through collecting, training, and evaluating a data 
 Follow the [installation guide](Setup-Guide.md).
 
 ## Collecting the Data
-Want to skip this step? Download our [pre-gathered door environment data set](https://utexas.box.com/s/3610huk9fu33m6wic16oe7crx8cahpl8).
+> Want to skip this step? Download our [pre-gathered door environment data set](https://utexas.box.com/s/3610huk9fu33m6wic16oe7crx8cahpl8).
 
 ~~ This section is coming soon ~~
 
@@ -21,4 +21,9 @@ python scripts/train.py  --env=door --data=/path/to/datasets/demo250
 This will generate the checkpoint files inside the `save/` directory.
 
 ## Evaluation
-~~ This section is coming soon ~~
+> Want to skip this step? Download our [pre-trained door Visuomotor Policies](https://utexas.box.com/s/qn3156sxpejx4zf4piq5zh97srl5zcto).
+
+Evaluation is useful for seeing the status of your visuomotor policy. The following script will run the door opening environment with the generated policy.
+```
+python3 scripts/evaluate.py --env=door --path=/path/to/checkpoints/door_
+```

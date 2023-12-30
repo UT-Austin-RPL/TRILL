@@ -24,7 +24,6 @@ class DracoManipulationInterface(Interface):
 
         self._config = config
         self._sp = DracoManipulationStateProvider(self._robot)
-        self._sp.initialize()
         self._se = DracoManipulationStateEstimator(self._robot, self._config)
         self._control_architecture = DracoManipulationControlArchitecture(
             self._robot, self._config

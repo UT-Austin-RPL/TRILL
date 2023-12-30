@@ -6,4 +6,4 @@ There are four main steps in using this repository:
 3. [Training](Training.md)
 4. [Evaluation](Evaluation.md)
 
-Want to follow along an example of training? Follow the walkthrough
+Want to follow along an example of training? Follow the [door environment tutorial](Tutorial_Door_Env.md).

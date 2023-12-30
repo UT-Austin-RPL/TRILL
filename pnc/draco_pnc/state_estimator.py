@@ -47,4 +47,4 @@ class DracoManipulationStateEstimator(object):
             * (self._sp.dcm - self._sp.prev_dcm)
             / self._config["Simulation"]["Control Period"]
         )
-        +(1.0 - alpha_dcm_vel) * self._sp.dcm_vel()
+        +(1.0 - alpha_dcm_vel) * self._sp.dcm_vel
