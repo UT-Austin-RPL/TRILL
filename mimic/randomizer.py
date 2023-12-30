@@ -2,7 +2,7 @@ import numpy as np
 import robomimic.utils.tensor_utils as TensorUtils
 import torch
 import torchvision
-from robomimic.models.base_nets import Randomizer
+from robomimic.models import Randomizer
 
 
 class ImgColorJitterRandomizer(Randomizer):

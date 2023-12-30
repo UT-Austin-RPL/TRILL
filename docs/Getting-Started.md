@@ -5,3 +5,5 @@ There are four main steps in using this repository:
 2. [Creating the Data Set](Creating-the-Data-Set.md)
 3. [Training](Training.md)
 4. [Evaluation](Evaluation.md)
+
+Want to follow along an example of training? Follow the walkthrough

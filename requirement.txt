@@ -12,9 +12,10 @@ quadprog
 pin
 pyyaml
 robosuite==1.4.0
-robomimic==0.2.0
+robomimic==0.3.0
 gym
 wandb
 h5py
-torch==1.8.2
-torchvision==0.9.2
+torch==2.1
+torchvision==0.16
+torchaudio
