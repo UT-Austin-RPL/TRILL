@@ -2,7 +2,7 @@
 
 The visuomotor policies generate the target task-space commands at 20 Hz. The robot control interface, including hand-trajectory interpolation, gait planning, and whole-body control, is updated and computes the joint-space commands at 100 Hz to actuate the robot. We provide implementation details for reproducibility.
 
-![intro](pipeline.png)
+![intro](imgs/pipeline.png)
 
 ## Whole-body Control
 In the whole-body control, we control 26 joints of the robot: 6 joints in each arm and 7 joints in each leg. Due to the knees being designed as rolling contact mechanisms, the two knee joints in each leg are interlinked. Consequently, the whole-body controller computes motor torques for 24 degrees of freedom (DOFs). Additionally, 1 DOF for each gripper is controlled through PD control, which operates outside the whole-body control. Likewise, the pitch joint in the robot's neck is controlled by PD control, and target joint angles are consistent throughout the environments.

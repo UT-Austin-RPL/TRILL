@@ -1,6 +1,7 @@
 from collections import OrderedDict
 
 import torch
+import numpy as np
 from robomimic.algo import RolloutPolicy
 from robomimic.algo.bc import *
 from robomimic.utils.file_utils import (

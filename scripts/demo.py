@@ -74,12 +74,13 @@ def main(env_type, subtask, demonstrator, host):
     subtask_button_held = False
 
     while True:
-        action = {}
-        action["trajectory"] = {}
-        action["locomotion"] = 0
-        action["subtask"] = 0
-        action["gripper"] = {}
-        action["aux"] = {}
+        action = {
+            "trajectory": {},
+            "locomotion": 0,
+            "subtask": 0,
+            "gripper": {},
+            "aux": {},
+        }
 
         if env_type == "kitchen" or env_type == "workbench2":
             action["aux"]["neck"] = 1
