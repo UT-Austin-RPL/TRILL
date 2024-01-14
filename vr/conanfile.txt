@@ -1,9 +1,0 @@
-[requires]
-openvr/1.16.8
-glew/2.2.0
-glfw/3.3.8
-eigen/3.4.0
-cppzmq/4.9.0
-
-[generators]
-cmake

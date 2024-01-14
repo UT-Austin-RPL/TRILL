@@ -24,4 +24,4 @@ sign up for a free account on the website and authorize your account using `wand
 you can acquire from the [authorization page](https://wandb.ai/authorize). You should only need to do this setup step once.
 
 ## Setup VR
-See the [VR README](../vr/README.md) for instructions on how to setup your VR headset. We designed this repo to work with [Meta's Oculus Quest 2](https://www.meta.com/quest/products/quest-2). 
+See the [VR README](https://github.com/UT-Austin-RPL/TRILL/tree/vr) for instructions on how to setup your VR headset. We designed this repo to work with [Meta's Oculus Quest 2](https://www.meta.com/quest/products/quest-2). 
