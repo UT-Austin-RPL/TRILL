@@ -46,5 +46,3 @@ The implementation of the whole-body control is based on [PyPnC](https://github.
    year={2023}
 }
 ```
-=======
-
