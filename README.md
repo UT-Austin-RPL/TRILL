@@ -10,13 +10,12 @@ We tackle the problem of developing humanoid loco-manipulation skills with deep 
 
 If you find our work useful in your research, please consider [citing](#citing).
 
+
 ## Dependencies
 - Python 3.8.5 (recommended)
 - [Robosuite  1.4.0](https://github.com/ARISE-Initiative/robosuite/tree/v1.4)
 - [Robomimic 0.2.0](https://github.com/ARISE-Initiative/robomimic/tree/v0.2.0)
 - [PyTorch](https://github.com/pytorch/pytorch)
-
-## Installation
 
 
 ## Usage
