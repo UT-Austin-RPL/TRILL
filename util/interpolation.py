@@ -1,6 +1,6 @@
+import numpy as np
 from scipy.spatial.transform import Rotation as R
 from scipy.spatial.transform import Slerp
-import numpy as np
 
 from util import liegroup
 
@@ -16,14 +16,13 @@ def linear_changing(ini, end, dur, curr_time):
 def linear_changing_vel(ini, end, dur, curr_time):
     ret = (end - ini) / dur
     if curr_time > dur:
-        ret = 0.
+        ret = 0.0
 
     return ret
 
 
 def linear_changing_acc(ini, end, dur, curr_time):
-
-    return 0.
+    return 0.0
 
 
 def smooth_changing(ini, end, dur, curr_time):
@@ -37,16 +36,21 @@ def smooth_changing(ini, end, dur, curr_time):
 def smooth_changing_vel(ini, end, dur, curr_time):
     ret = (end - ini) * 0.5 * (np.pi / dur) * np.sin(curr_time / dur * np.pi)
     if curr_time > dur:
-        ret = 0.
+        ret = 0.0
 
     return ret
 
 
 def smooth_changing_acc(ini, end, dur, curr_time):
-    ret = (end - ini) * 0.5 * (np.pi / dur) * (
-        np.pi / dur) * np.cos(curr_time / dur * np.pi)
+    ret = (
+        (end - ini)
+        * 0.5
+        * (np.pi / dur)
+        * (np.pi / dur)
+        * np.cos(curr_time / dur * np.pi)
+    )
     if curr_time > dur:
-        ret = 0.
+        ret = 0.0
 
     return ret
 
@@ -73,23 +77,33 @@ class HermiteCurve(object):
         self._v2 = end_vel
 
     def evaluate(self, s_in):
-        s = np.clip(s_in, 0., 1.)
-        return self._p1 * (2 * s**3 - 3 * s**2 + 1) + self._p2 * (
-            -2 * s**3 + 3 * s**2) + self._v1 * (
-                s**3 - 2 * s**2 + s) + self._v2 * (s**3 - s**2)
+        s = np.clip(s_in, 0.0, 1.0)
+        return (
+            self._p1 * (2 * s**3 - 3 * s**2 + 1)
+            + self._p2 * (-2 * s**3 + 3 * s**2)
+            + self._v1 * (s**3 - 2 * s**2 + s)
+            + self._v2 * (s**3 - s**2)
+        )
 
     def evaluate_first_derivative(self, s_in):
-        s = np.clip(s_in, 0., 1.)
+        s = np.clip(s_in, 0.0, 1.0)
 
-        return self._p1 * (6 * s**2 - 6 * s) + self._p2 * (
-            -6 * s**2 + 6 * s) + self._v1 * (
-                3 * s**2 - 4 * s + 1) + self._v2 * (3 * s**2 - 2 * s)
+        return (
+            self._p1 * (6 * s**2 - 6 * s)
+            + self._p2 * (-6 * s**2 + 6 * s)
+            + self._v1 * (3 * s**2 - 4 * s + 1)
+            + self._v2 * (3 * s**2 - 2 * s)
+        )
 
     def evaluate_second_derivative(self, s_in):
-        s = np.clip(s_in, 0., 1.)
+        s = np.clip(s_in, 0.0, 1.0)
 
-        return self._p1 * (12 * s - 6) + self._p2 * (
-            -12 * s + 6) + self._v1 * (6 * s - 4) + self._v2 * (6 * s - 2)
+        return (
+            self._p1 * (12 * s - 6)
+            + self._p2 * (-12 * s + 6)
+            + self._v1 * (6 * s - 4)
+            + self._v2 * (6 * s - 2)
+        )
 
 
 class HermiteCurveVec(object):
@@ -103,19 +117,17 @@ class HermiteCurveVec(object):
         self._curves = []
         for i in range(self._dim):
             self._curves.append(
-                HermiteCurve(start_pos[i], start_vel[i], end_pos[i],
-                             end_vel[i]))
+                HermiteCurve(start_pos[i], start_vel[i], end_pos[i], end_vel[i])
+            )
 
     def evaluate(self, s_in):
         return np.array([c.evaluate(s_in) for c in self._curves])
 
     def evaluate_first_derivative(self, s_in):
-        return np.array(
-            [c.evaluate_first_derivative(s_in) for c in self._curves])
+        return np.array([c.evaluate_first_derivative(s_in) for c in self._curves])
 
     def evaluate_second_derivative(self, s_in):
-        return np.array(
-            [c.evaluate_second_derivative(s_in) for c in self._curves])
+        return np.array([c.evaluate_second_derivative(s_in) for c in self._curves])
 
 
 class HermiteCurveQuat(object):
@@ -129,18 +141,20 @@ class HermiteCurveQuat(object):
         self._q0 = R.from_quat(quat_start)
 
         if np.linalg.norm(ang_vel_start) < 1e-6:
-            self._q1 = R.from_quat(quat_start) * R.from_quat([0., 0., 0., 1.])
+            self._q1 = R.from_quat(quat_start) * R.from_quat([0.0, 0.0, 0.0, 1.0])
         else:
             self._q1 = R.from_quat(quat_start) * R.from_rotvec(
-                (np.linalg.norm(ang_vel_start) / 3.0) *
-                (ang_vel_start / np.linalg.norm(ang_vel_start)))
+                (np.linalg.norm(ang_vel_start) / 3.0)
+                * (ang_vel_start / np.linalg.norm(ang_vel_start))
+            )
 
         if np.linalg.norm(ang_vel_end) < 1e-6:
-            self._q2 = R.from_quat(quat_end) * R.from_quat([0., 0., 0., 1.])
+            self._q2 = R.from_quat(quat_end) * R.from_quat([0.0, 0.0, 0.0, 1.0])
         else:
             self._q2 = R.from_quat(quat_end) * R.from_rotvec(
-                (np.linalg.norm(ang_vel_end) / 3.0) *
-                (ang_vel_end / np.linalg.norm(ang_vel_end)))
+                (np.linalg.norm(ang_vel_end) / 3.0)
+                * (ang_vel_end / np.linalg.norm(ang_vel_end))
+            )
 
         self._q3 = R.from_quat(quat_end)
 
@@ -153,12 +167,12 @@ class HermiteCurveQuat(object):
         self._omega_3 = self._omega_3aa.as_rotvec()
 
     def _compute_basis(self, s_in):
-        s = np.clip(s_in, 0., 1.)
+        s = np.clip(s_in, 0.0, 1.0)
 
-        self._b1 = 1 - (1 - s)**3
+        self._b1 = 1 - (1 - s) ** 3
         self._b2 = 3 * s**2 - 2 * s**3
         self._b3 = s**3
-        self._bdot1 = 3 * (1 - s)**2
+        self._bdot1 = 3 * (1 - s) ** 2
         self._bdot2 = 6 * s - 6 * s**2
         self._bdot3 = 3 * s**2
         self._bddot1 = -6 * (1 - s)
@@ -166,38 +180,49 @@ class HermiteCurveQuat(object):
         self._bddot3 = 6 * s
 
     def evaluate(self, s_in):
-        s = np.clip(s_in, 0., 1.)
+        s = np.clip(s_in, 0.0, 1.0)
         self._compute_basis(s)
 
         if np.linalg.norm(self._omega_1) > 1e-5:
             qtmp1 = R.from_rotvec(
-                (np.linalg.norm(self._omega_1) * self._b1) *
-                (self._omega_1 / np.linalg.norm(self._omega_1)))
+                (np.linalg.norm(self._omega_1) * self._b1)
+                * (self._omega_1 / np.linalg.norm(self._omega_1))
+            )
         else:
-            qtmp1 = R.from_quat([0., 0., 0., 1.])
+            qtmp1 = R.from_quat([0.0, 0.0, 0.0, 1.0])
         if np.linalg.norm(self._omega_2) > 1e-5:
             qtmp2 = R.from_rotvec(
-                (np.linalg.norm(self._omega_2) * self._b2) *
-                (self._omega_2 / np.linalg.norm(self._omega_2)))
+                (np.linalg.norm(self._omega_2) * self._b2)
+                * (self._omega_2 / np.linalg.norm(self._omega_2))
+            )
         else:
-            qtmp2 = R.from_quat([0., 0., 0., 1.])
+            qtmp2 = R.from_quat([0.0, 0.0, 0.0, 1.0])
         if np.linalg.norm(self._omega_3) > 1e-5:
             qtmp3 = R.from_rotvec(
-                (np.linalg.norm(self._omega_3) * self._b3) *
-                (self._omega_3 / np.linalg.norm(self._omega_3)))
+                (np.linalg.norm(self._omega_3) * self._b3)
+                * (self._omega_3 / np.linalg.norm(self._omega_3))
+            )
         else:
-            qtmp3 = R.from_quat([0., 0., 0., 1.])
+            qtmp3 = R.from_quat([0.0, 0.0, 0.0, 1.0])
 
         return (qtmp3 * qtmp2 * qtmp1 * self._q0).as_quat()
 
     def evaluate_ang_vel(self, s_in):
-        s = np.clip(s_in, 0., 1.)
+        s = np.clip(s_in, 0.0, 1.0)
         self._compute_basis(s)
 
-        return self._omega_1 * self._bdot1 + self._omega_2 * self._bdot2 + self._omega_3 * self._bdot3
+        return (
+            self._omega_1 * self._bdot1
+            + self._omega_2 * self._bdot2
+            + self._omega_3 * self._bdot3
+        )
 
     def evaluate_ang_acc(self, s_in):
-        s = np.clip(s_in, 0., 1.)
+        s = np.clip(s_in, 0.0, 1.0)
         self._compute_basis(s)
 
-        return self._omega_1 * self._bddot1 + self._omega_2 * self._bddot2 + self._omega_3 * self._bddot3
+        return (
+            self._omega_1 * self._bddot1
+            + self._omega_2 * self._bddot2
+            + self._omega_3 * self._bddot3
+        )

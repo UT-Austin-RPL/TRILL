@@ -1,10 +1,13 @@
-import numpy as np
 from robosuite.models.robots import RobotModel
 from robosuite.utils.mjcf_utils import find_elements, string_to_array
 from collections import OrderedDict
+from collections import OrderedDict
+
+from robosuite.models.robots import RobotModel
+from robosuite.utils.mjcf_utils import find_elements, string_to_array
+
 
 class MobileBaseModel(RobotModel):
-
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self._set_key_map()
@@ -39,18 +42,21 @@ class HumanoidModel(RobotModel):
         self.hand_rotation_offset = {}
         for arm in ("right", "left"):
             hand_element = find_elements(
-                root=self.root, tags="body", attribs={"name": self.eef_name[arm]}, return_first=True
+                root=self.root,
+                tags="body",
+                attribs={"name": self.eef_name[arm]},
+                return_first=True,
             )
-            self.hand_rotation_offset[arm] = string_to_array(hand_element.get("quat", "1 0 0 0"))[[1, 2, 3, 0]]
+            self.hand_rotation_offset[arm] = string_to_array(
+                hand_element.get("quat", "1 0 0 0")
+            )[[1, 2, 3, 0]]
 
         # Get camera names for this robot
         self.cameras = self.get_element_names(self.worldbody, "camera")
         self._set_key_map()
 
-
     def _set_key_map(self):
         raise NotImplementedError
-
 
     def add_gripper(self, gripper, arm_name=None):
         """
@@ -191,4 +197,3 @@ class HumanoidModel(RobotModel):
     @property
     def key_map(self):
         return self._key_map
-

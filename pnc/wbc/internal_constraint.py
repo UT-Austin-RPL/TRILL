@@ -1,4 +1,5 @@
 import abc
+
 import numpy as np
 
 
@@ -8,6 +9,7 @@ class InternalConstraint(abc.ABC):
     Usage:
         update_internal_constraint
     """
+
     def __init__(self, robot, dim):
         self._robot = robot
         self._dim = dim

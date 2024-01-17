@@ -10,9 +10,10 @@ class LocomanipulationState(object):
 
     DH_MANIPULATION = 14
 
-from .double_support_stand import DoubleSupportStand
-from .double_support_balance import DoubleSupportBalance
-from .contact_transition_start import ContactTransitionStart
+
 from .contact_transition_end import ContactTransitionEnd
-from .single_support_swing import SingleSupportSwing
+from .contact_transition_start import ContactTransitionStart
+from .double_support_balance import DoubleSupportBalance
+from .double_support_stand import DoubleSupportStand
 from .manipulation import Manipulation
+from .single_support_swing import SingleSupportSwing

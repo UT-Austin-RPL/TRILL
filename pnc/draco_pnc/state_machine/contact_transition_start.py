@@ -1,10 +1,10 @@
 from scipy.spatial.transform import Rotation as R
 
-from pnc.draco_pnc.state_machine import LocomanipulationState
 from pnc.dcm import Footstep
+from pnc.draco_pnc.state_machine import LocomanipulationState
+from pnc.draco_pnc.state_provider import DracoManipulationStateProvider
 from pnc.state_machine import StateMachine
 from pnc.wbc.manager.dcm_trajectory_manager import DCMTransferType
-from pnc.draco_pnc.state_provider import DracoManipulationStateProvider
 
 
 class ContactTransitionStart(StateMachine):
@@ -14,8 +14,8 @@ class ContactTransitionStart(StateMachine):
         self._hierarchy_managers = hm
         self._force_managers = fm
         self._leg_side = leg_side
-        self._sp = DracoManipulationStateProvider()
-        self._start_time = 0.
+        self._sp = DracoManipulationStateProvider(robot)
+        self._start_time = 0.0
         self._planning_id = 0
 
     def first_visit(self):
@@ -29,47 +29,57 @@ class ContactTransitionStart(StateMachine):
         for fm in self._force_managers.values():
             fm.initialize_ramp_to_max(
                 self._sp.curr_time,
-                self._trajectory_managers["dcm"].compute_rf_z_ramp_up_time())
+                self._trajectory_managers["dcm"].compute_rf_z_ramp_up_time(),
+            )
 
         # Initialize Hierarchy Ramp to Max
         self._hierarchy_managers["rfoot_pos"].initialize_ramp_to_max(
             self._sp.curr_time,
-            self._trajectory_managers["dcm"].compute_rf_z_ramp_up_time())
+            self._trajectory_managers["dcm"].compute_rf_z_ramp_up_time(),
+        )
         self._hierarchy_managers["lfoot_pos"].initialize_ramp_to_max(
             self._sp.curr_time,
-            self._trajectory_managers["dcm"].compute_rf_z_ramp_up_time())
+            self._trajectory_managers["dcm"].compute_rf_z_ramp_up_time(),
+        )
         self._hierarchy_managers["rfoot_ori"].initialize_ramp_to_max(
             self._sp.curr_time,
-            self._trajectory_managers["dcm"].compute_rf_z_ramp_up_time())
+            self._trajectory_managers["dcm"].compute_rf_z_ramp_up_time(),
+        )
         self._hierarchy_managers["lfoot_ori"].initialize_ramp_to_max(
             self._sp.curr_time,
-            self._trajectory_managers["dcm"].compute_rf_z_ramp_up_time())
+            self._trajectory_managers["dcm"].compute_rf_z_ramp_up_time(),
+        )
 
         # Check if it is the last footstep
         if self._trajectory_managers["dcm"].no_reaming_steps():
             self._end_time = self._trajectory_managers[
-                "dcm"].compute_final_contact_transfer_time()
+                "dcm"
+            ].compute_final_contact_transfer_time()
         else:
             transfer_type = DCMTransferType.MID
             self._end_time = self._trajectory_managers[
-                "dcm"].compute_rf_z_ramp_up_time()
+                "dcm"
+            ].compute_rf_z_ramp_up_time()
 
             if self._sp.prev_state == LocomanipulationState.BALANCE:
                 transfer_type = DCMTransferType.INI
-                self._end_time = self._trajectory_managers[
-                    "dcm"].compute_ini_contact_transfer_time(
-                    ) - self._trajectory_managers[
-                        "dcm"].compute_rf_z_ramp_down_time()
+                self._end_time = (
+                    self._trajectory_managers["dcm"].compute_ini_contact_transfer_time()
+                    - self._trajectory_managers["dcm"].compute_rf_z_ramp_down_time()
+                )
 
                 # TODO: Replanning
                 torso_quat = R.from_matrix(
-                    self._robot.get_link_iso("torso_link")[0:3,
-                                                           0:3]).as_quat()
+                    self._robot.get_link_iso("torso_link")[0:3, 0:3]
+                ).as_quat()
                 self._trajectory_managers["dcm"].initialize(
-                    self._sp.curr_time, transfer_type, torso_quat,
-                    self._sp.dcm, self._sp.dcm_vel)
-                self._trajectory_managers["dcm"].save_trajectory(
-                    self._planning_id)
+                    self._sp.curr_time,
+                    transfer_type,
+                    torso_quat,
+                    self._sp.dcm,
+                    self._sp.dcm_vel,
+                )
+                self._trajectory_managers["dcm"].save_trajectory(self._planning_id)
                 self._planning_id += 1
 
     def one_step(self):
@@ -80,18 +90,15 @@ class ContactTransitionStart(StateMachine):
             fm.update_ramp_to_max(self._sp.curr_time)
 
         # Update task hieararchy weights
-        self._hierarchy_managers["rfoot_pos"].update_ramp_to_max(
-            self._sp.curr_time)
-        self._hierarchy_managers["lfoot_pos"].update_ramp_to_max(
-            self._sp.curr_time)
-        self._hierarchy_managers["rfoot_ori"].update_ramp_to_max(
-            self._sp.curr_time)
-        self._hierarchy_managers["lfoot_ori"].update_ramp_to_max(
-            self._sp.curr_time)
+        self._hierarchy_managers["rfoot_pos"].update_ramp_to_max(self._sp.curr_time)
+        self._hierarchy_managers["lfoot_pos"].update_ramp_to_max(self._sp.curr_time)
+        self._hierarchy_managers["rfoot_ori"].update_ramp_to_max(self._sp.curr_time)
+        self._hierarchy_managers["lfoot_ori"].update_ramp_to_max(self._sp.curr_time)
 
         # Update floating base task
         self._trajectory_managers["dcm"].update_floating_base_task_desired(
-            self._sp.curr_time)
+            self._sp.curr_time
+        )
 
         # Update foot task
         self._trajectory_managers["lfoot"].use_current()

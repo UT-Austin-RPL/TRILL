@@ -1,11 +1,15 @@
 import os
-import numpy as np
 
+import numpy as np
 from robosuite.models.objects import MujocoXMLObject
-from robosuite.utils.mjcf_utils import xml_path_completion, find_elements, array_to_string
+from robosuite.utils.mjcf_utils import (
+    xml_path_completion,
+    find_elements,
+    array_to_string,
+)
 
 cwd = os.getcwd()
-PATH_TO_OBJECT_MODELS = os.path.expanduser(cwd+'/models/objects')
+PATH_TO_OBJECT_MODELS = os.path.expanduser(cwd + "/models/objects")
 
 
 class TableObject(MujocoXMLObject):
@@ -21,10 +25,12 @@ class TableObject(MujocoXMLObject):
     def __init__(self, name):
         xml_path = os.path.join(PATH_TO_OBJECT_MODELS, "table.xml")
         super().__init__(
-            xml_path_completion(xml_path), name=name, joints=[dict(type="free", damping="0.0005")],
-                 obj_type="all", duplicate_collision_geoms=True
+            xml_path_completion(xml_path),
+            name=name,
+            joints=[dict(type="free", damping="0.0005")],
+            obj_type="all",
+            duplicate_collision_geoms=True,
         )
-
 
 
 class ToasterObject(MujocoXMLObject):
@@ -40,8 +46,11 @@ class ToasterObject(MujocoXMLObject):
     def __init__(self, name):
         xml_path = os.path.join(PATH_TO_OBJECT_MODELS, "toaster.xml")
         super().__init__(
-            xml_path_completion(xml_path), name=name, joints=[dict(type="free", damping="0.0005")],
-                 obj_type="all", duplicate_collision_geoms=True
+            xml_path_completion(xml_path),
+            name=name,
+            joints=[dict(type="free", damping="0.0005")],
+            obj_type="all",
+            duplicate_collision_geoms=True,
         )
 
 
@@ -58,8 +67,11 @@ class PotObject(MujocoXMLObject):
     def __init__(self, name):
         xml_path = os.path.join(PATH_TO_OBJECT_MODELS, "pot.xml")
         super().__init__(
-            xml_path_completion(xml_path), name=name, joints=[dict(type="free", damping="0.0005")],
-                 obj_type="all", duplicate_collision_geoms=False
+            xml_path_completion(xml_path),
+            name=name,
+            joints=[dict(type="free", damping="0.0005")],
+            obj_type="all",
+            duplicate_collision_geoms=False,
         )
 
 
@@ -76,10 +88,12 @@ class PotLidObject(MujocoXMLObject):
     def __init__(self, name):
         xml_path = os.path.join(PATH_TO_OBJECT_MODELS, "pot_lid.xml")
         super().__init__(
-            xml_path_completion(xml_path), name=name, joints=[dict(type="free", damping="0.0005")],
-                 obj_type="all", duplicate_collision_geoms=False
+            xml_path_completion(xml_path),
+            name=name,
+            joints=[dict(type="free", damping="0.0005")],
+            obj_type="all",
+            duplicate_collision_geoms=False,
         )
-
 
 
 class DoorObject(MujocoXMLObject):
@@ -102,7 +116,11 @@ class DoorObject(MujocoXMLObject):
         else:
             xml_path = os.path.join(PATH_TO_OBJECT_MODELS, "locked_door.xml")
         super().__init__(
-            xml_path_completion(xml_path), name=name, joints=None, obj_type="all", duplicate_collision_geoms=False
+            xml_path_completion(xml_path),
+            name=name,
+            joints=None,
+            obj_type="all",
+            duplicate_collision_geoms=False,
         )
 
         # Set relevant body names
@@ -132,7 +150,12 @@ class DoorObject(MujocoXMLObject):
         Args:
             friction (3-tuple of float): friction parameters to override the ones specified in the XML
         """
-        hinge = find_elements(root=self.worldbody, tags="joint", attribs={"name": self.door_joint}, return_first=True)
+        hinge = find_elements(
+            root=self.worldbody,
+            tags="joint",
+            attribs={"name": self.door_joint},
+            return_first=True,
+        )
         hinge.set("frictionloss", array_to_string(np.array([friction])))
 
     def _set_door_damping(self, damping):
@@ -142,7 +165,12 @@ class DoorObject(MujocoXMLObject):
         Args:
             damping (float): damping parameter to override the ones specified in the XML
         """
-        hinge = find_elements(root=self.worldbody, tags="joint", attribs={"name": self.door_joint}, return_first=True)
+        hinge = find_elements(
+            root=self.worldbody,
+            tags="joint",
+            attribs={"name": self.door_joint},
+            return_first=True,
+        )
         hinge.set("damping", array_to_string(np.array([damping])))
 
     @property
@@ -157,7 +185,6 @@ class DoorObject(MujocoXMLObject):
         dic = super().important_sites
         dic.update({"handle": self.naming_prefix + "handle"})
         return dic
-
 
 
 class BreadObject(MujocoXMLObject):
@@ -189,8 +216,11 @@ class TrayObject(MujocoXMLObject):
     def __init__(self, name):
         xml_path = os.path.join(PATH_TO_OBJECT_MODELS, "tray.xml")
         super().__init__(
-            xml_path_completion(xml_path), name=name, joints=[dict(type="free", damping="0.0005")],
-                 obj_type="all", duplicate_collision_geoms=True
+            xml_path_completion(xml_path),
+            name=name,
+            joints=[dict(type="free", damping="0.0005")],
+            obj_type="all",
+            duplicate_collision_geoms=True,
         )
 
 
@@ -207,8 +237,11 @@ class HammerObject(MujocoXMLObject):
     def __init__(self, name):
         xml_path = os.path.join(PATH_TO_OBJECT_MODELS, "hammer.xml")
         super().__init__(
-            xml_path_completion(xml_path), name=name, joints=[dict(type="free", damping="0.0005")],
-                 obj_type="all", duplicate_collision_geoms=False
+            xml_path_completion(xml_path),
+            name=name,
+            joints=[dict(type="free", damping="0.0005")],
+            obj_type="all",
+            duplicate_collision_geoms=False,
         )
 
 
@@ -225,10 +258,12 @@ class LadleObject(MujocoXMLObject):
     def __init__(self, name):
         xml_path = os.path.join(PATH_TO_OBJECT_MODELS, "ladle.xml")
         super().__init__(
-            xml_path_completion(xml_path), name=name, joints=[dict(type="free", damping="0.0005")],
-                 obj_type="all", duplicate_collision_geoms=False
+            xml_path_completion(xml_path),
+            name=name,
+            joints=[dict(type="free", damping="0.0005")],
+            obj_type="all",
+            duplicate_collision_geoms=False,
         )
-
 
 
 class ToolboxObject(MujocoXMLObject):
@@ -244,8 +279,11 @@ class ToolboxObject(MujocoXMLObject):
     def __init__(self, name):
         xml_path = os.path.join(PATH_TO_OBJECT_MODELS, "toolbox.xml")
         super().__init__(
-            xml_path_completion(xml_path), name=name, joints=[dict(type="free", damping="0.0005")],
-                 obj_type="all", duplicate_collision_geoms=False
+            xml_path_completion(xml_path),
+            name=name,
+            joints=[dict(type="free", damping="0.0005")],
+            obj_type="all",
+            duplicate_collision_geoms=False,
         )
 
 
@@ -262,8 +300,11 @@ class MicrowaveObject(MujocoXMLObject):
     def __init__(self, name):
         xml_path = os.path.join(PATH_TO_OBJECT_MODELS, "microwave.xml")
         super().__init__(
-            xml_path_completion(xml_path), name=name, joints=[dict(type="free", damping="0.0005")],
-                 obj_type="all", duplicate_collision_geoms=True
+            xml_path_completion(xml_path),
+            name=name,
+            joints=[dict(type="free", damping="0.0005")],
+            obj_type="all",
+            duplicate_collision_geoms=True,
         )
 
 
@@ -280,8 +321,11 @@ class StoveObject(MujocoXMLObject):
     def __init__(self, name):
         xml_path = os.path.join(PATH_TO_OBJECT_MODELS, "stove.xml")
         super().__init__(
-            xml_path_completion(xml_path), name=name, joints=[dict(type="free", damping="0.0005")],
-                 obj_type="all", duplicate_collision_geoms=False
+            xml_path_completion(xml_path),
+            name=name,
+            joints=[dict(type="free", damping="0.0005")],
+            obj_type="all",
+            duplicate_collision_geoms=False,
         )
 
 
@@ -298,8 +342,11 @@ class TargetObject(MujocoXMLObject):
     def __init__(self, name):
         xml_path = os.path.join(PATH_TO_OBJECT_MODELS, "target.xml")
         super().__init__(
-            xml_path_completion(xml_path), name=name, joints=None,
-                 obj_type="all", duplicate_collision_geoms=False
+            xml_path_completion(xml_path),
+            name=name,
+            joints=None,
+            obj_type="all",
+            duplicate_collision_geoms=False,
         )
 
 
@@ -316,8 +363,11 @@ class LaneObject(MujocoXMLObject):
     def __init__(self, name):
         xml_path = os.path.join(PATH_TO_OBJECT_MODELS, "lane.xml")
         super().__init__(
-            xml_path_completion(xml_path), name=name, joints=None,
-                 obj_type="all", duplicate_collision_geoms=False
+            xml_path_completion(xml_path),
+            name=name,
+            joints=None,
+            obj_type="all",
+            duplicate_collision_geoms=False,
         )
 
 
@@ -334,11 +384,12 @@ class LineObject(MujocoXMLObject):
     def __init__(self, name):
         xml_path = os.path.join(PATH_TO_OBJECT_MODELS, "line.xml")
         super().__init__(
-            xml_path_completion(xml_path), name=name, joints=None,
-                 obj_type="all", duplicate_collision_geoms=False
+            xml_path_completion(xml_path),
+            name=name,
+            joints=None,
+            obj_type="all",
+            duplicate_collision_geoms=False,
         )
-
-
 
 
 class WallObject(MujocoXMLObject):
@@ -350,16 +401,19 @@ class WallObject(MujocoXMLObject):
     """
 
     def __init__(self, name, color=None):
-        if color is None:        
+        if color is None:
             obj_path = "wall.xml"
         else:
             obj_path = "wall_{}.xml".format(color)
-        
+
         xml_path = os.path.join(PATH_TO_OBJECT_MODELS, obj_path)
         super().__init__(
-            xml_path_completion(xml_path), name=name, joints=None, obj_type="all", duplicate_collision_geoms=True
+            xml_path_completion(xml_path),
+            name=name,
+            joints=None,
+            obj_type="all",
+            duplicate_collision_geoms=True,
         )
-
 
     @property
     def important_sites(self):
@@ -387,14 +441,16 @@ class BrushObject(MujocoXMLObject):
     def __init__(self, name):
         xml_path = os.path.join(PATH_TO_OBJECT_MODELS, "brush.xml")
         super().__init__(
-            xml_path_completion(xml_path), name=name, joints=[dict(type="free", damping="0.0005")],
-                 obj_type="all", duplicate_collision_geoms=True
+            xml_path_completion(xml_path),
+            name=name,
+            joints=[dict(type="free", damping="0.0005")],
+            obj_type="all",
+            duplicate_collision_geoms=True,
         )
 
         # Set relevant body names
         self.brush_body = self.naming_prefix + "body"
         self.furs_body = self.naming_prefix + "furs"
-
 
     @property
     def important_sites(self):
@@ -423,8 +479,11 @@ class ParticleObject(MujocoXMLObject):
     def __init__(self, name):
         xml_path = os.path.join(PATH_TO_OBJECT_MODELS, "particle.xml")
         super().__init__(
-            xml_path_completion(xml_path), name=name, joints=[dict(type="free", damping="0.0005")],
-                 obj_type="all", duplicate_collision_geoms=True
+            xml_path_completion(xml_path),
+            name=name,
+            joints=[dict(type="free", damping="0.0005")],
+            obj_type="all",
+            duplicate_collision_geoms=True,
         )
 
 
@@ -441,11 +500,12 @@ class NailObject(MujocoXMLObject):
     def __init__(self, name):
         xml_path = os.path.join(PATH_TO_OBJECT_MODELS, "nail.xml")
         super().__init__(
-            xml_path_completion(xml_path), name=name, joints=[dict(type="free", damping="0.0005")],
-                 obj_type="all", duplicate_collision_geoms=True
+            xml_path_completion(xml_path),
+            name=name,
+            joints=[dict(type="free", damping="0.0005")],
+            obj_type="all",
+            duplicate_collision_geoms=True,
         )
-
-
 
     @property
     def important_sites(self):
@@ -474,12 +534,33 @@ class PegboardObject(MujocoXMLObject):
     def __init__(self, name):
         xml_path = os.path.join(PATH_TO_OBJECT_MODELS, "pegboard.xml")
         super().__init__(
-            xml_path_completion(xml_path), name=name, joints=[
-                        dict(name="joint_x", type="slide", axis="1 0 0", frictionloss="100", damping="0.1"),
-                        dict(name="joint_y", type="slide", axis="0 1 0", frictionloss="100", damping="0.1"),
-                        dict(name="joint_yaw", type="hinge", axis="0 0 1", frictionloss="100", damping="0.1")
-                        ],
-                 obj_type="all", duplicate_collision_geoms=False
+            xml_path_completion(xml_path),
+            name=name,
+            joints=[
+                dict(
+                    name="joint_x",
+                    type="slide",
+                    axis="1 0 0",
+                    frictionloss="100",
+                    damping="0.1",
+                ),
+                dict(
+                    name="joint_y",
+                    type="slide",
+                    axis="0 1 0",
+                    frictionloss="100",
+                    damping="0.1",
+                ),
+                dict(
+                    name="joint_yaw",
+                    type="hinge",
+                    axis="0 0 1",
+                    frictionloss="100",
+                    damping="0.1",
+                ),
+            ],
+            obj_type="all",
+            duplicate_collision_geoms=False,
         )
 
 
@@ -496,10 +577,31 @@ class CartObject(MujocoXMLObject):
     def __init__(self, name):
         xml_path = os.path.join(PATH_TO_OBJECT_MODELS, "cart.xml")
         super().__init__(
-            xml_path_completion(xml_path), name=name, joints=[
-                        dict(name="joint_x", type="slide", axis="1 0 0", frictionloss="0.5", damping="320."),
-                        dict(name="joint_y", type="slide", axis="0 1 0", frictionloss="0.5", damping="320."),
-                        dict(name="joint_yaw", type="hinge", axis="0 0 1", frictionloss="0.5", damping="640.")
-                        ],
-                 obj_type="all", duplicate_collision_geoms=False
+            xml_path_completion(xml_path),
+            name=name,
+            joints=[
+                dict(
+                    name="joint_x",
+                    type="slide",
+                    axis="1 0 0",
+                    frictionloss="0.5",
+                    damping="320.",
+                ),
+                dict(
+                    name="joint_y",
+                    type="slide",
+                    axis="0 1 0",
+                    frictionloss="0.5",
+                    damping="320.",
+                ),
+                dict(
+                    name="joint_yaw",
+                    type="hinge",
+                    axis="0 0 1",
+                    frictionloss="0.5",
+                    damping="640.",
+                ),
+            ],
+            obj_type="all",
+            duplicate_collision_geoms=False,
         )

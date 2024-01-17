@@ -22,27 +22,29 @@ class PointContact(Contact):
             self._data_saver = DataSaver()
 
     def _update_jacobian(self):
-        self._jacobian = self._robot.get_link_jacobian(
-            self._link_id)[self._dim_contact:, :]
+        self._jacobian = self._robot.get_link_jacobian(self._link_id)[
+            self._dim_contact :, :
+        ]
         self._jacobian_dot_q_dot = self._robot.get_link_jacobian_dot_times_qdot(
-            self._link_id)[self._dim_contact:]
+            self._link_id
+        )[self._dim_contact :]
 
     def _update_cone_constraint(self):
         rot = self._robot.get_link_iso(self._link_id)[0:3, 0:3].transpose()
         self._cone_constraint_mat = np.zeros((6, self._dim_contact))
-        self._cone_constraint_mat[0, 2] = 1.
+        self._cone_constraint_mat[0, 2] = 1.0
 
-        self._cone_constraint_mat[1, 0] = 1.
+        self._cone_constraint_mat[1, 0] = 1.0
         self._cone_constraint_mat[1, 2] = self._mu
-        self._cone_constraint_mat[2, 0] = -1.
+        self._cone_constraint_mat[2, 0] = -1.0
         self._cone_constraint_mat[2, 2] = self._mu
 
-        self._cone_constraint_mat[3, 1] = 1.
+        self._cone_constraint_mat[3, 1] = 1.0
         self._cone_constraint_mat[3, 2] = self._mu
-        self._cone_constraint_mat[4, 1] = -1.
+        self._cone_constraint_mat[4, 1] = -1.0
         self._cone_constraint_mat[4, 2] = self._mu
 
-        self._cone_constraint_mat[5, 2] = -1.
+        self._cone_constraint_mat[5, 2] = -1.0
 
         self._cone_constraint_vec = np.zeros(6)
         self._cone_constraint_vec[5] = -self._rf_z_max
@@ -67,7 +69,8 @@ class SurfaceContact(Contact):
     def _update_jacobian(self):
         self._jacobian = self._robot.get_link_jacobian(self._link_id)
         self._jacobian_dot_q_dot = self._robot.get_link_jacobian_dot_times_qdot(
-            self._link_id)
+            self._link_id
+        )
 
     def _update_cone_constraint(self):
         self._cone_constraint_mat = np.zeros((16 + 2, self._dim_contact))
@@ -89,85 +92,85 @@ class SurfaceContact(Contact):
     def _get_u(self, x, y, mu):
         u = np.zeros((16 + 2, 6))
 
-        u[0, 5] = 1.
+        u[0, 5] = 1.0
 
-        u[1, 3] = 1.
+        u[1, 3] = 1.0
         u[1, 5] = mu
-        u[2, 3] = -1.
+        u[2, 3] = -1.0
         u[2, 5] = mu
 
-        u[3, 4] = 1.
+        u[3, 4] = 1.0
         u[3, 5] = mu
-        u[4, 4] = -1.
+        u[4, 4] = -1.0
         u[4, 5] = mu
 
-        u[5, 0] = 1.
+        u[5, 0] = 1.0
         u[5, 5] = y
-        u[6, 0] = -1.
+        u[6, 0] = -1.0
         u[6, 5] = y
 
-        u[7, 1] = 1.
+        u[7, 1] = 1.0
         u[7, 5] = x
-        u[8, 1] = -1.
+        u[8, 1] = -1.0
         u[8, 5] = x
 
         ##tau
         u[9, 0] = -mu
         u[9, 1] = -mu
-        u[9, 2] = 1.
+        u[9, 2] = 1.0
         u[9, 3] = y
         u[9, 4] = x
         u[9, 5] = (x + y) * mu
 
         u[10, 0] = -mu
         u[10, 1] = mu
-        u[10, 2] = 1.
+        u[10, 2] = 1.0
         u[10, 3] = y
         u[10, 4] = -x
         u[10, 5] = (x + y) * mu
 
         u[11, 0] = mu
         u[11, 1] = -mu
-        u[11, 2] = 1.
+        u[11, 2] = 1.0
         u[11, 3] = -y
         u[11, 4] = x
         u[11, 5] = (x + y) * mu
 
         u[12, 0] = mu
         u[12, 1] = mu
-        u[12, 2] = 1.
+        u[12, 2] = 1.0
         u[12, 3] = -y
         u[12, 4] = -x
         u[12, 5] = (x + y) * mu
 
         u[13, 0] = -mu
         u[13, 1] = -mu
-        u[13, 2] = -1.
+        u[13, 2] = -1.0
         u[13, 3] = -y
         u[13, 4] = -x
         u[13, 5] = (x + y) * mu
 
         u[14, 0] = -mu
         u[14, 1] = mu
-        u[14, 2] = -1.
+        u[14, 2] = -1.0
         u[14, 3] = -y
         u[14, 4] = x
         u[14, 5] = (x + y) * mu
 
         u[15, 0] = mu
         u[15, 1] = -mu
-        u[15, 2] = -1.
+        u[15, 2] = -1.0
         u[15, 3] = y
         u[15, 4] = -x
         u[15, 5] = (x + y) * mu
 
         u[16, 0] = mu
         u[16, 1] = mu
-        u[16, 2] = -1.
+        u[16, 2] = -1.0
         u[16, 3] = y
         u[16, 4] = x
         u[16, 5] = (x + y) * mu
 
-        u[17, 5] = -1.
+        u[17, 5] = -1.0
 
         return u

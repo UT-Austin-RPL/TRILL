@@ -1,15 +1,20 @@
-from scipy.spatial.transform import Rotation as R
 import numpy as np
+from scipy.spatial.transform import Rotation as R
+
 from util import liegroup
 
 
 def x_rot(angle):
-    return np.array([[1, 0, 0], [0, np.cos(angle), -np.sin(angle)],
-                     [0, np.sin(angle), np.cos(angle)]])
+    return np.array(
+        [
+            [1, 0, 0],
+            [0, np.cos(angle), -np.sin(angle)],
+            [0, np.sin(angle), np.cos(angle)],
+        ]
+    )
 
 
 def iso_to_pose(iso_matrix):
-
     mat, pos = liegroup.TransToRp(iso_matrix)
     quat = rot_to_quat(mat)
     return pos, quat
@@ -21,23 +26,26 @@ def euler_to_rot(angles):
     x = angles[0]
     y = angles[1]
     z = angles[2]
-    ret = np.array([
-        np.cos(y) * np.cos(z),
-        np.cos(z) * np.sin(x) * np.sin(y) - np.cos(x) * np.sin(z),
-        np.sin(x) * np.sin(z) + np.cos(x) * np.cos(z) * np.sin(y),
-        np.cos(y) * np.sin(z),
-        np.cos(x) * np.cos(z) + np.sin(x) * np.sin(y) * np.sin(z),
-        np.cos(x) * np.sin(y) * np.sin(z) - np.cos(z) * np.sin(x), -np.sin(y),
-        np.cos(y) * np.sin(x),
-        np.cos(x) * np.cos(y)
-    ]).reshape(3, 3)
+    ret = np.array(
+        [
+            np.cos(y) * np.cos(z),
+            np.cos(z) * np.sin(x) * np.sin(y) - np.cos(x) * np.sin(z),
+            np.sin(x) * np.sin(z) + np.cos(x) * np.cos(z) * np.sin(y),
+            np.cos(y) * np.sin(z),
+            np.cos(x) * np.cos(z) + np.sin(x) * np.sin(y) * np.sin(z),
+            np.cos(x) * np.sin(y) * np.sin(z) - np.cos(z) * np.sin(x),
+            -np.sin(y),
+            np.cos(y) * np.sin(x),
+            np.cos(x) * np.cos(y),
+        ]
+    ).reshape(3, 3)
     return np.copy(ret)
 
 
 def euler_to_quat(angles):
     # Euler ZYX to Rot
     # Note that towr has (x, y, z) order
-    return np.copy((R.from_euler('xyz', angles, degrees=False)).as_quat())
+    return np.copy((R.from_euler("xyz", angles, degrees=False)).as_quat())
 
 
 def quat_to_rot(quat):
@@ -79,16 +87,17 @@ def rot_to_euler(rot):
     quat (np.array): scalar last quaternion
 
     """
-    return np.copy(R.from_matrix(rot).as_euler('xyz'))
-
+    return np.copy(R.from_matrix(rot).as_euler("xyz"))
 
 
 def quat_to_exp(quat):
     img_vec = np.array([quat[0], quat[1], quat[2]])
     w = quat[3]
     theta = 2.0 * np.arcsin(
-        np.sqrt(img_vec[0] * img_vec[0] + img_vec[1] * img_vec[1] +
-                img_vec[2] * img_vec[2]))
+        np.sqrt(
+            img_vec[0] * img_vec[0] + img_vec[1] * img_vec[1] + img_vec[2] * img_vec[2]
+        )
+    )
 
     if np.abs(theta) < 1e-4:
         return np.zeros(3)
@@ -98,8 +107,7 @@ def quat_to_exp(quat):
 
 
 def quat_to_euler(quat):
-
-    return np.copy((R.from_quat(quat)).as_euler('xyz'))
+    return np.copy((R.from_quat(quat)).as_euler("xyz"))
 
 
 def exp_to_quat(exp):
@@ -122,10 +130,12 @@ def get_sinusoid_trajectory(start_time, mid_point, amp, freq, eval_time):
     dim = amp.shape[0]
     p, v, a = np.zeros(dim), np.zeros(dim), np.zeros(dim)
     p = amp * np.sin(2 * np.pi * freq * (eval_time - start_time)) + mid_point
-    v = amp * 2 * np.pi * freq * np.cos(2 * np.pi * freq *
-                                        (eval_time - start_time))
-    a = -amp * (2 * np.pi * freq)**2 * np.sin(2 * np.pi * freq *
-                                              (eval_time - start_time))
+    v = amp * 2 * np.pi * freq * np.cos(2 * np.pi * freq * (eval_time - start_time))
+    a = (
+        -amp
+        * (2 * np.pi * freq) ** 2
+        * np.sin(2 * np.pi * freq * (eval_time - start_time))
+    )
 
     return p, v, a
 
@@ -141,4 +151,3 @@ def prevent_quat_jump(quat_des, quat_act):
         new_quat_act = quat_act
 
     return new_quat_act
-

@@ -2,24 +2,24 @@
 6-DoF gripper with its open/close variant
 """
 import os
-import numpy as np
 
+import numpy as np
 from robosuite.models.grippers.gripper_model import GripperModel
 
 cwd = os.getcwd()
 
-PATH_TO_GRIPPER_MODEL = os.path.expanduser(cwd+'/models/grippers/sake_ezgripper')
-PATH_TO_GRIPPER_XML = os.path.join(PATH_TO_GRIPPER_MODEL, 'sake_ezgripper.xml')
+PATH_TO_GRIPPER_MODEL = os.path.expanduser(cwd + "/models/grippers/sake_ezgripper")
+PATH_TO_GRIPPER_XML = os.path.join(PATH_TO_GRIPPER_MODEL, "sake_ezgripper.xml")
 
 EZGRIPPER_MAP = {
-    'joint': {
-        'gripper': 'joint_right_driver',
+    "joint": {
+        "gripper": "joint_right_driver",
     },
-
-    'actuator': {
-        'gripper': 'torque_drive',
-    }
+    "actuator": {
+        "gripper": "torque_drive",
+    },
 }
+
 
 class SakeEZGripperBase(GripperModel):
     """
@@ -42,14 +42,8 @@ class SakeEZGripperBase(GripperModel):
     @property
     def _important_geoms(self):
         return {
-            "left_finger": [
-                "geom_left_finger1",
-                "geom_left_finger2"
-            ],
-            "right_finger": [
-                "geom_right_finger1",
-                "geom_right_finger2"
-            ],
+            "left_finger": ["geom_left_finger1", "geom_left_finger2"],
+            "right_finger": ["geom_right_finger1", "geom_right_finger2"],
             "left_fingerpad": ["geom_left_pad_box1_col", "geom_left_pad_box2_col"],
             "right_fingerpad": ["geom_right_pad_box1_col", "geom_right_pad_box2_col"],
         }
@@ -59,6 +53,7 @@ class SakeEZGripper(SakeEZGripperBase):
     """
     1-DoF variant of RobotiqGripperBase.
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self._set_key_map()
@@ -75,20 +70,25 @@ class SakeEZGripper(SakeEZGripperBase):
             AssertionError: [Invalid action dimension size]
         """
         assert len(action) == 1
-        self.current_action = np.clip(self.current_action + self.speed * np.sign(action), -1.0, 1.0)
+        self.current_action = np.clip(
+            self.current_action + self.speed * np.sign(action), -1.0, 1.0
+        )
         return self.current_action
-
 
     def _set_key_map(self):
         """
         Sets the key map for this gripper
         """
 
-        self._key_map = {'joint': {}, 'actuator': {}}
+        self._key_map = {"joint": {}, "actuator": {}}
 
-        for key in EZGRIPPER_MAP['joint'].keys():
-            self._key_map['joint'].update({key: self.naming_prefix+EZGRIPPER_MAP['joint'][key]})
-            self._key_map['actuator'].update({key: self.naming_prefix+EZGRIPPER_MAP['actuator'][key]})
+        for key in EZGRIPPER_MAP["joint"].keys():
+            self._key_map["joint"].update(
+                {key: self.naming_prefix + EZGRIPPER_MAP["joint"][key]}
+            )
+            self._key_map["actuator"].update(
+                {key: self.naming_prefix + EZGRIPPER_MAP["actuator"][key]}
+            )
 
     @property
     def speed(self):

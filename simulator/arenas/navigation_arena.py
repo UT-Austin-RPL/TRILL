@@ -7,7 +7,7 @@ from robosuite.utils.mjcf_utils import xml_path_completion
 cwd = os.getcwd()
 sys.path.append(cwd)
 
-PATH_TO_ARENA_XML = os.path.expanduser(cwd+'/models/arenas/navigation_arena.xml')
+PATH_TO_ARENA_XML = os.path.expanduser(cwd + "/models/arenas/navigation_arena.xml")
 
 
 class NavigationArena(Arena):

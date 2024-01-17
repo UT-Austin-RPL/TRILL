@@ -1,7 +1,7 @@
-from pnc.draco_pnc.state_machine import LocomanipulationState
-from pnc.state_machine import StateMachine
 from pnc.dcm import Footstep
+from pnc.draco_pnc.state_machine import LocomanipulationState
 from pnc.draco_pnc.state_provider import DracoManipulationStateProvider
+from pnc.state_machine import StateMachine
 
 
 class DoubleSupportBalance(StateMachine):
@@ -11,7 +11,7 @@ class DoubleSupportBalance(StateMachine):
         self._hierarchy_managers = hm
         self._force_managers = fm
         self._sp = DracoManipulationStateProvider()
-        self._start_time = 0.
+        self._start_time = 0.0
         self._walking_trigger = False
         self._swaying_trigger = False
         self._lhand_task_trans_trigger = False
@@ -91,15 +91,16 @@ class DoubleSupportBalance(StateMachine):
         pass
 
     def end_of_state(self):
-        if (self._walking_trigger) and (
-                len(self._trajectory_managers["dcm"].footstep_list) > 0
-        ) and not (self._trajectory_managers["dcm"].no_reaming_steps()):
+        if (
+            (self._walking_trigger)
+            and (len(self._trajectory_managers["dcm"].footstep_list) > 0)
+            and not (self._trajectory_managers["dcm"].no_reaming_steps())
+        ):
             return True
         return False
 
     def get_next_state(self):
-        b_valid_step, robot_side = self._trajectory_managers[
-            "dcm"].next_step_side()
+        b_valid_step, robot_side = self._trajectory_managers["dcm"].next_step_side()
         if b_valid_step:
             if robot_side == Footstep.LEFT_SIDE:
                 return LocomanipulationState.LF_CONTACT_TRANS_START

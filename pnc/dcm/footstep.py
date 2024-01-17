@@ -9,7 +9,7 @@ class Footstep(object):
 
     def __init__(self):
         self._pos = np.zeros(3)
-        self._quat = np.array([0., 0., 0., 1.])  # scalar-last
+        self._quat = np.array([0.0, 0.0, 0.0, 1.0])  # scalar-last
         self._rot = np.eye(3)
         self._iso = np.eye(4)
         self._side = -1

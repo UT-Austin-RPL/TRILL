@@ -1,4 +1,5 @@
 import abc
+
 import numpy as np
 
 
@@ -9,6 +10,7 @@ class Task(abc.ABC):
     Usage:
         update_desired --> update_jacobian --> update_cmd
     """
+
     def __init__(self, robot, dim):
         self._robot = robot
         self._dim = dim

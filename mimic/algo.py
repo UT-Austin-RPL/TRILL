@@ -1,16 +1,17 @@
 from collections import OrderedDict
 
 import torch
-import torch.nn as nn
-import torch.nn.functional as F
-
-import robomimic.models.base_nets as BaseNets
-import robomimic.utils.obs_utils as ObsUtils
-import robomimic.utils.torch_utils as TorchUtils
-from robomimic.algo import PolicyAlgo, RolloutPolicy
+import numpy as np
+from robomimic.algo import RolloutPolicy
 from robomimic.algo.bc import *
-from robomimic.utils.file_utils import maybe_dict_from_checkpoint, config_from_checkpoint, algo_name_from_checkpoint  # noqa: E402
+from robomimic.utils.file_utils import (
+    maybe_dict_from_checkpoint,
+    config_from_checkpoint,
+    algo_name_from_checkpoint,
+)  # noqa: E402
+
 from .policy_nets import *
+
 
 def algo_factory(algo_name, config, obs_key_shapes, ac_dim, device):
     """
@@ -34,22 +35,26 @@ def algo_factory(algo_name, config, obs_key_shapes, ac_dim, device):
     algo_config = config.algo
     obs_config = config.observation
 
-    gaussian_enabled = ("gaussian" in algo_config and algo_config.gaussian.enabled)
-    gmm_enabled = ("gmm" in algo_config and algo_config.gmm.enabled)
-    vae_enabled = ("vae" in algo_config and algo_config.vae.enabled)
+    gaussian_enabled = "gaussian" in algo_config and algo_config.gaussian.enabled
+    gmm_enabled = "gmm" in algo_config and algo_config.gmm.enabled
+    vae_enabled = "vae" in algo_config and algo_config.vae.enabled
 
     if algo_config.rnn.enabled:
         if gmm_enabled:
-            if len(algo_config.gmm.discrete_indices)==0:
-                assert len(algo_config.gmm.discrete_indices) == len(algo_config.gmm.discrete_classes)
+            if len(algo_config.gmm.discrete_indices) == 0:
+                assert len(algo_config.gmm.discrete_indices) == len(
+                    algo_config.gmm.discrete_classes
+                )
                 algo_cls = BC_RNN_GMM
             elif sum(algo_config.gmm.discrete_trg_config) != 0:
                 algo_cls = BC_HIERARCHICAL_RNN_HUMANOID
             else:
                 algo_cls = BC_RNN_HYBRID
         else:
-            if len(algo_config.gmm.discrete_indices)==0:
-                assert len(algo_config.gmm.discrete_indices) == len(algo_config.gmm.discrete_classes)
+            if len(algo_config.gmm.discrete_indices) == 0:
+                assert len(algo_config.gmm.discrete_indices) == len(
+                    algo_config.gmm.discrete_classes
+                )
                 algo_cls = BC_RNN
             elif sum(algo_config.gmm.discrete_trg_config) != 0:
                 algo_cls = BC_HIERARCHICAL_RNN_DETERMINISTIC
@@ -58,9 +63,9 @@ def algo_factory(algo_name, config, obs_key_shapes, ac_dim, device):
     else:
         assert sum([gaussian_enabled, gmm_enabled, vae_enabled]) <= 1
         if gaussian_enabled:
-            algo_cls =  BC_Gaussian
+            algo_cls = BC_Gaussian
         if gmm_enabled:
-            algo_cls =  BC_GMM
+            algo_cls = BC_GMM
         if vae_enabled:
             algo_cls = BC_VAE
         else:
@@ -103,7 +108,9 @@ def policy_from_checkpoint(device=None, ckpt_path=None, ckpt_dict=None, verbose=
 
     # algo name and config from model dict
     algo_name, _ = algo_name_from_checkpoint(ckpt_dict=ckpt_dict)
-    config, _ = config_from_checkpoint(algo_name=algo_name, ckpt_dict=ckpt_dict, verbose=verbose)
+    config, _ = config_from_checkpoint(
+        algo_name=algo_name, ckpt_dict=ckpt_dict, verbose=verbose
+    )
 
     # read config to set up metadata for observation modalities (e.g. detecting rgb observations)
     ObsUtils.initialize_obs_utils_with_config(config)
@@ -144,6 +151,7 @@ class BC_RNN_HYBRID(BC_RNN):
     """
     BC training with an RNN GMM policy.
     """
+
     def _create_networks(self):
         """
         Creates networks and places them into @self.nets.
@@ -155,8 +163,9 @@ class BC_RNN_HYBRID(BC_RNN):
         self.discrete_indices = self.algo_config.gmm.discrete_indices
         self.discrete_classes = self.algo_config.gmm.discrete_classes
 
-        self.trajectory_indices = [idx for idx in range(self.ac_dim)
-                                    if idx not in self.discrete_indices]
+        self.trajectory_indices = [
+            idx for idx in range(self.ac_dim) if idx not in self.discrete_indices
+        ]
 
         print("Discrete class: ", self.discrete_classes)
         print("Discrete indices: ", self.discrete_indices)
@@ -179,7 +188,9 @@ class BC_RNN_HYBRID(BC_RNN):
             min_std=self.algo_config.gmm.min_std,
             std_activation=self.algo_config.gmm.std_activation,
             low_noise_eval=self.algo_config.gmm.low_noise_eval,
-            encoder_kwargs=ObsUtils.obs_encoder_kwargs_from_config(self.obs_config.encoder),
+            encoder_kwargs=ObsUtils.obs_encoder_kwargs_from_config(
+                self.obs_config.encoder
+            ),
             **BaseNets.rnn_args_from_config(self.algo_config.rnn),
         )
 
@@ -203,21 +214,25 @@ class BC_RNN_HYBRID(BC_RNN):
             predictions (dict): dictionary containing network outputs
         """
         pred_dists, pred_discrete = self.nets["policy"].forward_train(
-            obs_dict=batch["obs"], 
+            obs_dict=batch["obs"],
             goal_dict=batch["goal_obs"],
         )
 
         demo_trajectory = batch["actions"][..., self.trajectory_indices]
-        demo_discrete = torch.round(batch["actions"][..., self.discrete_indices]).type(torch.long)
+        demo_discrete = torch.round(batch["actions"][..., self.discrete_indices]).type(
+            torch.long
+        )
 
         # make sure that this is a batch of multivariate action distributions, so that
         # the log probability computation will be correct
-        assert len(pred_dists.batch_shape) == 2 # [B, T]
+        assert len(pred_dists.batch_shape) == 2  # [B, T]
         log_probs = pred_dists.log_prob(demo_trajectory)
-        cross_entropy = nn.CrossEntropyLoss()(pred_discrete.flatten(end_dim=1), demo_discrete.flatten(end_dim=1))
+        cross_entropy = nn.CrossEntropyLoss()(
+            pred_discrete.flatten(end_dim=1), demo_discrete.flatten(end_dim=1)
+        )
 
-        #original_stdout = sys.stdout # Save a reference to the original standard output
-        #with open('/home/mingyo/test.txt', 'a') as f:
+        # original_stdout = sys.stdout # Save a reference to the original standard output
+        # with open('/home/mingyo/test.txt', 'a') as f:
         #    sys.stdout = f # Change the standard output to the file we created.
         #    print(pred_discrete.flatten(end_dim=1)[0], demo_discrete.flatten(end_dim=1)[0])
         #    sys.stdout = original_stdout # Reset the standard output to its original value
@@ -245,10 +260,12 @@ class BC_RNN_HYBRID(BC_RNN):
         # loss is just negative log-likelihood of action targets
         log_probs = predictions["log_probs"].mean()
         cross_entropy = predictions["cross_entropy"]
-        action_loss = - self.algo_config.loss.log_probs_weight*log_probs\
-                      + self.algo_config.loss.cross_entropy_weight*cross_entropy
+        action_loss = (
+            -self.algo_config.loss.log_probs_weight * log_probs
+            + self.algo_config.loss.cross_entropy_weight * cross_entropy
+        )
         return OrderedDict(
-            cross_etropy=cross_entropy, 
+            cross_etropy=cross_entropy,
             log_probs=log_probs,
             action_loss=action_loss,
         )
@@ -266,8 +283,8 @@ class BC_RNN_HYBRID(BC_RNN):
         """
         log = PolicyAlgo.log_info(self, info)
         log["Loss"] = info["losses"]["action_loss"].item()
-        log["Log_Likelihood"] = info["losses"]["log_probs"].item() 
-        log["Cross_Entropy"] = info["losses"]["cross_etropy"].item() 
+        log["Log_Likelihood"] = info["losses"]["log_probs"].item()
+        log["Cross_Entropy"] = info["losses"]["cross_etropy"].item()
         if "policy_grad_norms" in info:
             log["Policy_Grad_Norms"] = info["policy_grad_norms"]
         return log
@@ -277,6 +294,7 @@ class BC_RNN_HUMANOID(BC_RNN):
     """
     BC training with an RNN GMM policy.
     """
+
     def _create_networks(self):
         """
         Creates networks and places them into @self.nets.
@@ -285,18 +303,36 @@ class BC_RNN_HUMANOID(BC_RNN):
         assert self.algo_config.rnn.enabled
         assert len(self.algo_config.gmm.discrete_indices) != 0
         assert sum(self.algo_config.gmm.discrete_prob_config) != 0
-        assert len(self.algo_config.gmm.discrete_indices) == len(self.algo_config.gmm.discrete_prob_config)
+        assert len(self.algo_config.gmm.discrete_indices) == len(
+            self.algo_config.gmm.discrete_prob_config
+        )
 
-        self.discrete_det_classes = [act_idx for idx, act_idx in enumerate(self.algo_config.gmm.discrete_classes)
-                                        if not self.algo_config.gmm.discrete_prob_config[idx]]
-        self.discrete_prob_classes = [act_idx for idx, act_idx in enumerate(self.algo_config.gmm.discrete_classes)
-                                        if self.algo_config.gmm.discrete_prob_config[idx]]
-        self.discrete_det_indices = [act_idx for idx, act_idx in enumerate(self.algo_config.gmm.discrete_indices)
-                                        if not self.algo_config.gmm.discrete_prob_config[idx]]
-        self.discrete_prob_indices = [act_idx for idx, act_idx in enumerate(self.algo_config.gmm.discrete_indices)
-                                        if self.algo_config.gmm.discrete_prob_config[idx]]
-        self.trajectory_indices = [idx for idx in range(self.ac_dim)
-                                    if idx not in self.discrete_det_indices and idx not in self.discrete_prob_indices]
+        self.discrete_det_classes = [
+            act_idx
+            for idx, act_idx in enumerate(self.algo_config.gmm.discrete_classes)
+            if not self.algo_config.gmm.discrete_prob_config[idx]
+        ]
+        self.discrete_prob_classes = [
+            act_idx
+            for idx, act_idx in enumerate(self.algo_config.gmm.discrete_classes)
+            if self.algo_config.gmm.discrete_prob_config[idx]
+        ]
+        self.discrete_det_indices = [
+            act_idx
+            for idx, act_idx in enumerate(self.algo_config.gmm.discrete_indices)
+            if not self.algo_config.gmm.discrete_prob_config[idx]
+        ]
+        self.discrete_prob_indices = [
+            act_idx
+            for idx, act_idx in enumerate(self.algo_config.gmm.discrete_indices)
+            if self.algo_config.gmm.discrete_prob_config[idx]
+        ]
+        self.trajectory_indices = [
+            idx
+            for idx in range(self.ac_dim)
+            if idx not in self.discrete_det_indices
+            and idx not in self.discrete_prob_indices
+        ]
         print("Discrete deterministic class: ", self.discrete_det_classes)
         print("Discrete deterministic indices: ", self.discrete_det_indices)
         print("Discrete probabilistic class: ", self.discrete_prob_classes)
@@ -306,7 +342,9 @@ class BC_RNN_HUMANOID(BC_RNN):
         self.discrete_det_dim = len(self.discrete_det_indices)
         self.discrete_prob_dim = len(self.discrete_prob_indices)
         self.trajctory_dim = len(self.trajectory_indices)
-        self.ac_dim = self.discrete_det_dim + self.discrete_prob_dim + self.trajctory_dim
+        self.ac_dim = (
+            self.discrete_det_dim + self.discrete_prob_dim + self.trajctory_dim
+        )
 
         self.nets = nn.ModuleDict()
         self.nets["policy"] = RNNHumanoidActorNetwork(
@@ -323,7 +361,9 @@ class BC_RNN_HUMANOID(BC_RNN):
             min_std=self.algo_config.gmm.min_std,
             std_activation=self.algo_config.gmm.std_activation,
             low_noise_eval=self.algo_config.gmm.low_noise_eval,
-            encoder_kwargs=ObsUtils.obs_encoder_kwargs_from_config(self.obs_config.encoder),
+            encoder_kwargs=ObsUtils.obs_encoder_kwargs_from_config(
+                self.obs_config.encoder
+            ),
             **BaseNets.rnn_args_from_config(self.algo_config.rnn),
         )
 
@@ -346,21 +386,29 @@ class BC_RNN_HUMANOID(BC_RNN):
         Returns:
             predictions (dict): dictionary containing network outputs
         """
-        pred_traj_dists, pred_disc_dists, pred_disc_logits = self.nets["policy"].forward_train(
-            obs_dict=batch["obs"], 
+        pred_traj_dists, pred_disc_dists, pred_disc_logits = self.nets[
+            "policy"
+        ].forward_train(
+            obs_dict=batch["obs"],
             goal_dict=batch["goal_obs"],
         )
 
         demo_trajectory = batch["actions"][..., self.trajectory_indices]
-        demo_det_discrete = torch.round(batch["actions"][..., self.discrete_det_indices]).type(torch.long)
-        demo_prob_discrete = torch.round(batch["actions"][..., self.discrete_prob_indices]).type(torch.long)
+        demo_det_discrete = torch.round(
+            batch["actions"][..., self.discrete_det_indices]
+        ).type(torch.long)
+        demo_prob_discrete = torch.round(
+            batch["actions"][..., self.discrete_prob_indices]
+        ).type(torch.long)
 
         # make sure that this is a batch of multivariate action distributions, so that
         # the log probability computation will be correct
-        assert len(pred_traj_dists.batch_shape) == 2 # [B, T]
+        assert len(pred_traj_dists.batch_shape) == 2  # [B, T]
         traj_log_probs = pred_traj_dists.log_prob(demo_trajectory)
         disc_log_probs = pred_disc_dists.log_prob(demo_prob_discrete)
-        disc_cross_entropy = nn.CrossEntropyLoss()(pred_disc_logits.flatten(end_dim=1), demo_det_discrete.flatten(end_dim=1))
+        disc_cross_entropy = nn.CrossEntropyLoss()(
+            pred_disc_logits.flatten(end_dim=1), demo_det_discrete.flatten(end_dim=1)
+        )
 
         # original_stdout = sys.stdout # Save a reference to the original standard output
         # with open('/home/mingyo/normalize.txt', 'a') as f:
@@ -369,7 +417,7 @@ class BC_RNN_HUMANOID(BC_RNN):
         #     sys.stdout = original_stdout # Reset the standard output to its original value
 
         predictions = OrderedDict(
-            disc_cross_entropy=disc_cross_entropy, 
+            disc_cross_entropy=disc_cross_entropy,
             disc_log_probs=disc_log_probs,
             traj_log_probs=traj_log_probs,
         )
@@ -393,11 +441,13 @@ class BC_RNN_HUMANOID(BC_RNN):
         traj_log_probs = predictions["traj_log_probs"].mean()
         disc_log_probs = predictions["disc_log_probs"].mean()
         disc_cross_entropy = predictions["disc_cross_entropy"]
-        action_loss = - self.algo_config.loss.log_probs_weight*traj_log_probs\
-                      - self.algo_config.loss.log_probs_weight*100.*disc_log_probs\
-                      + self.algo_config.loss.cross_entropy_weight*disc_cross_entropy
+        action_loss = (
+            -self.algo_config.loss.log_probs_weight * traj_log_probs
+            - self.algo_config.loss.log_probs_weight * 100.0 * disc_log_probs
+            + self.algo_config.loss.cross_entropy_weight * disc_cross_entropy
+        )
         return OrderedDict(
-            disc_cross_entropy=disc_cross_entropy, 
+            disc_cross_entropy=disc_cross_entropy,
             disc_log_probs=disc_log_probs,
             traj_log_probs=traj_log_probs,
             action_loss=action_loss,
@@ -416,9 +466,9 @@ class BC_RNN_HUMANOID(BC_RNN):
         """
         log = PolicyAlgo.log_info(self, info)
         log["Loss"] = info["losses"]["action_loss"].item()
-        log["Trajectory_Log_Likelihood"] = info["losses"]["traj_log_probs"].item() 
-        log["Discrete_Log_Likelihood"] = info["losses"]["disc_log_probs"].item() 
-        log["Discrete_Cross_Entropy"] = info["losses"]["disc_cross_entropy"].item() 
+        log["Trajectory_Log_Likelihood"] = info["losses"]["traj_log_probs"].item()
+        log["Discrete_Log_Likelihood"] = info["losses"]["disc_log_probs"].item()
+        log["Discrete_Cross_Entropy"] = info["losses"]["disc_cross_entropy"].item()
         if "policy_grad_norms" in info:
             log["Policy_Grad_Norms"] = info["policy_grad_norms"]
         return log
@@ -428,6 +478,7 @@ class BC_HIERARCHICAL_RNN_DETERMINISTIC(BC_RNN):
     """
     BC training with an RNN GMM policy.
     """
+
     def _create_networks(self):
         """
         Creates networks and places them into @self.nets.
@@ -435,18 +486,36 @@ class BC_HIERARCHICAL_RNN_DETERMINISTIC(BC_RNN):
         assert self.algo_config.rnn.enabled
         assert len(self.algo_config.gmm.discrete_indices) != 0
         assert sum(self.algo_config.gmm.discrete_trg_config) != 0
-        assert len(self.algo_config.gmm.discrete_indices) == len(self.algo_config.gmm.discrete_trg_config)
+        assert len(self.algo_config.gmm.discrete_indices) == len(
+            self.algo_config.gmm.discrete_trg_config
+        )
 
-        self.discrete_con_classes = [act_idx for idx, act_idx in enumerate(self.algo_config.gmm.discrete_classes)
-                                        if not self.algo_config.gmm.discrete_trg_config[idx]]
-        self.discrete_trg_classes = [act_idx for idx, act_idx in enumerate(self.algo_config.gmm.discrete_classes)
-                                        if self.algo_config.gmm.discrete_trg_config[idx]]
-        self.discrete_con_indices = [act_idx for idx, act_idx in enumerate(self.algo_config.gmm.discrete_indices)
-                                        if not self.algo_config.gmm.discrete_trg_config[idx]]
-        self.discrete_trg_indices = [act_idx for idx, act_idx in enumerate(self.algo_config.gmm.discrete_indices)
-                                        if self.algo_config.gmm.discrete_trg_config[idx]]
-        self.trajectory_indices = [idx for idx in range(self.ac_dim)
-                                    if idx not in self.discrete_con_indices and idx not in self.discrete_trg_indices]
+        self.discrete_con_classes = [
+            act_idx
+            for idx, act_idx in enumerate(self.algo_config.gmm.discrete_classes)
+            if not self.algo_config.gmm.discrete_trg_config[idx]
+        ]
+        self.discrete_trg_classes = [
+            act_idx
+            for idx, act_idx in enumerate(self.algo_config.gmm.discrete_classes)
+            if self.algo_config.gmm.discrete_trg_config[idx]
+        ]
+        self.discrete_con_indices = [
+            act_idx
+            for idx, act_idx in enumerate(self.algo_config.gmm.discrete_indices)
+            if not self.algo_config.gmm.discrete_trg_config[idx]
+        ]
+        self.discrete_trg_indices = [
+            act_idx
+            for idx, act_idx in enumerate(self.algo_config.gmm.discrete_indices)
+            if self.algo_config.gmm.discrete_trg_config[idx]
+        ]
+        self.trajectory_indices = [
+            idx
+            for idx in range(self.ac_dim)
+            if idx not in self.discrete_con_indices
+            and idx not in self.discrete_trg_indices
+        ]
         print("Discrete contiuous action class: ", self.discrete_con_classes)
         print("Discrete contiuous action indices: ", self.discrete_con_indices)
         print("Discrete trigger action class: ", self.discrete_trg_classes)
@@ -469,7 +538,9 @@ class BC_HIERARCHICAL_RNN_DETERMINISTIC(BC_RNN):
             discrete_trg_indices=self.discrete_trg_indices,
             ac_dim=self.ac_dim,
             mlp_layer_dims=self.algo_config.actor_layer_dims,
-            encoder_kwargs=ObsUtils.obs_encoder_kwargs_from_config(self.obs_config.encoder),
+            encoder_kwargs=ObsUtils.obs_encoder_kwargs_from_config(
+                self.obs_config.encoder
+            ),
             **BaseNets.rnn_args_from_config(self.algo_config.rnn),
         )
 
@@ -492,8 +563,10 @@ class BC_HIERARCHICAL_RNN_DETERMINISTIC(BC_RNN):
         Returns:
             predictions (dict): dictionary containing network outputs
         """
-        pred_trajectory, pred_con_logits, pred_trg_dists, pred_trg_logits = self.nets["policy"].forward_train(
-            obs_dict=batch["obs"], 
+        pred_trajectory, pred_con_logits, pred_trg_dists, pred_trg_logits = self.nets[
+            "policy"
+        ].forward_train(
+            obs_dict=batch["obs"],
             goal_dict=batch["goal_obs"],
         )
 
@@ -501,27 +574,40 @@ class BC_HIERARCHICAL_RNN_DETERMINISTIC(BC_RNN):
         pred_trg_logits_flatten = pred_trg_logits.flatten(end_dim=1)
 
         demo_trajectory = batch["actions"][..., self.trajectory_indices]
-        demo_con_discrete_flatten = torch.round(batch["actions"][..., self.discrete_con_indices]).type(torch.long).flatten(end_dim=1)
+        demo_con_discrete_flatten = (
+            torch.round(batch["actions"][..., self.discrete_con_indices])
+            .type(torch.long)
+            .flatten(end_dim=1)
+        )
 
-        demo_trg_discrete = torch.round(batch["actions"][..., self.discrete_trg_indices]).type(torch.long)
-        demo_trg_activation = torch.where(demo_trg_discrete==0, 0, 1).type(torch.long)
+        demo_trg_discrete = torch.round(
+            batch["actions"][..., self.discrete_trg_indices]
+        ).type(torch.long)
+        demo_trg_activation = torch.where(demo_trg_discrete == 0, 0, 1).type(torch.long)
         demo_trg_discrete_flatten = demo_trg_discrete.flatten(end_dim=1)
-        demo_trg_value_indices = demo_trg_discrete_flatten.nonzero(as_tuple=True)[0].tolist()
+        demo_trg_value_indices = demo_trg_discrete_flatten.nonzero(as_tuple=True)[
+            0
+        ].tolist()
 
         # make sure that this is a batch of multivariate action distributions, so that
         # the log probability computation will be correct
         # assert len(pred_trajectory.batch_shape) == 2 # [B, T]
         traj_l2_loss = nn.MSELoss()(pred_trajectory, demo_trajectory)
-        con_cross_entropy = nn.CrossEntropyLoss()(pred_con_logits_flatten, demo_con_discrete_flatten)
+        con_cross_entropy = nn.CrossEntropyLoss()(
+            pred_con_logits_flatten, demo_con_discrete_flatten
+        )
         activ_log_probs = pred_trg_dists.log_prob(demo_trg_activation)
-        
-        if len(demo_trg_value_indices)!=0:
-            value_cross_entropy = nn.CrossEntropyLoss()(pred_trg_logits_flatten[demo_trg_value_indices], demo_trg_discrete_flatten[demo_trg_value_indices]-1)
+
+        if len(demo_trg_value_indices) != 0:
+            value_cross_entropy = nn.CrossEntropyLoss()(
+                pred_trg_logits_flatten[demo_trg_value_indices],
+                demo_trg_discrete_flatten[demo_trg_value_indices] - 1,
+            )
         else:
             value_cross_entropy = torch.tensor([0.0], device=self.device)
 
         predictions = OrderedDict(
-            con_cross_entropy=con_cross_entropy, 
+            con_cross_entropy=con_cross_entropy,
             activ_log_probs=activ_log_probs,
             value_cross_entropy=value_cross_entropy,
             traj_l2_loss=traj_l2_loss,
@@ -545,15 +631,17 @@ class BC_HIERARCHICAL_RNN_DETERMINISTIC(BC_RNN):
         # loss is just negative log-likelihood of action targets
         traj_l2_loss = predictions["traj_l2_loss"].mean()
         con_cross_entropy = predictions["con_cross_entropy"]
-        activ_log_probs = 200.*predictions["activ_log_probs"].mean()
+        activ_log_probs = 200.0 * predictions["activ_log_probs"].mean()
         value_cross_entropy = predictions["value_cross_entropy"]
-        action_loss = + self.algo_config.loss.l2_weight*traj_l2_loss\
-                      + self.algo_config.loss.cross_entropy_weight*con_cross_entropy\
-                      - self.algo_config.loss.log_probs_weight*activ_log_probs\
-                      + self.algo_config.loss.cross_entropy_weight*value_cross_entropy
+        action_loss = (
+            +self.algo_config.loss.l2_weight * traj_l2_loss
+            + self.algo_config.loss.cross_entropy_weight * con_cross_entropy
+            - self.algo_config.loss.log_probs_weight * activ_log_probs
+            + self.algo_config.loss.cross_entropy_weight * value_cross_entropy
+        )
         return OrderedDict(
-            con_cross_entropy=con_cross_entropy, 
-            activ_log_probs=activ_log_probs, 
+            con_cross_entropy=con_cross_entropy,
+            activ_log_probs=activ_log_probs,
             value_cross_entropy=value_cross_entropy,
             traj_l2_loss=traj_l2_loss,
             action_loss=action_loss,
@@ -572,10 +660,14 @@ class BC_HIERARCHICAL_RNN_DETERMINISTIC(BC_RNN):
         """
         log = PolicyAlgo.log_info(self, info)
         log["Loss"] = info["losses"]["action_loss"].item()
-        log["Trajectory_L2_Loss"] = info["losses"]["traj_l2_loss"].item() 
-        log["Trigger_Log_Likelihood"] = info["losses"]["activ_log_probs"].item() 
-        log["Trigger_Value_Cross_Entropy"] = info["losses"]["value_cross_entropy"].item() 
-        log["Continuous_Discrete_Cross_Entropy"] = info["losses"]["con_cross_entropy"].item() 
+        log["Trajectory_L2_Loss"] = info["losses"]["traj_l2_loss"].item()
+        log["Trigger_Log_Likelihood"] = info["losses"]["activ_log_probs"].item()
+        log["Trigger_Value_Cross_Entropy"] = info["losses"][
+            "value_cross_entropy"
+        ].item()
+        log["Continuous_Discrete_Cross_Entropy"] = info["losses"][
+            "con_cross_entropy"
+        ].item()
         if "policy_grad_norms" in info:
             log["Policy_Grad_Norms"] = info["policy_grad_norms"]
         return log
@@ -585,6 +677,7 @@ class BC_HIERARCHICAL_RNN_HUMANOID(BC_RNN):
     """
     BC training with an RNN GMM policy.
     """
+
     def _create_networks(self):
         """
         Creates networks and places them into @self.nets.
@@ -593,18 +686,36 @@ class BC_HIERARCHICAL_RNN_HUMANOID(BC_RNN):
         assert self.algo_config.rnn.enabled
         assert len(self.algo_config.gmm.discrete_indices) != 0
         assert sum(self.algo_config.gmm.discrete_trg_config) != 0
-        assert len(self.algo_config.gmm.discrete_indices) == len(self.algo_config.gmm.discrete_trg_config)
+        assert len(self.algo_config.gmm.discrete_indices) == len(
+            self.algo_config.gmm.discrete_trg_config
+        )
 
-        self.discrete_con_classes = [act_idx for idx, act_idx in enumerate(self.algo_config.gmm.discrete_classes)
-                                        if not self.algo_config.gmm.discrete_trg_config[idx]]
-        self.discrete_trg_classes = [act_idx for idx, act_idx in enumerate(self.algo_config.gmm.discrete_classes)
-                                        if self.algo_config.gmm.discrete_trg_config[idx]]
-        self.discrete_con_indices = [act_idx for idx, act_idx in enumerate(self.algo_config.gmm.discrete_indices)
-                                        if not self.algo_config.gmm.discrete_trg_config[idx]]
-        self.discrete_trg_indices = [act_idx for idx, act_idx in enumerate(self.algo_config.gmm.discrete_indices)
-                                        if self.algo_config.gmm.discrete_trg_config[idx]]
-        self.trajectory_indices = [idx for idx in range(self.ac_dim)
-                                    if idx not in self.discrete_con_indices and idx not in self.discrete_trg_indices]
+        self.discrete_con_classes = [
+            act_idx
+            for idx, act_idx in enumerate(self.algo_config.gmm.discrete_classes)
+            if not self.algo_config.gmm.discrete_trg_config[idx]
+        ]
+        self.discrete_trg_classes = [
+            act_idx
+            for idx, act_idx in enumerate(self.algo_config.gmm.discrete_classes)
+            if self.algo_config.gmm.discrete_trg_config[idx]
+        ]
+        self.discrete_con_indices = [
+            act_idx
+            for idx, act_idx in enumerate(self.algo_config.gmm.discrete_indices)
+            if not self.algo_config.gmm.discrete_trg_config[idx]
+        ]
+        self.discrete_trg_indices = [
+            act_idx
+            for idx, act_idx in enumerate(self.algo_config.gmm.discrete_indices)
+            if self.algo_config.gmm.discrete_trg_config[idx]
+        ]
+        self.trajectory_indices = [
+            idx
+            for idx in range(self.ac_dim)
+            if idx not in self.discrete_con_indices
+            and idx not in self.discrete_trg_indices
+        ]
         print("Discrete contiuous action class: ", self.discrete_con_classes)
         print("Discrete contiuous action indices: ", self.discrete_con_indices)
         print("Discrete trigger action class: ", self.discrete_trg_classes)
@@ -631,7 +742,9 @@ class BC_HIERARCHICAL_RNN_HUMANOID(BC_RNN):
             min_std=self.algo_config.gmm.min_std,
             std_activation=self.algo_config.gmm.std_activation,
             low_noise_eval=self.algo_config.gmm.low_noise_eval,
-            encoder_kwargs=ObsUtils.obs_encoder_kwargs_from_config(self.obs_config.encoder),
+            encoder_kwargs=ObsUtils.obs_encoder_kwargs_from_config(
+                self.obs_config.encoder
+            ),
             **BaseNets.rnn_args_from_config(self.algo_config.rnn),
         )
 
@@ -654,8 +767,10 @@ class BC_HIERARCHICAL_RNN_HUMANOID(BC_RNN):
         Returns:
             predictions (dict): dictionary containing network outputs
         """
-        pred_traj_dists, pred_con_logits, pred_trg_dists, pred_trg_logits = self.nets["policy"].forward_train(
-            obs_dict=batch["obs"], 
+        pred_traj_dists, pred_con_logits, pred_trg_dists, pred_trg_logits = self.nets[
+            "policy"
+        ].forward_train(
+            obs_dict=batch["obs"],
             goal_dict=batch["goal_obs"],
         )
 
@@ -663,27 +778,40 @@ class BC_HIERARCHICAL_RNN_HUMANOID(BC_RNN):
         pred_trg_logits_flatten = pred_trg_logits.flatten(end_dim=1)
 
         demo_trajectory = batch["actions"][..., self.trajectory_indices]
-        demo_con_discrete_flatten = torch.round(batch["actions"][..., self.discrete_con_indices]).type(torch.long).flatten(end_dim=1)
+        demo_con_discrete_flatten = (
+            torch.round(batch["actions"][..., self.discrete_con_indices])
+            .type(torch.long)
+            .flatten(end_dim=1)
+        )
 
-        demo_trg_discrete = torch.round(batch["actions"][..., self.discrete_trg_indices]).type(torch.long)
-        demo_trg_activation = torch.where(demo_trg_discrete==0, 0, 1).type(torch.long)
+        demo_trg_discrete = torch.round(
+            batch["actions"][..., self.discrete_trg_indices]
+        ).type(torch.long)
+        demo_trg_activation = torch.where(demo_trg_discrete == 0, 0, 1).type(torch.long)
         demo_trg_discrete_flatten = demo_trg_discrete.flatten(end_dim=1)
-        demo_trg_value_indices = demo_trg_discrete_flatten.nonzero(as_tuple=True)[0].tolist()
+        demo_trg_value_indices = demo_trg_discrete_flatten.nonzero(as_tuple=True)[
+            0
+        ].tolist()
 
         # make sure that this is a batch of multivariate action distributions, so that
         # the log probability computation will be correct
-        assert len(pred_traj_dists.batch_shape) == 2 # [B, T]
+        assert len(pred_traj_dists.batch_shape) == 2  # [B, T]
         traj_log_probs = pred_traj_dists.log_prob(demo_trajectory)
-        con_cross_entropy = nn.CrossEntropyLoss()(pred_con_logits_flatten, demo_con_discrete_flatten)
+        con_cross_entropy = nn.CrossEntropyLoss()(
+            pred_con_logits_flatten, demo_con_discrete_flatten
+        )
         activ_log_probs = pred_trg_dists.log_prob(demo_trg_activation)
-        
-        if len(demo_trg_value_indices)!=0:
-            value_cross_entropy = nn.CrossEntropyLoss()(pred_trg_logits_flatten[demo_trg_value_indices], demo_trg_discrete_flatten[demo_trg_value_indices]-1)
+
+        if len(demo_trg_value_indices) != 0:
+            value_cross_entropy = nn.CrossEntropyLoss()(
+                pred_trg_logits_flatten[demo_trg_value_indices],
+                demo_trg_discrete_flatten[demo_trg_value_indices] - 1,
+            )
         else:
             value_cross_entropy = torch.tensor([0.0], device=self.device)
 
         predictions = OrderedDict(
-            con_cross_entropy=con_cross_entropy, 
+            con_cross_entropy=con_cross_entropy,
             activ_log_probs=activ_log_probs,
             value_cross_entropy=value_cross_entropy,
             traj_log_probs=traj_log_probs,
@@ -707,15 +835,17 @@ class BC_HIERARCHICAL_RNN_HUMANOID(BC_RNN):
         # loss is just negative log-likelihood of action targets
         traj_log_probs = predictions["traj_log_probs"].mean()
         con_cross_entropy = predictions["con_cross_entropy"]
-        activ_log_probs = 200.*predictions["activ_log_probs"].mean()
+        activ_log_probs = 200.0 * predictions["activ_log_probs"].mean()
         value_cross_entropy = predictions["value_cross_entropy"]
-        action_loss = - self.algo_config.loss.log_probs_weight*traj_log_probs\
-                      + self.algo_config.loss.cross_entropy_weight*con_cross_entropy\
-                      - self.algo_config.loss.log_probs_weight*activ_log_probs\
-                      + self.algo_config.loss.cross_entropy_weight*value_cross_entropy
+        action_loss = (
+            -self.algo_config.loss.log_probs_weight * traj_log_probs
+            + self.algo_config.loss.cross_entropy_weight * con_cross_entropy
+            - self.algo_config.loss.log_probs_weight * activ_log_probs
+            + self.algo_config.loss.cross_entropy_weight * value_cross_entropy
+        )
         return OrderedDict(
-            con_cross_entropy=con_cross_entropy, 
-            activ_log_probs=activ_log_probs, 
+            con_cross_entropy=con_cross_entropy,
+            activ_log_probs=activ_log_probs,
             value_cross_entropy=value_cross_entropy,
             traj_log_probs=traj_log_probs,
             action_loss=action_loss,
@@ -734,10 +864,14 @@ class BC_HIERARCHICAL_RNN_HUMANOID(BC_RNN):
         """
         log = PolicyAlgo.log_info(self, info)
         log["Loss"] = info["losses"]["action_loss"].item()
-        log["Trajectory_Log_Likelihood"] = info["losses"]["traj_log_probs"].item() 
-        log["Trigger_Log_Likelihood"] = info["losses"]["activ_log_probs"].item() 
-        log["Trigger_Value_Cross_Entropy"] = info["losses"]["value_cross_entropy"].item() 
-        log["Continuous_Discrete_Cross_Entropy"] = info["losses"]["con_cross_entropy"].item() 
+        log["Trajectory_Log_Likelihood"] = info["losses"]["traj_log_probs"].item()
+        log["Trigger_Log_Likelihood"] = info["losses"]["activ_log_probs"].item()
+        log["Trigger_Value_Cross_Entropy"] = info["losses"][
+            "value_cross_entropy"
+        ].item()
+        log["Continuous_Discrete_Cross_Entropy"] = info["losses"][
+            "con_cross_entropy"
+        ].item()
         if "policy_grad_norms" in info:
             log["Policy_Grad_Norms"] = info["policy_grad_norms"]
         return log
