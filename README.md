@@ -29,7 +29,7 @@ We provide our demonstration dataset in the `door` simulation environment ([link
 
 
 ## Implementation Details
-Please see [this page](docs/Implementation-Details) for detailed information on our implementation, including the whole-body controller, model architecture, and teleoperation system.
+Please see [this page](docs/Implementation-Details.md) for detailed information on our implementation, including the whole-body controller, model architecture, and teleoperation system.
 
 
 ## Related repository

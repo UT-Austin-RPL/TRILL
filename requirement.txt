@@ -16,6 +16,6 @@ robomimic==0.3.0
 gym
 wandb
 h5py
-torch==2.1
-torchvision==0.16
+torch==2.1.2
+torchvision==0.16.2
 torchaudio
