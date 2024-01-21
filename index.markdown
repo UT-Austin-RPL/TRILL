@@ -142,7 +142,7 @@ highlight {
     IEEE-RAS International Conference on Humanoid Robots (Humanoids), 2023<br>
     <b>Oral Presentation</b>
   </h3>
-  <h2><a href="http://arxiv.org/abs/2309.01952">Paper</a> | <a href="https://github.com/UT-Austin-RPL/TRILL">Code</a></h2>
+  <h2><a href="http://arxiv.org/abs/2309.01952">Paper</a> | <a href="https://github.com/UT-Austin-RPL/TRILL">Code</a></h2> | <a href="https://youtu.be/VCK2b6wp_g8?si=YF0QVep02DK6nxON">Video</a></h2>
   </center>
 
  <center><p><span style="font-size:20px;"></span></p></center>
@@ -207,7 +207,7 @@ src="./src/figure/pipeline.png" style="width:100%;"> </a></td>
 </tr> </tbody> </table>
 
 <table align=center width=800px><tr><td> <p align="justify" width="20%">
-  The trained policies generate the target task-space command at 20Hz from the onboard stereo camera observation and the robot's proprioceptive feedback. The robot control interface realizes the task-space commands and computes the desired joint torques at 100Hz and sends them to the humanoid robot for actuation. More implementation details can be found in <a href="https://github.com/UT-Austin-RPL/TRILL/blob/main/implementation.md">this page</a>.
+  The trained policies generate the target task-space command at 20Hz from the onboard stereo camera observation and the robot's proprioceptive feedback. The robot control interface realizes the task-space commands and computes the desired joint torques at 100Hz and sends them to the humanoid robot for actuation. More implementation details can be found in <a href="https://github.com/UT-Austin-RPL/TRILL/blob/main/docs/Implementation-Details.md">this page</a>.
 </p></td></tr></table>
 <br>
 
