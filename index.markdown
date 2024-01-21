@@ -142,7 +142,7 @@ highlight {
     IEEE-RAS International Conference on Humanoid Robots (Humanoids), 2023<br>
     <b>Oral Presentation</b>
   </h3>
-  <h2><a href="http://arxiv.org/abs/2309.01952">Paper</a> | <a href="https://github.com/UT-Austin-RPL/TRILL">Code</a></h2> | <a href="https://youtu.be/VCK2b6wp_g8?si=YF0QVep02DK6nxON">Video</a></h2>
+  <h2><a href="http://arxiv.org/abs/2309.01952">Paper</a> | <a href="https://github.com/UT-Austin-RPL/TRILL">Code</a> | <a href="https://youtu.be/VCK2b6wp_g8?si=YF0QVep02DK6nxON">Video</a></h2>
   </center>
 
  <center><p><span style="font-size:20px;"></span></p></center>
