@@ -199,7 +199,9 @@ We demonstrate the effectiveness of TRILL in simulation and on a real-world robo
   </p></td></tr></table>
 
   
-<br><br><hr> <h1 align="center">Hierarchical Loco-manipulation Pipeline</h1> <!-- <h2
+<hr>
+
+<h1 align="center">Hierarchical Loco-manipulation Pipeline</h1> <!-- <h2
 align="center"></h2> --> <table border="0" cellspacing="10"
 cellpadding="0" align="center"><tbody><tr><td align="center"
 valign="middle"><a href="./src/figure/pipeline.png"> <img
@@ -209,7 +211,6 @@ src="./src/figure/pipeline.png" style="width:100%;"> </a></td>
 <table align=center width=800px><tr><td> <p align="justify" width="20%">
   The trained policies generate the target task-space command at 20Hz from the onboard stereo camera observation and the robot's proprioceptive feedback. The robot control interface realizes the task-space commands and computes the desired joint torques at 100Hz and sends them to the humanoid robot for actuation. More implementation details can be found in <a href="https://github.com/UT-Austin-RPL/TRILL/blob/main/docs/Implementation-Details.md">this page</a>.
 </p></td></tr></table>
-<br>
 
 <hr>
 
