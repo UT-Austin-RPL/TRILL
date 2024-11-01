@@ -6,6 +6,7 @@ categories: projects
 
 <link media="all" href="./css/glab.css" type="text/css" rel="StyleSheet">
 <link href='https://fonts.googleapis.com/css?family=Titillium+Web:400,600,400italic,600italic,300,300italic' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
 <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <title>Deep Imitation Learning for Humanoid Loco-manipulation through Human Teleoperation</title>
 
@@ -13,6 +14,7 @@ categories: projects
 <meta property="og:title" content="TRILL">
 
 <script src="./src/popup.js" type="text/javascript"></script>
+<script src="https://kit.fontawesome.com/ef67f68cfb.js" crossorigin="anonymous"></script>
 
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-5RB3JP5LNX"></script>
