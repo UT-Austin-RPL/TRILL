@@ -4,12 +4,12 @@ permalink: /
 categories: projects
 ---
 
+<link media="all" href="./css/glab.css" type="text/css" rel="StyleSheet">
 <link href='https://fonts.googleapis.com/css?family=Titillium+Web:400,600,400italic,600italic,300,300italic' rel='stylesheet' type='text/css'>
 <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <title>Deep Imitation Learning for Humanoid Loco-manipulation through Human Teleoperation</title>
 
 
-<!-- <meta property="og:image" content="src/figure/approach.png"> -->
 <meta property="og:title" content="TRILL">
 
 <script src="./src/popup.js" type="text/javascript"></script>
@@ -28,7 +28,6 @@ categories: projects
 // redefining default features
 var _POPUP_FEATURES = 'width=500,height=300,resizable=1,scrollbars=1,titlebar=1,status=1';
 </script>
-<link media="all" href="./css/glab.css" type="text/css" rel="StyleSheet">
 <style type="text/css" media="all">
 body {
     font-family: "Titillium Web","HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
@@ -142,7 +141,12 @@ highlight {
     IEEE-RAS International Conference on Humanoid Robots (Humanoids), 2023<br>
     <b>Oral Presentation</b>
   </h3>
-  <h2><a href="http://arxiv.org/abs/2309.01952">Paper</a> | <a href="https://github.com/UT-Austin-RPL/TRILL">Code</a></h2>
+  <h3>
+    <a href="http://arxiv.org/abs/2309.01952">
+      <i class="ai ai-arxiv"></i> Paper</a> |
+    <a href="https://github.com/UT-Austin-RPL/TRILL">
+      <i class="fa-brands fa-github"></i> Code</a>
+  </h3>
   </center>
 
  <center><p><span style="font-size:20px;"></span></p></center>
