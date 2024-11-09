@@ -220,7 +220,7 @@ src="./src/figure/pipeline.png" style="width:100%;"> </a></td>
 
 <hr>
 
-<h1 align="center">Real-robot Teleoperation</h1>
+<h1 align="center">Real-Robot Teleoperation</h1>
 
   <table align=center width=800px><tr><td> <p align="justify" width="20%">
     We design an intuitive VR teleoperation system, which reduces the cognitive and physical burdens for human operators to provide task demonstration. As a result, our teleoperation approach can produce high-quality demonstration data while maintaining safe robot operation.
