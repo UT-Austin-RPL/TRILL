@@ -244,7 +244,7 @@ src="./src/figure/pipeline.png" style="width:100%;"> </a></td>
   
 <hr>
 
-<h1 align="center">Real-robot Deployment</h1>
+<h1 align="center">Real-Robot Deployment</h1>
 
   <table align=center width=800px><tr><td> <p align="justify" width="20%">
     We demonstrate the application of TRILL on the real robot, deploying visuomotor policies trained for dexterous manipulation tasks. During evaluation, the robot performed each task 10 times in a row without rebooting and succeeded in 8 out of 10 trials in the <i>Tool pick-and-place</i> task and 9 out of 10 trials in the <i>Removing the spray cap</i> task, respectively.
