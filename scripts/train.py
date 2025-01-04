@@ -106,7 +106,7 @@ def train(config, device, info):
         raise Exception("Dataset at provided path {} not found!".format(dataset_path))
 
     # Configure meta data
-    env_meta = {"env_name": "quadruped-nav", "type": EnvType.GYM_TYPE, "env_kwargs": {}}
+    env_meta = {"env_name": "trill", "type": EnvType.GYM_TYPE, "env_kwargs": {}}
     shape_meta = FileUtils.get_shape_metadata_from_dataset(
         dataset_path=config.train.data, all_obs_keys=config.all_obs_keys, verbose=True
     )
