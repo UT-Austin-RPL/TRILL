@@ -141,7 +141,7 @@ highlight {
   </h3>
   <h3>
     IEEE-RAS International Conference on Humanoid Robots (Humanoids), 2023<br>
-    <b>Best Paper Award Finalist, IEEE-RAS TC on Whole-body Control</b>
+    <b>Best Paper Award Finalist, IEEE-RAS TC Whole-Body Control</b>
   </h3>
   <h3>
     <a href="http://arxiv.org/abs/2309.01952">
