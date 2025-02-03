@@ -6,7 +6,7 @@ This tutorial will walk you through collecting, training, and evaluating a data 
 
 Follow the [installation guide](Setup-Guide.md).
 
-## Collecting the Data
+## Collecting Data
 
 > Want to skip this step? Download our [pre-gathered door environment data set](https://utexas.box.com/s/3610huk9fu33m6wic16oe7crx8cahpl8).
 

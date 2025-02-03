@@ -23,7 +23,7 @@ If you find our work useful in your research, please consider [citing](#citing).
 Please see [Getting Started](docs/Getting-Started.md).
 
 
-## Dataset and pre-trained models
+## Dataset and Pre-trained Models
 We provide our demonstration dataset in the `door` simulation environment ([link](https://utexas.box.com/s/3610huk9fu33m6wic16oe7crx8cahpl8)) and trained models of the Visuomotor Policies ([link](https://utexas.box.com/s/qn3156sxpejx4zf4piq5zh97srl5zcto)). We also plan to open our demonstration dataset and trained models in the `workbench` simulation environment in the near future.
 
 
@@ -31,7 +31,7 @@ We provide our demonstration dataset in the `door` simulation environment ([link
 Please see [this page](docs/Implementation-Details.md) for detailed information on our implementation, including the whole-body controller, model architecture, and teleoperation system.
 
 
-## Related repository
+## Related Repository
 The implementation of the whole-body control is based on [PyPnC](https://github.com/junhyeokahn/PyPnC).
 
 

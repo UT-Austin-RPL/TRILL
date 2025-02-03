@@ -1,4 +1,4 @@
-# Creating the Data Set
+# Creating a Dataset
 
 Use the following commands to collect human demonstration data for a Visuomotor Policy. Then, run the following script on the host machine.
 ```
