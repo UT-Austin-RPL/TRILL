@@ -2,7 +2,7 @@
 
 Use the following commands to collect human demonstration data for a Visuomotor Policy. Then, run the following script on the host machine.
 ```
-python3 scripts/demo.py --env_type=ENV_TYPE --subtask=SUBTASK_INDEX --subtask=DEMONSTRATORS_NAME --host=HOST_IP_ADDRESS
+python3 scripts/demo.py --env=ENV_TYPE --subtask=SUBTASK_INDEX --subtask=DEMONSTRATORS_NAME --host=HOST_IP_ADDRESS
 ```
 You may be able to specify the type of tasks by changing `SUBTASK_INDEX` (0: free-space locomotion, 1: manipulation, 2: loco-manipulation). Collected data would be saved in `./datasets/ENV_TYPE/subtask{SUBTASK_INDEX}_{DEMONSTRATORS_NAME}/RECORDED_TIME`.
 
