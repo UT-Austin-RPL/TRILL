@@ -5,7 +5,7 @@ _**We strongly advise using a virtual envrionment manager such as Conda or pyenv
 
 Install the environments and dependencies by running the following commands.
 ```
-pip install -r requirement.txt
+pip install -r requirements.txt
 ```
 Then, set up the colors of collision meshes transparent in [these lines](https://github.com/ARISE-Initiative/robosuite/blob/eb01e1ffa46f1af0a3aa3ac363d5e63097a6cbcc/robosuite/utils/mjcf_utils.py#L18C39-L18C39) at `<robosuite-home>/utils/mjcf_utils.py`.
 
