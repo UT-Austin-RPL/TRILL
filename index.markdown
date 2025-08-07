@@ -153,24 +153,20 @@ highlight {
   </tbody>
 </table>
 
-<div style="width: 500px;">
-<p>
-  <table align=center width=800px>
-		<tr>
-			<td>
-				<p align="justify" width="20%">
-					We tackle the problem of developing humanoid loco-manipulation skills with deep imitation learning. The challenge of collecting human demonstrations for humanoids, in conjunction with the difficulty of  policy training under a high degree of freedom, presents substantial challenges.
-					We introduce <b>TRILL</b>, a data-efficient framework for learning humanoid loco-manipulation policies from human demonstrations. 
-					In this framework, we collect human demonstration data through an intuitive Virtual Reality (VR) interface.
-					We employ the whole-body control formulation to transform task-space commands from human operators into the robot's joint-torque actuation while stabilizing its dynamics.
-					By employing high-level action abstractions tailored for humanoid robots, our method can efficiently learn complex loco-manipulation skills.
-					We demonstrate the effectiveness of TRILL in simulation and on a real-world robot for performing various types of tasks. 
-				</p>
-			</td>
-		</tr>
-	</table>
-</p>
-</div>
+<table border="0" cellspacing="10" cellpadding="0" align="center">
+	<tr>
+		<td>
+			<p align="justify" width="20%">
+				We tackle the problem of developing humanoid loco-manipulation skills with deep imitation learning. The challenge of collecting human demonstrations for humanoids, in conjunction with the difficulty of  policy training under a high degree of freedom, presents substantial challenges.
+				We introduce <b>TRILL</b>, a data-efficient framework for learning humanoid loco-manipulation policies from human demonstrations. 
+				In this framework, we collect human demonstration data through an intuitive Virtual Reality (VR) interface.
+				We employ the whole-body control formulation to transform task-space commands from human operators into the robot's joint-torque actuation while stabilizing its dynamics.
+				By employing high-level action abstractions tailored for humanoid robots, our method can efficiently learn complex loco-manipulation skills.
+				We demonstrate the effectiveness of TRILL in simulation and on a real-world robot for performing various types of tasks. 
+			</p>
+		</td>
+	</tr>
+</table>
 
 <hr>
 
