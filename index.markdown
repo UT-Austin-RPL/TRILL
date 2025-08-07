@@ -142,9 +142,9 @@ highlight {
 <center><p><span style="font-size:20px;"></span></p></center>
 
 <table border="0" cellspacing="10" cellpadding="0" align="center"> 
-	<tbody>
-		<tr> 
-			<td align="center" valign="middle">
+  <tbody>
+    <tr> 
+      <td align="center" valign="middle">
         <video muted autoplay loop width="798">
           <source src="./src/video/header.mp4"  type="video/mp4">
         </video>
@@ -152,19 +152,19 @@ highlight {
     </tr>
   </tbody>
 </table>
-<table border="0" cellspacing="10" cellpadding="0" align="center">
-	<tr>
-		<td>
-			<p align="justify" width="20%">
-				We tackle the problem of developing humanoid loco-manipulation skills with deep imitation learning. The challenge of collecting human demonstrations for humanoids, in conjunction with the difficulty of  policy training under a high degree of freedom, presents substantial challenges.
-				We introduce <b>TRILL</b>, a data-efficient framework for learning humanoid loco-manipulation policies from human demonstrations. 
-				In this framework, we collect human demonstration data through an intuitive Virtual Reality (VR) interface.
-				We employ the whole-body control formulation to transform task-space commands from human operators into the robot's joint-torque actuation while stabilizing its dynamics.
-				By employing high-level action abstractions tailored for humanoid robots, our method can efficiently learn complex loco-manipulation skills.
-				We demonstrate the effectiveness of TRILL in simulation and on a real-world robot for performing various types of tasks. 
-			</p>
-		</td>
-	</tr>
+<table align=center width=800px>
+  <tr>
+    <td>
+      <p align="justify" width="20%">
+        We tackle the problem of developing humanoid loco-manipulation skills with deep imitation learning. The challenge of collecting human demonstrations for humanoids, in conjunction with the difficulty of  policy training under a high degree of freedom, presents substantial challenges.
+        We introduce <b>TRILL</b>, a data-efficient framework for learning humanoid loco-manipulation policies from human demonstrations. 
+        In this framework, we collect human demonstration data through an intuitive Virtual Reality (VR) interface.
+        We employ the whole-body control formulation to transform task-space commands from human operators into the robot's joint-torque actuation while stabilizing its dynamics.
+        By employing high-level action abstractions tailored for humanoid robots, our method can efficiently learn complex loco-manipulation skills.
+        We demonstrate the effectiveness of TRILL in simulation and on a real-world robot for performing various types of tasks. 
+      </p>
+    </td>
+  </tr>
 </table>
 
 <hr>
@@ -173,148 +173,144 @@ highlight {
   <table border="0" cellspacing="10" cellpadding="0" align="center"> 
     <tbody>
       <tr>
-				<td align="center" valign="middle">
-				  <a href="./src/figure/approach.png"><img src="./src/figure/approach.png" style="width:100%;"> </a>
+        <td align="center" valign="middle">
+          <a href="./src/figure/approach.png"><img src="./src/figure/approach.png" style="width:100%;"> </a>
         </td>
       </tr>
     </tbody>
   </table>
   <table align=center width=800px>
-		<tr>
-			<td>
-				<p align="justify" width="20%">
-			    TRILL addresses the challenge of learning humanoid loco-manipulation. 
-			    We introduce a learning framework that facilitates teleoperated demonstrations with task-space commands provided by a human demonstrator. 
-			    The trained policies leverage human complexity and adaptability in decision-making to generate these commands.
-			    The robot control interface then executes these target commands through joint-torque actuation, complying with robot dynamics.
-			    This synergistic combination of imitation learning and whole-body control enables successful method implementation in both simulated and real-world environments.
-  		</p>
-		</td>
-	</tr>
+    <tr>
+      <td>
+        <p align="justify" width="20%">
+          TRILL addresses the challenge of learning humanoid loco-manipulation. 
+          We introduce a learning framework that facilitates teleoperated demonstrations with task-space commands provided by a human demonstrator. 
+          The trained policies leverage human complexity and adaptability in decision-making to generate these commands.
+          The robot control interface then executes these target commands through joint-torque actuation, complying with robot dynamics.
+          This synergistic combination of imitation learning and whole-body control enables successful method implementation in both simulated and real-world environments.
+      </p>
+    </td>
+  </tr>
 </table>
   
 <hr>
 
 <h1 align="center">Hierarchical Loco-manipulation Pipeline</h1>
 <table border="0" cellspacing="10" cellpadding="0" align="center">
-	<tbody>
-		<tr>
-			<td align="center" valign="middle">
-				<a href="./src/figure/pipeline.png">
-					<img src="./src/figure/pipeline.png" style="width:100%;">
-				</a>
-			</td>
-		</tr> 
-	</tbody>
+  <tbody>
+    <tr>
+      <td align="center" valign="middle">
+        <a href="./src/figure/pipeline.png">
+          <img src="./src/figure/pipeline.png" style="width:100%;">
+        </a>
+      </td>
+    </tr> 
+  </tbody>
 </table>
-
 <table align=center width=800px>
-	<tr>
-		<td>
-			<p align="justify" width="20%">
-			  The trained policies generate the target task-space command at 20Hz from the onboard stereo camera observation and the robot's proprioceptive feedback.
-				The robot control interface realizes the task-space commands and computes the desired joint torques at 100Hz and sends them to the humanoid robot for actuation. 
-				More implementation details can be found in <a href="https://github.com/UT-Austin-RPL/TRILL/blob/main/docs/Implementation-Details.md">this page</a>.
-			</p>
-		</td>
-	</tr>
+  <tr>
+    <td>
+      <p align="justify" width="20%">
+        The trained policies generate the target task-space command at 20Hz from the onboard stereo camera observation and the robot's proprioceptive feedback.
+        The robot control interface realizes the task-space commands and computes the desired joint torques at 100Hz and sends them to the humanoid robot for actuation. 
+        More implementation details can be found in <a href="https://github.com/UT-Austin-RPL/TRILL/blob/main/docs/Implementation-Details.md">this page</a>.
+      </p>
+    </td>
+  </tr>
 </table>
 
 <hr>
 
 <h1 align="center">Real-Robot Teleoperation</h1>
 <table align=center width=800px>
-	<tr>
-		<td>
-			<p align="justify" width="20%">
-		    We design an intuitive VR teleoperation system, which reduces the cognitive and physical burdens for human operators to provide task demonstration. 
-				As a result, our teleoperation approach can produce high-quality demonstration data while maintaining safe robot operation.
-		  </p>
-		</td>
-	</tr>
+  <tr>
+    <td>
+      <p align="justify" width="20%">
+        We design an intuitive VR teleoperation system, which reduces the cognitive and physical burdens for human operators to provide task demonstration. 
+        As a result, our teleoperation approach can produce high-quality demonstration data while maintaining safe robot operation.
+      </p>
+    </td>
+  </tr>
 </table>
 <table border="0" cellspacing="10" cellpadding="0" align="center"> 
-	<tbody>
-		<tr> 
-			<td align="center" valign="middle">
-				<video controls width="798">
-					<source src="./src/video/demo_ramen.mp4"  type="video/mp4">
-				</video>
-			</td>
-		</tr>
-	</tbody>
+  <tbody>
+    <tr> 
+      <td align="center" valign="middle">
+        <video controls width="798">
+          <source src="./src/video/demo_ramen.mp4"  type="video/mp4">
+        </video>
+      </td>
+    </tr>
+  </tbody>
 </table>
-
 <table align=center width=800px>
-	<tr>
-		<td> 
-			<p align="justify" style="text-align: right;" width="20%">
-    		Music: <a href="https://soundcloud.com/bergscloud/happy">Happy</a> by <a href="https://soundcloud.com/bergscloud">Luke Bergs</a>
-  		</p>
-		</td>
-	</tr>
+  <tr>
+    <td> 
+      <p align="justify" style="text-align: right;" width="20%">
+        Music: <a href="https://soundcloud.com/bergscloud/happy">Happy</a> by <a href="https://soundcloud.com/bergscloud">Luke Bergs</a>
+      </p>
+    </td>
+  </tr>
 </table>
   
 <hr>
 
 <h1 align="center">Real-Robot Deployment</h1>
 <table align=center width=800px>
-	<tr>
-		<td> 
-			<p align="justify" width="20%">
-		    We demonstrate the application of TRILL on the real robot, deploying visuomotor policies trained for dexterous manipulation tasks.
-				During evaluation, the robot performed each task 10 times in a row without rebooting and succeeded in 8 out of 10 trials in the <i>Tool pick-and-place</i> task and 9 out of 10 trials in the <i>Removing the spray cap</i> task, respectively.
-		  </p>
-		</td>
-	</tr>
+  <tr>
+    <td> 
+      <p align="justify" width="20%">
+        We demonstrate the application of TRILL on the real robot, deploying visuomotor policies trained for dexterous manipulation tasks.
+        During evaluation, the robot performed each task 10 times in a row without rebooting and succeeded in 8 out of 10 trials in the <i>Tool pick-and-place</i> task and 9 out of 10 trials in the <i>Removing the spray cap</i> task, respectively.
+      </p>
+    </td>
+  </tr>
 </table>
-
 <table border="0" cellspacing="10" cellpadding="0" align="center"> 
-	<tbody>
-		<tr> 
-			<td align="center" valign="middle">
-				<video muted controls width="394">
-					<source src="./src/video/deploy_box.mp4" type="video/mp4">
-				</video>
-			</td>
-			<td align="center" valign="middle">
-				<video muted controls width="394">
-					<source src="./src/video/deploy_cap.mp4" type="video/mp4">
-				</video>
-			</td>
-		</tr>
-	</tbody>
+  <tbody>
+    <tr> 
+      <td align="center" valign="middle">
+        <video muted controls width="394">
+          <source src="./src/video/deploy_box.mp4" type="video/mp4">
+        </video>
+      </td>
+      <td align="center" valign="middle">
+        <video muted controls width="394">
+          <source src="./src/video/deploy_cap.mp4" type="video/mp4">
+        </video>
+      </td>
+    </tr>
+  </tbody>
 </table>
 
 <hr>
 
 <h1 align="center">Simulation Evaluation</h1>
 <table align=center width=800px>
-	<tr>
-		<td>
-			<p align="justify" width="20%">
-				We design two realistic simulation environments and evaluate the robot’s ability to successfully perform subtasks involving free-space locomotion, manipulation, and loco-manipulation.
-				TRILL, a framework tailored to train humanoid robots, achieves success rates of 96% for free-space locomotion tasks, 80% for manipulation tasks, and 92% for loco-manipulation tasks.
-			</p>
-		</td>
-	</tr>
+  <tr>
+    <td>
+      <p align="justify" width="20%">
+        We design two realistic simulation environments and evaluate the robot’s ability to successfully perform subtasks involving free-space locomotion, manipulation, and loco-manipulation.
+        TRILL, a framework tailored to train humanoid robots, achieves success rates of 96% for free-space locomotion tasks, 80% for manipulation tasks, and 92% for loco-manipulation tasks.
+      </p>
+    </td>
+  </tr>
 </table>
-
 <table border="0" cellspacing="10" cellpadding="0" align="center">
-	<tbody>
-		<tr>
-			<td align="center" valign="middle">
-				<video muted controls width="394">
-					<source src="./src/video/deploy_door.mp4"  type="video/mp4">
-				</video>
-			</td>
-			<td align="center" valign="middle">
-				<video muted controls width="394">
-					<source src="./src/video/deploy_workbench.mp4"  type="video/mp4">
-				</video>
-			</td>
-		</tr>
-	</tbody>
+  <tbody>
+    <tr>
+      <td align="center" valign="middle">
+        <video muted controls width="394">
+          <source src="./src/video/deploy_door.mp4"  type="video/mp4">
+        </video>
+      </td>
+      <td align="center" valign="middle">
+        <video muted controls width="394">
+          <source src="./src/video/deploy_workbench.mp4"  type="video/mp4">
+        </video>
+      </td>
+    </tr>
+  </tbody>
 </table>
 
 <hr>
@@ -326,9 +322,9 @@ highlight {
     <pre><code style="display:block; overflow-x: auto">
       @inproceedings{seo2023trill,
         title={Deep Imitation Learning for Humanoid Loco-manipulation 
-	  through Human Teleoperation},
+    through Human Teleoperation},
         author={Seo, Mingyo and Han, Steve and Sim, Kyutae and Bang, Seung Hyeon
-	  and Gonzalez, Carlos and Sentis, Luis and Zhu, Yuke},
+    and Gonzalez, Carlos and Sentis, Luis and Zhu, Yuke},
         booktitle={IEEE-RAS International Conference on Humanoid Robots (Humanoids)},
         year={2023}
       }
