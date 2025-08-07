@@ -141,10 +141,10 @@ highlight {
 </center>
 <center><p><span style="font-size:20px;"></span></p></center>
 
-<table border="0" cellspacing="10" cellpadding="0" align="center">
-  <tbody>
-    <tr>
-      <td align="center" valign="middle">
+<table border="0" cellspacing="10" cellpadding="0" align="center"> 
+	<tbody>
+		<tr> 
+			<td align="center" valign="middle">
         <video muted autoplay loop width="798">
           <source src="./src/video/header.mp4"  type="video/mp4">
         </video>
@@ -152,7 +152,6 @@ highlight {
     </tr>
   </tbody>
 </table>
-
 <table border="0" cellspacing="10" cellpadding="0" align="center">
 	<tr>
 		<td>
